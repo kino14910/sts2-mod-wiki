@@ -1,0 +1,28 @@
+{
+	"extends": "$app/tsconfig",
+	"compilerOptions": {
+		"strict": true,
+		"checkJs": false,
+		"paths": {
+			"#lib": [
+				"./src/lib"
+			],
+			"#lib/*": [
+				"./src/lib/*"
+			]
+		},
+		"types": [
+			"$app/types",
+			"./worker-configuration.d.ts"
+		]
+	},
+	"include": [
+		"src",
+		"vite.config.ts",
+		"playwright.config.ts"
+	],
+	"exclude": [
+		".svelte-kit",
+		"node_modules"
+	]
+}
