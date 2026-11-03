@@ -1,0 +1,158 @@
+<div class="tp-root preview-tool" data-text-preview-tool>
+
+<div class="tp-cols">
+
+<!-- 左栏：编辑器 -->
+<div class="tp-card tp-card-editor">
+<h3>
+  <span>编辑器</span>
+</h3>
+
+<div class="tp-editor-body">
+<textarea id="bbcodeInput" rows="6" spellcheck="false" placeholder='在此输入 BBCode'>获得等量于与你当前[gold]弃牌堆[/gold]中牌数{IfUpgraded:show:+{CalculationBase}|}的[gold]格挡[/gold]值。{InCombat:\n（获得{CalculatedBlock:diff()}点[gold]格挡[/gold]）|}</textarea>
+<button id="copyEditorBtn" class="tp-copy-btn" title="复制 BBCode (Ctrl+Enter)">复制</button>
+
+<div class="tp-tag-area">
+
+<!-- 左侧：可折叠标签列表 -->
+<div class="tp-tag-list">
+
+<div class="tp-tag-fold">
+<div class="tp-tag-fold-header" data-fold="color">
+  <span class="tp-fold-icon">▼</span> 颜色标签
+</div>
+<div class="tp-tag-fold-body" data-fold-body="color">
+<button data-insert="[gold]...[/gold]" data-select="...">[gold]</button>
+<button data-insert="[red]...[/red]" data-select="...">[red]</button>
+<button data-insert="[blue]...[/blue]" data-select="...">[blue]</button>
+<button data-insert="[green]...[/green]" data-select="...">[green]</button>
+<button data-insert="[purple]...[/purple]" data-select="...">[purple]</button>
+<button data-insert="[orange]...[/orange]" data-select="...">[orange]</button>
+<button data-insert="[pink]...[/pink]" data-select="...">[pink]</button>
+<button data-insert="[aqua]...[/aqua]" data-select="...">[aqua]</button>
+<button data-insert="[color=#XXXXXX]...[/color]" data-select="...">[color]</button>
+<button data-insert="[font=...]...[/font]" data-select="...">[font]</button>
+<button data-insert="[font_size=...]...[/font_size]" data-select="...">[font_size]</button>
+</div>
+</div>
+
+<div class="tp-tag-fold">
+<div class="tp-tag-fold-header" data-fold="fx">
+  <span class="tp-fold-icon">▶</span> 文字效果
+</div>
+<div class="tp-tag-fold-body collapsed" data-fold-body="fx">
+<button data-insert="[b]...[/b]" data-select="...">[b]粗体</button>
+<button data-insert="[i]...[/i]" data-select="...">[i]斜体</button>
+<button data-insert="[u]...[/u]" data-select="...">[u]下划线</button>
+<button data-insert="[jitter]...[/jitter]" data-select="...">[jitter]</button>
+<button data-insert="[sine]...[/sine]" data-select="...">[sine]</button>
+<button data-insert="[fade_in]...[/fade_in]" data-select="...">[fade_in]</button>
+<button data-insert="[fly_in]...[/fly_in]" data-select="...">[fly_in]</button>
+<button data-insert="[thinky_dots]...[/thinky_dots]" data-select="...">[thinky_dots]</button>
+<button data-insert="[rainbow]...[/rainbow]" data-select="...">[rainbow]</button>
+</div>
+</div>
+
+<div class="tp-tag-fold">
+<div class="tp-tag-fold-header" data-fold="var">
+  <span class="tp-fold-icon">▶</span> 占位变量
+</div>
+<div class="tp-tag-fold-body collapsed" data-fold-body="var">
+<button data-insert="{Damage}">{Damage}</button>
+<button data-insert="{Block}">{Block}</button>
+<button data-insert="{Energy}">{Energy}</button>
+<button data-insert="{Cards}">{Cards}</button>
+<button data-insert="{Repeat}">{Repeat}</button>
+<button data-insert="{Heal}">{Heal}</button>
+<button data-insert="{HpLoss}">{HpLoss}</button>
+<button data-insert="{MaxHp}">{MaxHp}</button>
+<button data-insert="{Gold}">{Gold}</button>
+<button data-insert="{CalculatedDamage}">{CalculatedDamage}</button>
+<button data-insert="{CalculatedBlock}">{CalculatedBlock}</button>
+<button data-insert="{Summon}">{Summon}</button>
+<button data-insert="{Forge}">{Forge}</button>
+<button data-insert="{Stars}">{Stars}</button>
+<button data-insert="{StrengthPower}">{StrengthPower}</button>
+<button data-insert="{DexterityPower}">{DexterityPower}</button>
+<button data-insert="{WeakPower}">{WeakPower}</button>
+<button data-insert="{VulnerablePower}">{VulnerablePower}</button>
+<button data-insert="{PoisonPower}">{PoisonPower}</button>
+<button data-insert="{DoomPower}">{DoomPower}</button>
+<button data-insert="{energyPrefix}">{energyPrefix}</button>
+</div>
+</div>
+
+<div class="tp-tag-fold">
+<div class="tp-tag-fold-header" data-fold="cardctx">
+  <span class="tp-fold-icon">▶</span> 卡牌上下文
+</div>
+<div class="tp-tag-fold-body collapsed" data-fold-body="cardctx">
+<button data-insert="{singleStarIcon}">{singleStarIcon}</button>
+<button data-insert="{InCombat:\n（命中{CalculatedHits:diff()}次）|}">{InCombat}</button>
+<button data-insert="{IsTargeting:\n（造成{CalculatedDamage:diff()}点伤害）|}">{IsTargeting}</button>
+<button data-insert="{OnTable:在场上|不在场上}">{OnTable}</button>
+<button data-insert="{IfUpgraded:show:所有牌|一张牌}">{IfUpgraded}</button>
+</div>
+</div>
+
+<div class="tp-tag-fold">
+<div class="tp-tag-fold-header" data-fold="powerctx">
+  <span class="tp-fold-icon">▶</span> 能力上下文
+</div>
+<div class="tp-tag-fold-body collapsed" data-fold-body="powerctx">
+<button data-insert="{Amount}">{Amount}</button>
+<button data-insert="{OnPlayer:你|该敌人}">{OnPlayer}</button>
+<button data-insert="{IsMultiplayer:（联机）|}">{IsMultiplayer}</button>
+<button data-insert="{PlayerCount}">{PlayerCount}</button>
+<button data-insert="{OwnerName}">{OwnerName}</button>
+<button data-insert="{ApplierName}">{ApplierName}</button>
+<button data-insert="{TargetName}">{TargetName}</button>
+</div>
+</div>
+
+<div class="tp-tag-fold">
+<div class="tp-tag-fold-header" data-fold="fmt">
+  <span class="tp-fold-icon">▶</span> 格式化器
+</div>
+<div class="tp-tag-fold-body collapsed" data-fold-body="fmt">
+<button data-insert="{Damage:diff()}">diff()</button>
+<button data-insert="{HpLoss:inverseDiff()}">inverseDiff()</button>
+<button data-insert="{Energy:energyIcons()}">energyIcons()</button>
+<button data-insert="{Stars:starIcons()}">starIcons()</button>
+<button data-insert="{Damage:abs()}">abs</button>
+<button data-insert="{IfUpgraded:show:升级文本|未升级文本}">IfUpgraded</button>
+<button data-insert="{X:cond:>0?生效|不生效}">cond</button>
+<button data-insert="{X:choose(1):一|其他}">choose</button>
+<button data-insert="{Boost:percentMore()}">percentMore()</button>
+<button data-insert="{Boost:percentLess()}">percentLess()</button>
+<button data-insert="{Cards:plural:card|cards}">plural</button>
+<button data-insert="{Cards:list:、|和}">list</button>
+</div>
+</div>
+
+</div><!-- /.tp-tag-list -->
+
+<!-- 右侧：变量注入 -->
+<div class="tp-var-panel">
+<div class="tp-var-header">变量注入</div>
+<div class="tp-var-rows" id="varRows">
+</div>
+</div>
+
+</div><!-- /.tp-tag-area -->
+</div><!-- /.tp-editor-body -->
+</div><!-- /.tp-card -->
+
+<!-- 右栏：预览区 -->
+<div class="tp-card">
+<h3>预览</h3>
+
+<div class="tp-preview-area">
+<div class="tp-preview-render" id="previewRender">输入内容后实时预览</div>
+</div>
+</div>
+
+</div>
+
+<div class="tp-toast" id="toast"></div>
+</div>

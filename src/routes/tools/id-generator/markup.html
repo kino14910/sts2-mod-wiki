@@ -1,0 +1,54 @@
+<div class="entry-id-tool" data-entry-id-tool>
+<section class="entry-id-tool__panel">
+<div class="entry-id-tool__panel-title">输入</div>
+<div class="entry-id-tool__form">
+<label class="entry-id-tool__field">
+<span>前置库</span>
+<select id="entryIdLibrary">
+<option value="baselib">BaseLib</option>
+<option value="ritsulib">RitsuLib</option>
+</select>
+</label>
+<div class="entry-id-tool__fields" id="entryIdBaseLibFields">
+<label class="entry-id-tool__field">
+<span>命名空间</span>
+<input id="entryIdNamespace" value="Test.Scripts" spellcheck="false">
+</label>
+</div>
+<div class="entry-id-tool__fields is-hidden" id="entryIdRitsuLibFields">
+<label class="entry-id-tool__field">
+<span>Mod ID</span>
+<input id="entryIdModId" value="Test" spellcheck="false">
+</label>
+<label class="entry-id-tool__field">
+<span>内容类别</span>
+<select id="entryIdModelType"></select>
+</label>
+</div>
+</div>
+</section>
+<section class="entry-id-tool__panel entry-id-tool__panel--split">
+<div class="entry-id-tool__split">
+<div class="entry-id-tool__split-pane">
+<div class="entry-id-tool__panel-title entry-id-tool__panel-title--with-action">
+<span>类名（每行一个）</span>
+<span class="entry-id-tool__help" tabindex="0" aria-label="导入说明">
+<span class="entry-id-tool__help-mark">?</span>
+<span class="entry-id-tool__help-tip" role="tooltip">递归读取文件夹及其所有子文件夹下的 .cs 文件名并追加为类名（自动忽略 .uid / .import 等元数据文件）。文件仅在本地浏览器读取，不会上传。</span>
+</span>
+<button class="entry-id-tool__copy" id="entryIdImport" type="button">导入文件夹</button>
+<input type="file" id="entryIdImportInput" webkitdirectory directory multiple hidden>
+</div>
+<textarea id="entryIdNames" class="entry-id-tool__names" spellcheck="false" placeholder="MyCoolCard&#10;AnotherCard&#10;ThirdCard">MyCoolCard</textarea>
+</div>
+<div class="entry-id-tool__split-pane">
+<div class="entry-id-tool__panel-title entry-id-tool__panel-title--with-action">
+<span>输出 JSON</span>
+<button class="entry-id-tool__copy" id="entryIdCopy" type="button">复制</button>
+</div>
+<div id="entryIdError" class="entry-id-tool__error"></div>
+<pre id="entryIdFinal" class="entry-id-tool__code"></pre>
+</div>
+</div>
+</section>
+</div>
