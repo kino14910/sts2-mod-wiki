@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { RitsuLibEntryId } from '#lib/data/entry-id';
 	import { m } from '#lib/paraglide/messages';
 	import { loadToolScripts } from '#lib/tools/load-scripts.ts';
 	import markup from './markup.html?raw';
 
-	onMount(() =>
-		loadToolScripts(['/tools/id-generator/id-generator.js', '/tools/id-generator/id-generator-ui.js'])
-	);
+	onMount(() => {
+		Object.assign(globalThis, { RitsuLibEntryId });
+		return loadToolScripts(['/tools/id-generator/id-generator-ui.js']);
+	});
 </script>
 
 <svelte:head>
@@ -16,11 +18,16 @@
 	<link rel="stylesheet" href="/tools/id-generator/id-generator.css" />
 </svelte:head>
 
-<header class="tool-head">
-	<a class="tool-back" href={resolve('/tools')}>{m.tool_back()}</a>
+<header class="mb-[clamp(24px,3vw,36px)] grid max-w-[68ch] gap-3.5">
+	<a
+		class="justify-self-start font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted transition-colors hover:text-gold"
+		href={resolve('/tools')}>{m.tool_back()}</a
+	>
 	<p class="eyebrow">{m.tools_eyebrow()}</p>
-	<h1 class="display">{m.tool_id_heading()}</h1>
-	<p class="lede">{m.tool_id_lead()}</p>
+	<h1 class="display text-[clamp(2rem,3.4vw,2.9rem)] tracking-[-0.015em] text-gold">
+		{m.tool_id_heading()}
+	</h1>
+	<p class="lede max-w-[62ch]">{m.tool_id_lead()}</p>
 </header>
 
 {@html markup}

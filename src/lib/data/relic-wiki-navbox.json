@@ -1,0 +1,1385 @@
+{
+	"title": "Relics",
+	"href": "/relics",
+	"groups": [
+		{
+			"label": "Starter",
+			"href": "/relics?rarity=starter",
+			"rows": [
+				{
+					"group": "Ironclad",
+					"href": "/relics?character=ironclad",
+					"items": [
+						{
+							"name": "Burning Blood",
+							"href": "/relic/BurningBlood"
+						},
+						{
+							"name": "Black Blood",
+							"href": "/relic/BlackBlood"
+						}
+					]
+				},
+				{
+					"group": "Silent",
+					"href": "/relics?character=silent",
+					"items": [
+						{
+							"name": "Ring of the Snake",
+							"href": "/relic/RingOfTheSnake"
+						},
+						{
+							"name": "Ring of the Drake",
+							"href": "/relic/RingOfTheDrake"
+						}
+					]
+				},
+				{
+					"group": "Regent",
+					"href": "/relics?character=regent",
+					"items": [
+						{
+							"name": "Divine Right",
+							"href": "/relic/DivineRight"
+						},
+						{
+							"name": "Divine Destiny",
+							"href": "/relic/DivineDestiny"
+						}
+					]
+				},
+				{
+					"group": "Necrobinder",
+					"href": "/relics?character=necrobinder",
+					"items": [
+						{
+							"name": "Bound Phylactery",
+							"href": "/relic/BoundPhylactery"
+						},
+						{
+							"name": "Phylactery Unbound",
+							"href": "/relic/PhylacteryUnbound"
+						}
+					]
+				},
+				{
+					"group": "Defect",
+					"href": "/relics?character=defect",
+					"items": [
+						{
+							"name": "Cracked Core",
+							"href": "/relic/CrackedCore"
+						},
+						{
+							"name": "Infused Core",
+							"href": "/relic/InfusedCore"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Common",
+			"href": "/relics?rarity=common",
+			"rows": [
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Amethyst Aubergine",
+							"href": "/relic/AmethystAubergine"
+						},
+						{
+							"name": "Anchor",
+							"href": "/relic/Anchor"
+						},
+						{
+							"name": "Bag of Marbles",
+							"href": "/relic/BagOfMarbles"
+						},
+						{
+							"name": "Bag of Preparation",
+							"href": "/relic/BagOfPreparation"
+						},
+						{
+							"name": "Blood Vial",
+							"href": "/relic/BloodVial"
+						},
+						{
+							"name": "Book of Five Rings",
+							"href": "/relic/BookOfFiveRings"
+						},
+						{
+							"name": "Bronze Scales",
+							"href": "/relic/BronzeScales"
+						},
+						{
+							"name": "Centennial Puzzle",
+							"href": "/relic/CentennialPuzzle"
+						},
+						{
+							"name": "Festive Popper",
+							"href": "/relic/FestivePopper"
+						},
+						{
+							"name": "Gorget",
+							"href": "/relic/Gorget"
+						},
+						{
+							"name": "Happy Flower",
+							"href": "/relic/HappyFlower"
+						},
+						{
+							"name": "Juzu Bracelet",
+							"href": "/relic/JuzuBracelet"
+						},
+						{
+							"name": "Lantern",
+							"href": "/relic/Lantern"
+						},
+						{
+							"name": "Meal Ticket",
+							"href": "/relic/MealTicket"
+						},
+						{
+							"name": "Oddly Smooth Stone",
+							"href": "/relic/OddlySmoothStone"
+						},
+						{
+							"name": "Pendulum",
+							"href": "/relic/Pendulum"
+						},
+						{
+							"name": "Potion Belt",
+							"href": "/relic/PotionBelt"
+						},
+						{
+							"name": "Red Mask",
+							"href": "/relic/RedMask"
+						},
+						{
+							"name": "Regal Pillow",
+							"href": "/relic/RegalPillow"
+						},
+						{
+							"name": "Strawberry",
+							"href": "/relic/Strawberry"
+						},
+						{
+							"name": "Strike Dummy",
+							"href": "/relic/StrikeDummy"
+						},
+						{
+							"name": "Vajra",
+							"href": "/relic/Vajra"
+						},
+						{
+							"name": "Venerable Tea Set",
+							"href": "/relic/VenerableTeaSet"
+						},
+						{
+							"name": "War Paint",
+							"href": "/relic/WarPaint"
+						},
+						{
+							"name": "Whetstone",
+							"href": "/relic/Whetstone"
+						}
+					]
+				},
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Red Skull",
+							"href": "/relic/RedSkull"
+						},
+						{
+							"name": "Snecko Skull",
+							"href": "/relic/SneckoSkull"
+						},
+						{
+							"name": "Fencing Manual",
+							"href": "/relic/FencingManual"
+						},
+						{
+							"name": "Bone Flute",
+							"href": "/relic/BoneFlute"
+						},
+						{
+							"name": "Data Disk",
+							"href": "/relic/DataDisk"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Uncommon",
+			"href": "/relics?rarity=uncommon",
+			"rows": [
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Akabeko",
+							"href": "/relic/Akabeko"
+						},
+						{
+							"name": "Bowler Hat",
+							"href": "/relic/BowlerHat"
+						},
+						{
+							"name": "Candelabra",
+							"href": "/relic/Candelabra"
+						},
+						{
+							"name": "Eternal Feather",
+							"href": "/relic/EternalFeather"
+						},
+						{
+							"name": "Gremlin Horn",
+							"href": "/relic/GremlinHorn"
+						},
+						{
+							"name": "Horn Cleat",
+							"href": "/relic/HornCleat"
+						},
+						{
+							"name": "Joss Paper",
+							"href": "/relic/JossPaper"
+						},
+						{
+							"name": "Kusarigama",
+							"href": "/relic/Kusarigama"
+						},
+						{
+							"name": "Lasting Candy",
+							"href": "/relic/LastingCandy"
+						},
+						{
+							"name": "Letter Opener",
+							"href": "/relic/LetterOpener"
+						},
+						{
+							"name": "Lucky Fysh",
+							"href": "/relic/LuckyFysh"
+						},
+						{
+							"name": "Mercury Hourglass",
+							"href": "/relic/MercuryHourglass"
+						},
+						{
+							"name": "Miniature Cannon",
+							"href": "/relic/MiniatureCannon"
+						},
+						{
+							"name": "Nunchaku",
+							"href": "/relic/Nunchaku"
+						},
+						{
+							"name": "Orichalcum",
+							"href": "/relic/Orichalcum"
+						},
+						{
+							"name": "Ornamental Fan",
+							"href": "/relic/OrnamentalFan"
+						},
+						{
+							"name": "Pantograph",
+							"href": "/relic/Pantograph"
+						},
+						{
+							"name": "Parrying Shield",
+							"href": "/relic/ParryingShield"
+						},
+						{
+							"name": "Pear",
+							"href": "/relic/Pear"
+						},
+						{
+							"name": "Pen Nib",
+							"href": "/relic/PenNib"
+						},
+						{
+							"name": "Permafrost",
+							"href": "/relic/Permafrost"
+						},
+						{
+							"name": "Petrified Toad",
+							"href": "/relic/PetrifiedToad"
+						},
+						{
+							"name": "Planisphere",
+							"href": "/relic/Planisphere"
+						},
+						{
+							"name": "Reptile Trinket",
+							"href": "/relic/ReptileTrinket"
+						},
+						{
+							"name": "Ripple Basin",
+							"href": "/relic/RippleBasin"
+						},
+						{
+							"name": "Sparkling Rouge",
+							"href": "/relic/SparklingRouge"
+						},
+						{
+							"name": "Stone Cracker",
+							"href": "/relic/StoneCracker"
+						},
+						{
+							"name": "Tiny Mailbox",
+							"href": "/relic/TinyMailbox"
+						},
+						{
+							"name": "Tuning Fork",
+							"href": "/relic/TuningFork"
+						},
+						{
+							"name": "Vambrace",
+							"href": "/relic/Vambrace"
+						}
+					]
+				},
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Paper Phrog",
+							"href": "/relic/PaperPhrog"
+						},
+						{
+							"name": "Self-Forming Clay",
+							"href": "/relic/SelfFormingClay"
+						},
+						{
+							"name": "Tingsha",
+							"href": "/relic/Tingsha"
+						},
+						{
+							"name": "Twisted Funnel",
+							"href": "/relic/TwistedFunnel"
+						},
+						{
+							"name": "Galactic Dust",
+							"href": "/relic/GalacticDust"
+						},
+						{
+							"name": "Regalite",
+							"href": "/relic/Regalite"
+						},
+						{
+							"name": "Book Repair Knife",
+							"href": "/relic/BookRepairKnife"
+						},
+						{
+							"name": "Funerary Mask",
+							"href": "/relic/FuneraryMask"
+						},
+						{
+							"name": "Gold-Plated Cables",
+							"href": "/relic/GoldPlatedCables"
+						},
+						{
+							"name": "Symbiotic Virus",
+							"href": "/relic/SymbioticVirus"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Rare",
+			"href": "/relics?rarity=rare",
+			"rows": [
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Art of War",
+							"href": "/relic/ArtOfWar"
+						},
+						{
+							"name": "Beating Remnant",
+							"href": "/relic/BeatingRemnant"
+						},
+						{
+							"name": "Bellows",
+							"href": "/relic/Bellows"
+						},
+						{
+							"name": "Captain's Wheel",
+							"href": "/relic/CaptainsWheel"
+						},
+						{
+							"name": "Chandelier",
+							"href": "/relic/Chandelier"
+						},
+						{
+							"name": "Cloak Clasp",
+							"href": "/relic/CloakClasp"
+						},
+						{
+							"name": "Frozen Egg",
+							"href": "/relic/FrozenEgg"
+						},
+						{
+							"name": "Gambling Chip",
+							"href": "/relic/GamblingChip"
+						},
+						{
+							"name": "Game Piece",
+							"href": "/relic/GamePiece"
+						},
+						{
+							"name": "Girya",
+							"href": "/relic/Girya"
+						},
+						{
+							"name": "Ice Cream",
+							"href": "/relic/IceCream"
+						},
+						{
+							"name": "Intimidating Helmet",
+							"href": "/relic/IntimidatingHelmet"
+						},
+						{
+							"name": "Kunai",
+							"href": "/relic/Kunai"
+						},
+						{
+							"name": "Lizard Tail",
+							"href": "/relic/LizardTail"
+						},
+						{
+							"name": "Mango",
+							"href": "/relic/Mango"
+						},
+						{
+							"name": "Meat on the Bone",
+							"href": "/relic/MeatOnTheBone"
+						},
+						{
+							"name": "Molten Egg",
+							"href": "/relic/MoltenEgg"
+						},
+						{
+							"name": "Mummified Hand",
+							"href": "/relic/MummifiedHand"
+						},
+						{
+							"name": "Old Coin",
+							"href": "/relic/OldCoin"
+						},
+						{
+							"name": "Pocketwatch",
+							"href": "/relic/Pocketwatch"
+						},
+						{
+							"name": "Prayer Wheel",
+							"href": "/relic/PrayerWheel"
+						},
+						{
+							"name": "Rainbow Ring",
+							"href": "/relic/RainbowRing"
+						},
+						{
+							"name": "Razor Tooth",
+							"href": "/relic/RazorTooth"
+						},
+						{
+							"name": "Shovel",
+							"href": "/relic/Shovel"
+						},
+						{
+							"name": "Shuriken",
+							"href": "/relic/Shuriken"
+						},
+						{
+							"name": "Stone Calendar",
+							"href": "/relic/StoneCalendar"
+						},
+						{
+							"name": "Sturdy Clamp",
+							"href": "/relic/SturdyClamp"
+						},
+						{
+							"name": "The Courier",
+							"href": "/relic/TheCourier"
+						},
+						{
+							"name": "Toxic Egg",
+							"href": "/relic/ToxicEgg"
+						},
+						{
+							"name": "Tungsten Rod",
+							"href": "/relic/TungstenRod"
+						},
+						{
+							"name": "Unceasing Top",
+							"href": "/relic/UnceasingTop"
+						},
+						{
+							"name": "Unsettling Lamp",
+							"href": "/relic/UnsettlingLamp"
+						},
+						{
+							"name": "Vexing Puzzlebox",
+							"href": "/relic/VexingPuzzlebox"
+						},
+						{
+							"name": "White Beast Statue",
+							"href": "/relic/WhiteBeastStatue"
+						},
+						{
+							"name": "White Star",
+							"href": "/relic/WhiteStar"
+						}
+					]
+				},
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Charon's Ashes",
+							"href": "/relic/CharonsAshes"
+						},
+						{
+							"name": "Demon Tongue",
+							"href": "/relic/DemonTongue"
+						},
+						{
+							"name": "Ruined Helmet",
+							"href": "/relic/RuinedHelmet"
+						},
+						{
+							"name": "Helical Dart",
+							"href": "/relic/HelicalDart"
+						},
+						{
+							"name": "Paper Krane",
+							"href": "/relic/PaperKrane"
+						},
+						{
+							"name": "Tough Bandages",
+							"href": "/relic/ToughBandages"
+						},
+						{
+							"name": "Lunar Pastry",
+							"href": "/relic/LunarPastry"
+						},
+						{
+							"name": "Mini Regent",
+							"href": "/relic/MiniRegent"
+						},
+						{
+							"name": "Orange Dough",
+							"href": "/relic/OrangeDough"
+						},
+						{
+							"name": "Big Hat",
+							"href": "/relic/BigHat"
+						},
+						{
+							"name": "Bookmark",
+							"href": "/relic/Bookmark"
+						},
+						{
+							"name": "Ivory Tile",
+							"href": "/relic/IvoryTile"
+						},
+						{
+							"name": "Emotion Chip",
+							"href": "/relic/EmotionChip"
+						},
+						{
+							"name": "Metronome",
+							"href": "/relic/Metronome"
+						},
+						{
+							"name": "Power Cell",
+							"href": "/relic/PowerCell"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Ancient",
+			"href": "/relics?rarity=ancient",
+			"rows": [
+				{
+					"group": "Neow",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Neow",
+					"items": [
+						{
+							"name": "Arcane Scroll",
+							"href": "/relic/ArcaneScroll"
+						},
+						{
+							"name": "Booming Conch",
+							"href": "/relic/BoomingConch"
+						},
+						{
+							"name": "Cursed Pearl",
+							"href": "/relic/CursedPearl"
+						},
+						{
+							"name": "Dowsing Rod",
+							"href": "/relic/DowsingRod"
+						},
+						{
+							"name": "Fishing Rod",
+							"href": "/relic/FishingRod"
+						},
+						{
+							"name": "Golden Pearl",
+							"href": "/relic/GoldenPearl"
+						},
+						{
+							"name": "Hefty Tablet",
+							"href": "/relic/HeftyTablet"
+						},
+						{
+							"name": "Kaleidoscope",
+							"href": "/relic/Kaleidoscope"
+						},
+						{
+							"name": "Large Capsule",
+							"href": "/relic/LargeCapsule"
+						},
+						{
+							"name": "Lava Rock",
+							"href": "/relic/LavaRock"
+						},
+						{
+							"name": "Lead Paperweight",
+							"href": "/relic/LeadPaperweight"
+						},
+						{
+							"name": "Leafy Poultice",
+							"href": "/relic/LeafyPoultice"
+						},
+						{
+							"name": "Lost Coffer",
+							"href": "/relic/LostCoffer"
+						},
+						{
+							"name": "Massive Scroll",
+							"href": "/relic/MassiveScroll"
+						},
+						{
+							"name": "Neow's Bones",
+							"href": "/relic/NeowsBones"
+						},
+						{
+							"name": "Neow's Sacrifice",
+							"href": "/relic/NeowsSacrifice"
+						},
+						{
+							"name": "Neow's Talisman",
+							"href": "/relic/NeowsTalisman"
+						},
+						{
+							"name": "Neow's Torment",
+							"href": "/relic/NeowsTorment"
+						},
+						{
+							"name": "New Leaf",
+							"href": "/relic/NewLeaf"
+						},
+						{
+							"name": "Nutritious Oyster",
+							"href": "/relic/NutritiousOyster"
+						},
+						{
+							"name": "Phial Holster",
+							"href": "/relic/PhialHolster"
+						},
+						{
+							"name": "Pomander",
+							"href": "/relic/Pomander"
+						},
+						{
+							"name": "Precarious Shears",
+							"href": "/relic/PrecariousShears"
+						},
+						{
+							"name": "Precise Scissors",
+							"href": "/relic/PreciseScissors"
+						},
+						{
+							"name": "Scroll Boxes",
+							"href": "/relic/ScrollBoxes"
+						},
+						{
+							"name": "Silken Tress",
+							"href": "/relic/SilkenTress"
+						},
+						{
+							"name": "Silver Crucible",
+							"href": "/relic/SilverCrucible"
+						},
+						{
+							"name": "Small Capsule",
+							"href": "/relic/SmallCapsule"
+						},
+						{
+							"name": "Stone Humidifier",
+							"href": "/relic/StoneHumidifier"
+						},
+						{
+							"name": "Winged Boots",
+							"href": "/relic/WingedBoots"
+						}
+					]
+				},
+				{
+					"group": "Orobas",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orobas",
+					"items": [
+						{
+							"name": "Alchemical Coffer",
+							"href": "/relic/AlchemicalCoffer"
+						},
+						{
+							"name": "Archaic Tooth",
+							"href": "/relic/ArchaicTooth"
+						},
+						{
+							"name": "Driftwood",
+							"href": "/relic/Driftwood"
+						},
+						{
+							"name": "Electric Shrymp",
+							"href": "/relic/ElectricShrymp"
+						},
+						{
+							"name": "Glass Eye",
+							"href": "/relic/GlassEye"
+						},
+						{
+							"name": "Prismatic Gem",
+							"href": "/relic/PrismaticGem"
+						},
+						{
+							"name": "Radiant Pearl",
+							"href": "/relic/RadiantPearl"
+						},
+						{
+							"name": "Sand Castle",
+							"href": "/relic/SandCastle"
+						},
+						{
+							"name": "Sea Glass",
+							"href": "/relic/SeaGlass"
+						},
+						{
+							"name": "Touch of Orobas",
+							"href": "/relic/TouchOfOrobas"
+						}
+					]
+				},
+				{
+					"group": "Pael",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Pael",
+					"items": [
+						{
+							"name": "Pael's Blood",
+							"href": "/relic/PaelsBlood"
+						},
+						{
+							"name": "Pael's Claw",
+							"href": "/relic/PaelsClaw"
+						},
+						{
+							"name": "Pael's Eye",
+							"href": "/relic/PaelsEye"
+						},
+						{
+							"name": "Pael's Flesh",
+							"href": "/relic/PaelsFlesh"
+						},
+						{
+							"name": "Pael's Growth",
+							"href": "/relic/PaelsGrowth"
+						},
+						{
+							"name": "Pael's Horn",
+							"href": "/relic/PaelsHorn"
+						},
+						{
+							"name": "Pael's Legion",
+							"href": "/relic/PaelsLegion"
+						},
+						{
+							"name": "Pael's Tears",
+							"href": "/relic/PaelsTears"
+						},
+						{
+							"name": "Pael's Tooth",
+							"href": "/relic/PaelsTooth"
+						},
+						{
+							"name": "Pael's Wing",
+							"href": "/relic/PaelsWing"
+						}
+					]
+				},
+				{
+					"group": "Tezcatara",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Tezcatara",
+					"items": [
+						{
+							"name": "Biiig Hug",
+							"href": "/relic/BiiigHug"
+						},
+						{
+							"name": "Golden Compass",
+							"href": "/relic/GoldenCompass"
+						},
+						{
+							"name": "Nutritious Soup",
+							"href": "/relic/NutritiousSoup"
+						},
+						{
+							"name": "Pumpkin Candle",
+							"href": "/relic/PumpkinCandle"
+						},
+						{
+							"name": "Seal of Gold",
+							"href": "/relic/SealOfGold"
+						},
+						{
+							"name": "Storybook",
+							"href": "/relic/Storybook"
+						},
+						{
+							"name": "Toasty Mittens",
+							"href": "/relic/ToastyMittens"
+						},
+						{
+							"name": "Toy Box",
+							"href": "/relic/ToyBox"
+						},
+						{
+							"name": "Very Hot Cocoa",
+							"href": "/relic/VeryHotCocoa"
+						},
+						{
+							"name": "Yummy Cookie",
+							"href": "/relic/YummyCookie"
+						}
+					]
+				},
+				{
+					"group": "Nonupeipe",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Nonupeipe",
+					"items": [
+						{
+							"name": "Beautiful Bracelet",
+							"href": "/relic/BeautifulBracelet"
+						},
+						{
+							"name": "Blessed Antler",
+							"href": "/relic/BlessedAntler"
+						},
+						{
+							"name": "Brilliant Scarf",
+							"href": "/relic/BrilliantScarf"
+						},
+						{
+							"name": "Delicate Frond",
+							"href": "/relic/DelicateFrond"
+						},
+						{
+							"name": "Diamond Diadem",
+							"href": "/relic/DiamondDiadem"
+						},
+						{
+							"name": "Fur Coat",
+							"href": "/relic/FurCoat"
+						},
+						{
+							"name": "Glitter",
+							"href": "/relic/Glitter"
+						},
+						{
+							"name": "Jewelry Box",
+							"href": "/relic/JewelryBox"
+						},
+						{
+							"name": "Looming Fruit",
+							"href": "/relic/LoomingFruit"
+						},
+						{
+							"name": "Signet Ring",
+							"href": "/relic/SignetRing"
+						}
+					]
+				},
+				{
+					"group": "Tanx",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Tanx",
+					"items": [
+						{
+							"name": "Claws",
+							"href": "/relic/Claws"
+						},
+						{
+							"name": "Crossbow",
+							"href": "/relic/Crossbow"
+						},
+						{
+							"name": "Iron Club",
+							"href": "/relic/IronClub"
+						},
+						{
+							"name": "Meat Cleaver",
+							"href": "/relic/MeatCleaver"
+						},
+						{
+							"name": "Sai",
+							"href": "/relic/Sai"
+						},
+						{
+							"name": "Spiked Gauntlets",
+							"href": "/relic/SpikedGauntlets"
+						},
+						{
+							"name": "Tanx's Whistle",
+							"href": "/relic/TanxsWhistle"
+						},
+						{
+							"name": "Throwing Axe",
+							"href": "/relic/ThrowingAxe"
+						},
+						{
+							"name": "Tri-Boomerang",
+							"href": "/relic/TriBoomerang"
+						},
+						{
+							"name": "War Hammer",
+							"href": "/relic/WarHammer"
+						}
+					]
+				},
+				{
+					"group": "Vakuu",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Vakuu",
+					"items": [
+						{
+							"name": "Blood-Soaked Rose",
+							"href": "/relic/BloodSoakedRose"
+						},
+						{
+							"name": "Choices Paradox",
+							"href": "/relic/ChoicesParadox"
+						},
+						{
+							"name": "Distinguished Cape",
+							"href": "/relic/DistinguishedCape"
+						},
+						{
+							"name": "Fiddle",
+							"href": "/relic/Fiddle"
+						},
+						{
+							"name": "Jeweled Mask",
+							"href": "/relic/JeweledMask"
+						},
+						{
+							"name": "Lord's Parasol",
+							"href": "/relic/LordsParasol"
+						},
+						{
+							"name": "Music Box",
+							"href": "/relic/MusicBox"
+						},
+						{
+							"name": "Preserved Fog",
+							"href": "/relic/PreservedFog"
+						},
+						{
+							"name": "Sere Talon",
+							"href": "/relic/SereTalon"
+						},
+						{
+							"name": "Whispering Earring",
+							"href": "/relic/WhisperingEarring"
+						}
+					]
+				},
+				{
+					"group": "Darv",
+					"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Darv",
+					"items": [
+						{
+							"name": "Astrolabe",
+							"href": "/relic/Astrolabe"
+						},
+						{
+							"name": "Black Star",
+							"href": "/relic/BlackStar"
+						},
+						{
+							"name": "Calling Bell",
+							"href": "/relic/CallingBell"
+						},
+						{
+							"name": "Dusty Tome",
+							"href": "/relic/DustyTome"
+						},
+						{
+							"name": "Ectoplasm",
+							"href": "/relic/Ectoplasm"
+						},
+						{
+							"name": "Empty Cage",
+							"href": "/relic/EmptyCage"
+						},
+						{
+							"name": "Pandora's Box",
+							"href": "/relic/PandorasBox"
+						},
+						{
+							"name": "Philosopher's Stone",
+							"href": "/relic/PhilosophersStone"
+						},
+						{
+							"name": "Runic Pyramid",
+							"href": "/relic/RunicPyramid"
+						},
+						{
+							"name": "Snecko Eye",
+							"href": "/relic/SneckoEye"
+						},
+						{
+							"name": "Sozu",
+							"href": "/relic/Sozu"
+						},
+						{
+							"name": "Velvet Choker",
+							"href": "/relic/VelvetChoker"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Shop",
+			"href": "/relics?rarity=shop",
+			"rows": [
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Belt Buckle",
+							"href": "/relic/BeltBuckle"
+						},
+						{
+							"name": "Bread",
+							"href": "/relic/Bread"
+						},
+						{
+							"name": "Burning Sticks",
+							"href": "/relic/BurningSticks"
+						},
+						{
+							"name": "Cauldron",
+							"href": "/relic/Cauldron"
+						},
+						{
+							"name": "Chemical X",
+							"href": "/relic/ChemicalX"
+						},
+						{
+							"name": "Dingy Rug",
+							"href": "/relic/DingyRug"
+						},
+						{
+							"name": "Dolly's Mirror",
+							"href": "/relic/DollysMirror"
+						},
+						{
+							"name": "Dragon Fruit",
+							"href": "/relic/DragonFruit"
+						},
+						{
+							"name": "Ghost Seed",
+							"href": "/relic/GhostSeed"
+						},
+						{
+							"name": "Gnarled Hammer",
+							"href": "/relic/GnarledHammer"
+						},
+						{
+							"name": "Kifuda",
+							"href": "/relic/Kifuda"
+						},
+						{
+							"name": "Lava Lamp",
+							"href": "/relic/LavaLamp"
+						},
+						{
+							"name": "Lee's Waffle",
+							"href": "/relic/LeesWaffle"
+						},
+						{
+							"name": "Membership Card",
+							"href": "/relic/MembershipCard"
+						},
+						{
+							"name": "Miniature Tent",
+							"href": "/relic/MiniatureTent"
+						},
+						{
+							"name": "Mystic Lighter",
+							"href": "/relic/MysticLighter"
+						},
+						{
+							"name": "Orrery",
+							"href": "/relic/Orrery"
+						},
+						{
+							"name": "Punch Dagger",
+							"href": "/relic/PunchDagger"
+						},
+						{
+							"name": "Ringing Triangle",
+							"href": "/relic/RingingTriangle"
+						},
+						{
+							"name": "Royal Stamp",
+							"href": "/relic/RoyalStamp"
+						},
+						{
+							"name": "Screaming Flagon",
+							"href": "/relic/ScreamingFlagon"
+						},
+						{
+							"name": "Sling of Courage",
+							"href": "/relic/SlingOfCourage"
+						},
+						{
+							"name": "The Abacus",
+							"href": "/relic/TheAbacus"
+						},
+						{
+							"name": "Toolbox",
+							"href": "/relic/Toolbox"
+						},
+						{
+							"name": "Wing Charm",
+							"href": "/relic/WingCharm"
+						}
+					]
+				},
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Brimstone",
+							"href": "/relic/Brimstone"
+						},
+						{
+							"name": "Ninja Scroll",
+							"href": "/relic/NinjaScroll"
+						},
+						{
+							"name": "Vitruvian Minion",
+							"href": "/relic/VitruvianMinion"
+						},
+						{
+							"name": "Undying Sigil",
+							"href": "/relic/UndyingSigil"
+						},
+						{
+							"name": "Runic Capacitor",
+							"href": "/relic/RunicCapacitor"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Event",
+			"href": "/relics?rarity=event",
+			"rows": [
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Byrdpip",
+							"href": "/relic/Byrdpip"
+						},
+						{
+							"name": "Pollinous Core",
+							"href": "/relic/PollinousCore"
+						},
+						{
+							"name": "Bing Bong",
+							"href": "/relic/BingBong"
+						},
+						{
+							"name": "Daughter of the Wind",
+							"href": "/relic/DaughterOfTheWind"
+						},
+						{
+							"name": "Mr. Struggles",
+							"href": "/relic/MrStruggles"
+						},
+						{
+							"name": "Fresnel Lens",
+							"href": "/relic/FresnelLens"
+						},
+						{
+							"name": "Forgotten Soul",
+							"href": "/relic/ForgottenSoul"
+						},
+						{
+							"name": "Big Mushroom",
+							"href": "/relic/BigMushroom"
+						},
+						{
+							"name": "Fragrant Mushroom",
+							"href": "/relic/FragrantMushroom"
+						},
+						{
+							"name": "The Chosen Cheese",
+							"href": "/relic/ChosenCheese"
+						},
+						{
+							"name": "Bone Tea",
+							"href": "/relic/BoneTea"
+						},
+						{
+							"name": "Ember Tea",
+							"href": "/relic/EmberTea"
+						},
+						{
+							"name": "Tea of Discourtesy",
+							"href": "/relic/TeaOfDiscourtesy"
+						},
+						{
+							"name": "Lost Wisp",
+							"href": "/relic/LostWisp"
+						},
+						{
+							"name": "Anchor???",
+							"href": "/relic/FakeAnchor"
+						},
+						{
+							"name": "Blood Vial???",
+							"href": "/relic/FakeBloodVial"
+						},
+						{
+							"name": "Happy Flower???",
+							"href": "/relic/FakeHappyFlower"
+						},
+						{
+							"name": "Lee's Waffle???",
+							"href": "/relic/FakeLeesWaffle"
+						},
+						{
+							"name": "Mango???",
+							"href": "/relic/FakeMango"
+						},
+						{
+							"name": "Orichalcum???",
+							"href": "/relic/FakeOrichalcum"
+						},
+						{
+							"name": "Snecko Eye???",
+							"href": "/relic/FakeSneckoEye"
+						},
+						{
+							"name": "Strike Dummy???",
+							"href": "/relic/FakeStrikeDummy"
+						},
+						{
+							"name": "The Merchant's Rug???",
+							"href": "/relic/FakeMerchantsRug"
+						},
+						{
+							"name": "Venerable Tea Set???",
+							"href": "/relic/FakeVenerableTeaSet"
+						},
+						{
+							"name": "Royal Poison",
+							"href": "/relic/RoyalPoison"
+						},
+						{
+							"name": "Sword of Jade",
+							"href": "/relic/SwordOfJade"
+						},
+						{
+							"name": "Sword of Stone",
+							"href": "/relic/SwordOfStone"
+						},
+						{
+							"name": "Darkstone Periapt",
+							"href": "/relic/DarkstonePeriapt"
+						},
+						{
+							"name": "Dream Catcher",
+							"href": "/relic/DreamCatcher"
+						},
+						{
+							"name": "Hand Drill",
+							"href": "/relic/HandDrill"
+						},
+						{
+							"name": "Maw Bank",
+							"href": "/relic/MawBank"
+						},
+						{
+							"name": "The Boot",
+							"href": "/relic/TheBoot"
+						},
+						{
+							"name": "History Course",
+							"href": "/relic/HistoryCourse"
+						},
+						{
+							"name": "Wongo Customer Appreciation Badge",
+							"href": "/relic/WongoCustomerAppreciationBadge"
+						},
+						{
+							"name": "Wongo's Mystery Ticket",
+							"href": "/relic/WongosMysteryTicket"
+						}
+					]
+				}
+			]
+		},
+		{
+			"label": "Special",
+			"href": "/relics?rarity=special",
+			"rows": [
+				{
+					"group": "",
+					"href": "",
+					"items": [
+						{
+							"name": "Circlet",
+							"href": "/relic/Circlet"
+						}
+					]
+				}
+			]
+		}
+	],
+	"templateHref": "https://slaythespire.wiki.gg/wiki/Template:Relic2Nav"
+}

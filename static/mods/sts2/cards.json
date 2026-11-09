@@ -1,0 +1,8926 @@
+[
+  {
+    "id": "Abrasive",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "ThornsPower": 4,
+      "DexterityPower": 1
+    },
+    "keywords": [
+      "Sly"
+    ]
+  },
+  {
+    "id": "Abundance",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Accelerant",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Accelerant": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Accuracy",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "AccuracyPower": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "Acrobatics",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "AdaptiveStrike",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 18
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 23
+      }
+    }
+  },
+  {
+    "id": "Adrenaline",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Energy": 1,
+      "Cards": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 2
+      }
+    }
+  },
+  {
+    "id": "Afterimage",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "AfterimagePower": 1
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Afterlife",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Summon": 6
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Summon": 9
+      }
+    }
+  },
+  {
+    "id": "Aggression",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Alchemize",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Alignment",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": 3,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "AllForOne",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "Anger",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "Anointed",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "Anticipate",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "DexterityPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "DexterityPower": 4
+      }
+    }
+  },
+  {
+    "id": "Apotheosis",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Exhaust",
+      "Innate"
+    ]
+  },
+  {
+    "id": "Apparition",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "IntangiblePower": 1
+    },
+    "keywords": [
+      "Ethereal",
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Armaments",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": []
+  },
+  {
+    "id": "Arsenal",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "ArsenalPower": 1
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "AscendersBane",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Eternal",
+      "Unplayable",
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "AshenStrike",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 6,
+      "ExtraDamage": 3,
+      "CalculatedDamage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 4
+      }
+    }
+  },
+  {
+    "id": "Assassinate",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 10,
+      "VulnerablePower": 1
+    },
+    "keywords": [
+      "Innate",
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 13,
+        "VulnerablePower": 2
+      }
+    }
+  },
+  {
+    "id": "AstralPulse",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "secondEnergy": 3,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "Automation",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Backflip",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 5,
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "Backstab",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 11
+    },
+    "keywords": [
+      "Exhaust",
+      "Innate"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 15
+      }
+    }
+  },
+  {
+    "id": "BadLuck",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "HpLoss": 13
+    },
+    "keywords": [
+      "Eternal",
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "BallLightning",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "BansheesCry",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 9,
+    "variables": {
+      "Damage": 33,
+      "Energy": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Barrage",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 5,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "Barricade",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Bash",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 2,
+    "variables": {
+      "Damage": 8,
+      "VulnerablePower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10,
+        "VulnerablePower": 3
+      }
+    }
+  },
+  {
+    "id": "BattleTrance",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "BeaconOfHope",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "BeamCell",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Damage": 3,
+      "VulnerablePower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4,
+        "VulnerablePower": 2
+      }
+    }
+  },
+  {
+    "id": "BeatDown",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "BeatIntoShape",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 5,
+      "CalculationBase": 5,
+      "CalculationExtra": 5,
+      "CalculatedForge": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7,
+        "CalculationBase": 7,
+        "CalculationExtra": 7,
+        "CalculatedForge": 7
+      }
+    }
+  },
+  {
+    "id": "Beckon",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": 1,
+    "variables": {
+      "HpLoss": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "Begone",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "BelieveInYou",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "BiasedCognition",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "FocusPower": 4,
+      "BiasedCognitionPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "BigBang",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Cards": 1,
+      "Energy": 1,
+      "Stars": 1,
+      "Forge": 5
+    },
+    "keywords": [
+      "Exhaust",
+      "Innate"
+    ]
+  },
+  {
+    "id": "BlackHole",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "BlackHolePower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "BladeDance",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "BladeOfInk",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "BladeSymphony",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Blaze",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "StrengthPower": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 7
+      }
+    }
+  },
+  {
+    "id": "BlightStrike",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "Bloodletting",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "HpLoss": 3,
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "BloodWall",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "HpLoss": 2,
+      "Block": 16
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 20
+      }
+    }
+  },
+  {
+    "id": "Bludgeon",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Damage": 32
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 42
+      }
+    }
+  },
+  {
+    "id": "Blur",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 5,
+      "Blur": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "Bodyguard",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Summon": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Summon": 7
+      }
+    }
+  },
+  {
+    "id": "BodySlam",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "ExtraDamage": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Bolas",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4
+      }
+    }
+  },
+  {
+    "id": "Bombardment",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Damage": 18
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 24
+      }
+    }
+  },
+  {
+    "id": "BoneShards",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "OstyDamage": 9,
+      "Block": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 12,
+        "Block": 12
+      }
+    }
+  },
+  {
+    "id": "BoostAway",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Block": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "BootSequence",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Block": 10
+    },
+    "keywords": [
+      "Innate",
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 13
+      }
+    }
+  },
+  {
+    "id": "BorrowedTime",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Energy": 4,
+      "ExtraCost": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 6
+      }
+    }
+  },
+  {
+    "id": "BouncingFlask",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "PoisonPower": 3,
+      "Repeat": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 4
+      }
+    }
+  },
+  {
+    "id": "Brand",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "HpLoss": 1,
+      "StrengthPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 2
+      }
+    }
+  },
+  {
+    "id": "Break",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "Damage": 20,
+      "VulnerablePower": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 30,
+        "VulnerablePower": 7
+      }
+    }
+  },
+  {
+    "id": "Breakthrough",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9,
+      "HpLoss": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13
+      }
+    }
+  },
+  {
+    "id": "BrightestFlame",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 0,
+    "variables": {
+      "MaxHp": 1,
+      "Energy": 2,
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3,
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "BubbleBubble",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "PoisonPower": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "PoisonPower": 12
+      }
+    }
+  },
+  {
+    "id": "Buffer",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "BufferPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "BulkUp",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "OrbSlots": 1,
+      "StrengthPower": 2,
+      "DexterityPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 3,
+        "DexterityPower": 3
+      }
+    }
+  },
+  {
+    "id": "BulletTime",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Bully",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "CalculationBase": 4,
+      "ExtraDamage": 2,
+      "CalculatedDamage": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 3
+      }
+    }
+  },
+  {
+    "id": "Bulwark",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 12,
+      "Forge": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 15,
+        "Forge": 13
+      }
+    }
+  },
+  {
+    "id": "BundleOfJoy",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "Burn",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "Damage": 2
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "BurningPact",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Burst",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Skills": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Bury",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 4,
+    "variables": {
+      "Damage": 52
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 63
+      }
+    }
+  },
+  {
+    "id": "ByrdonisEgg",
+    "pool": "quest",
+    "type": "quest",
+    "rarity": "quest",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "ByrdSwoop",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 0,
+    "variables": {
+      "Damage": 14
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 18
+      }
+    }
+  },
+  {
+    "id": "Cacophony",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Cards": 33,
+      "Damage": 66
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 99
+      }
+    }
+  },
+  {
+    "id": "Calamity",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Calcify",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalcifyPower": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "CalculatedGamble",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "CallOfTheVoid",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Caltrops",
+    "pool": "event",
+    "type": "power",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "ThornsPower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Capacitor",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Repeat": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 3
+      }
+    }
+  },
+  {
+    "id": "CaptureSpirit",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 3,
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4,
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "Cascade",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": "X",
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Catastrophe",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "CelestialMight",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Damage": 6,
+      "Repeat": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 4
+      }
+    }
+  },
+  {
+    "id": "Chaos",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Repeat": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 2
+      }
+    }
+  },
+  {
+    "id": "Charge",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "ChargeBattery",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 7,
+      "Energy": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 10
+      }
+    }
+  },
+  {
+    "id": "ChildOfTheStars",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "BlockForStars": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Chill",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Cinder",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Damage": 18
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 24
+      }
+    }
+  },
+  {
+    "id": "Clash",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 0,
+    "variables": {
+      "Damage": 14
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 18
+      }
+    }
+  },
+  {
+    "id": "Claw",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Damage": 3,
+      "Increase": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4
+      }
+    }
+  },
+  {
+    "id": "Cleanse",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Summon": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Summon": 5
+      }
+    }
+  },
+  {
+    "id": "CloakAndDagger",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 6,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "CloakOfStars",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "secondEnergy": 1,
+    "variables": {
+      "Block": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 10
+      }
+    }
+  },
+  {
+    "id": "Clumsy",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable",
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "ColdSnap",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "CollisionCourse",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "Colossus",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 4,
+      "Colossus": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Comet",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "secondEnergy": 5,
+    "variables": {
+      "Damage": 33,
+      "VulnerablePower": 3,
+      "WeakPower": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 44
+      }
+    }
+  },
+  {
+    "id": "Compact",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "CompileDriver",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "Concoct",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "ConcoctPower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Conflagration",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 2,
+      "Repeat": 4,
+      "CalculatedDamage": 8,
+      "ExtraDamage": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 5,
+        "CalculatedDamage": 9,
+        "ExtraDamage": 3
+      }
+    }
+  },
+  {
+    "id": "Conqueror",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Forge": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 5
+      }
+    }
+  },
+  {
+    "id": "Constellation",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": 2,
+    "variables": {
+      "Cards": 1,
+      "Energy": 1,
+      "Block": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 12
+      }
+    }
+  },
+  {
+    "id": "ConsumingShadow",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Repeat": 2,
+      "ConsumingShadowPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 3
+      }
+    }
+  },
+  {
+    "id": "Convergence",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Energy": 1,
+      "Stars": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Stars": 2
+      }
+    }
+  },
+  {
+    "id": "Coolant",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CoolantPower": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Coolheaded",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "Coordinate",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StrengthPower": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 8
+      }
+    }
+  },
+  {
+    "id": "CorrosiveWave",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CorrosiveWave": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Corruption",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "ancient",
+    "cost": 3,
+    "variables": {
+      "Power": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "CosmicIndifference",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "Countdown",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CountdownPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "CrashLanding",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 21
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 26
+      }
+    }
+  },
+  {
+    "id": "CreativeAi",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "CreativeAi": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "CrescentSpear",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "secondEnergy": 1,
+    "variables": {
+      "CalculationBase": 8,
+      "ExtraDamage": 2,
+      "CalculatedDamage": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 3
+      }
+    }
+  },
+  {
+    "id": "CrimsonMantle",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CrimsonMantlePower": 7
+    },
+    "keywords": []
+  },
+  {
+    "id": "Cruelty",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CrueltyPower": 25
+    },
+    "keywords": []
+  },
+  {
+    "id": "CrushUnder",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7,
+      "StrengthLoss": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "CurseOfTheBell",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Eternal",
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "DaggerSpray",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "DaggerThrow",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "DanseMacabre",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "DanseMacabrePower": 4,
+      "Energy": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "DarkEmbrace",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Darkness",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "DarkShackles",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "StrengthLoss": 9
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Dash",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 10,
+      "Block": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13,
+        "Block": 13
+      }
+    }
+  },
+  {
+    "id": "Dazed",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Ethereal",
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "DeadlyPoison",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "PoisonPower": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "PoisonPower": 7
+      }
+    }
+  },
+  {
+    "id": "Deathbringer",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "DoomPower": 21,
+      "WeakPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "DoomPower": 26
+      }
+    }
+  },
+  {
+    "id": "DeathMarch",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 8,
+      "ExtraDamage": 4,
+      "CalculatedDamage": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 9,
+        "ExtraDamage": 6,
+        "CalculatedDamage": 9
+      }
+    }
+  },
+  {
+    "id": "DeathsDoor",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 6,
+      "Repeat": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Debilitate",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "DebilitatePower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "Debris",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Debt",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "Gold": 10
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Decay",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "Damage": 2
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "DecisionsDecisions",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "secondEnergy": 6,
+    "variables": {
+      "Cards": 3,
+      "Repeat": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 5
+      }
+    }
+  },
+  {
+    "id": "DefendDefect",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "DefendIronclad",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "DefendNecrobinder",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "DefendRegent",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "DefendSilent",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "Defile",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 13
+    },
+    "keywords": [
+      "Ethereal"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 17
+      }
+    }
+  },
+  {
+    "id": "Deflect",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Block": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Defragment",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "FocusPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Defy",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 6,
+      "WeakPower": 1
+    },
+    "keywords": [
+      "Ethereal"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "Delay",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 11,
+      "Energy": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 13,
+        "Energy": 2
+      }
+    }
+  },
+  {
+    "id": "Demesne",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Energy": 1,
+      "Cards": 1
+    },
+    "keywords": [
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "DemonForm",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "StrengthPower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "DemonicShield",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "CalculationBase": 0,
+      "HpLoss": 1,
+      "CalculationExtra": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "DeprecatedCard",
+    "pool": "token",
+    "type": "status",
+    "rarity": "status",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Devastate",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "secondEnergy": 4,
+    "variables": {
+      "Damage": 35
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 45
+      }
+    }
+  },
+  {
+    "id": "DevourLife",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "DevourLifePower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Dirge",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": "X",
+    "variables": {
+      "Summon": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Summon": 4
+      }
+    }
+  },
+  {
+    "id": "Discovery",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Disintegration",
+    "pool": "token",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "DisintegrationPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "Dismantle",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "Distraction",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "DodgeAndRoll",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 6
+      }
+    }
+  },
+  {
+    "id": "Dominate",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "VulnerablePower": 1,
+      "StrengthPerVulnerable": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "DoubleEnergy",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Doubt",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "WeakPower": 1
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Dowsing",
+    "pool": "colorless",
+    "type": "quest",
+    "rarity": "quest",
+    "cost": -1,
+    "variables": {
+      "Rooms": 5
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "DrainPower",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12,
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "DramaticEntrance",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 11
+    },
+    "keywords": [
+      "Exhaust",
+      "Innate"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 15
+      }
+    }
+  },
+  {
+    "id": "Dredge",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "DrumOfBattle",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 2,
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Dualcast",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "DualWield",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "DyingStar",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "secondEnergy": 3,
+    "variables": {
+      "Damage": 9,
+      "StrengthLoss": 9
+    },
+    "keywords": [
+      "Ethereal"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "EchoForm",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "EchoForm": 1
+    },
+    "keywords": [
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "EchoingSlash",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13
+      }
+    }
+  },
+  {
+    "id": "Eidolon",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "EndOfDays",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "DoomPower": 29
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "DoomPower": 37
+      }
+    }
+  },
+  {
+    "id": "EnergySurge",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "EnfeeblingTouch",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StrengthLoss": 8
+    },
+    "keywords": [
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "Enlightenment",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Enthralled",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Eternal"
+    ]
+  },
+  {
+    "id": "Entrench",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Entropy",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Envenom",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "EnvenomPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Equilibrium",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 13,
+      "Equilibrium": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 16
+      }
+    }
+  },
+  {
+    "id": "Eradicate",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": "X",
+    "variables": {
+      "Damage": 11
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "EscapePlan",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Block": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 5
+      }
+    }
+  },
+  {
+    "id": "EternalArmor",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "PlatingPower": 9
+    },
+    "keywords": []
+  },
+  {
+    "id": "EvilEye",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 11
+      }
+    }
+  },
+  {
+    "id": "ExpectAFight",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Energy": 0,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Expertise",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Expose",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Power": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Exterminate",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Damage": 3,
+      "Repeat": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4
+      }
+    }
+  },
+  {
+    "id": "Fade",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "DexterityPower": 6
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "DexterityPower": 9
+      }
+    }
+  },
+  {
+    "id": "FallingStar",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 0,
+    "secondEnergy": 2,
+    "variables": {
+      "Damage": 8,
+      "VulnerablePower": 1,
+      "WeakPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "FanOfKnives",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Shivs": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "Fasten",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "ExtraBlock": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "Fear",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7,
+      "VulnerablePower": 1
+    },
+    "keywords": [
+      "Ethereal"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 8,
+        "VulnerablePower": 2
+      }
+    }
+  },
+  {
+    "id": "Feed",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "MaxHp": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 12,
+        "MaxHp": 4
+      }
+    }
+  },
+  {
+    "id": "FeedingFrenzy",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 0,
+    "variables": {
+      "StrengthPower": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 7
+      }
+    }
+  },
+  {
+    "id": "FeelNoPain",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Power": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Feral",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "FeralPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Fetch",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "OstyDamage": 3,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 6
+      }
+    }
+  },
+  {
+    "id": "FiendFire",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "FightMe",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 5,
+      "Repeat": 2,
+      "StrengthPower": 3,
+      "EnemyStrength": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 6,
+        "StrengthPower": 4
+      }
+    }
+  },
+  {
+    "id": "FightThrough",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 13
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 17
+      }
+    }
+  },
+  {
+    "id": "Finesse",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Block": 4,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Finisher",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 6,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "Fisticuffs",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "FlakCannon",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 8,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "FlameBarrier",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 12,
+      "DamageBack": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 16
+      }
+    }
+  },
+  {
+    "id": "Flanking",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "FlashOfSteel",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 5,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "Flatten",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "OstyDamage": 12
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 16
+      }
+    }
+  },
+  {
+    "id": "Flechettes",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 5,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "FlickFlack",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [
+      "Sly"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "FocusedStrike",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9,
+      "FocusPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "Folly",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable",
+      "Eternal",
+      "Innate",
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "Footwork",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "DexterityPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "DexterityPower": 3
+      }
+    }
+  },
+  {
+    "id": "ForbiddenGrimoire",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "ancient",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Eternal"
+    ]
+  },
+  {
+    "id": "ForegoneConclusion",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "ForgottenRitual",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Energy": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 4
+      }
+    }
+  },
+  {
+    "id": "FranticEscape",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Friendship",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StrengthPower": 2,
+      "Energy": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Ftl",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 5,
+      "PlayMax": 3,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "Fuel",
+    "pool": "token",
+    "type": "skill",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Energy": 1,
+      "Cards": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 2,
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "Furnace",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Forge": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 7
+      }
+    }
+  },
+  {
+    "id": "Fusion",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "GammaBlast",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": 3,
+    "variables": {
+      "Damage": 13,
+      "VulnerablePower": 2,
+      "WeakPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 18
+      }
+    }
+  },
+  {
+    "id": "GangUp",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 5,
+      "ExtraDamage": 5,
+      "CalculatedDamage": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 7
+      }
+    }
+  },
+  {
+    "id": "GatherLight",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 8,
+      "Stars": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 11
+      }
+    }
+  },
+  {
+    "id": "Genesis",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "StarsPerTurn": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "GeneticAlgorithm",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Increase": 3,
+      "Block": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "GiantRock",
+    "pool": "token",
+    "type": "attack",
+    "rarity": "token",
+    "cost": 1,
+    "variables": {
+      "Damage": 20
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 24
+      }
+    }
+  },
+  {
+    "id": "Glacier",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "Glasswork",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "Glimmer",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 3,
+      "PutBack": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "GlimpseBeyond",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "Glitterstream",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Block": 11,
+      "BlockNextTurn": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 13
+      }
+    }
+  },
+  {
+    "id": "Glow",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Stars": 1,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Stars": 2
+      }
+    }
+  },
+  {
+    "id": "GoForTheEyes",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Damage": 3,
+      "WeakPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4,
+        "WeakPower": 2
+      }
+    }
+  },
+  {
+    "id": "GoldAxe",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "ExtraDamage": 1
+    },
+    "keywords": [
+      "Retain"
+    ]
+  },
+  {
+    "id": "GrandFinale",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 60
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 75
+      }
+    }
+  },
+  {
+    "id": "Graveblast",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 4
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "GraveWarden",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 8,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 11
+      }
+    }
+  },
+  {
+    "id": "Greed",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Eternal",
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Guards",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "GuidingStar",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "secondEnergy": 2,
+    "variables": {
+      "Damage": 12,
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13,
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Guilty",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "Combats": 5
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "GunkUp",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 4,
+      "Repeat": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 5
+      }
+    }
+  },
+  {
+    "id": "Hailstorm",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "HailstormPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "HammerTime",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "HandOfGreed",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 20,
+      "Gold": 20
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 25
+      }
+    }
+  },
+  {
+    "id": "HandTrick",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 10
+      }
+    }
+  },
+  {
+    "id": "Hang",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13
+      }
+    }
+  },
+  {
+    "id": "Haunt",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "HpLoss": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "HpLoss": 9
+      }
+    }
+  },
+  {
+    "id": "Havoc",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Haze",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "PoisonPower": 4
+    },
+    "keywords": [
+      "Sly"
+    ],
+    "upgrade": {
+      "variables": {
+        "PoisonPower": 6
+      }
+    }
+  },
+  {
+    "id": "Headbutt",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "HeavenlyDrill",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": "X",
+    "variables": {
+      "Damage": 8,
+      "Energy": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "Hegemony",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 15,
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 18,
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "HeirloomHammer",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 20,
+      "Repeat": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 25
+      }
+    }
+  },
+  {
+    "id": "HelixDrill",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 3,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 5
+      }
+    }
+  },
+  {
+    "id": "HelloWorld",
+    "pool": "event",
+    "type": "power",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Hellraiser",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Hemokinesis",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "HpLoss": 2,
+      "Damage": 15
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "Hibernate",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Repeat": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 3
+      }
+    }
+  },
+  {
+    "id": "HiddenCache",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Stars": 1,
+      "StarNextTurnPower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "HiddenDaggers",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 2,
+      "Shivs": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "HiddenGem",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Replay": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "HighFive",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "OstyDamage": 11,
+      "VulnerablePower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 13,
+        "VulnerablePower": 3
+      }
+    }
+  },
+  {
+    "id": "Hologram",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 5
+      }
+    }
+  },
+  {
+    "id": "Hotfix",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "FocusPower": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "HowlFromBeyond",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Damage": 18
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 24
+      }
+    }
+  },
+  {
+    "id": "HuddleUp",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Hyperbeam",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 30,
+      "FocusPower": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 38
+      }
+    }
+  },
+  {
+    "id": "IAmInvincible",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Block": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 13
+      }
+    }
+  },
+  {
+    "id": "IceLance",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Damage": 19,
+      "Repeat": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 24
+      }
+    }
+  },
+  {
+    "id": "Ignition",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "ImitationLearning",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "ImitationLearningPower": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Impatience",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Impervious",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Block": 30
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 40
+      }
+    }
+  },
+  {
+    "id": "Infection",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "Damage": 3
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "InfernalBlade",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Inferno",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "InfernoPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "InfiniteBlades",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Inflame",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StrengthPower": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Injury",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Intercept",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 13
+      }
+    }
+  },
+  {
+    "id": "Invoke",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Summon": 2,
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Summon": 3,
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "IronWave",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 5,
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7,
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Iteration",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "IterationPower": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "JackOfAllTrades",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "Jackpot",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Damage": 25,
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 30
+      }
+    }
+  },
+  {
+    "id": "Juggernaut",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "JuggernautPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "Juggling",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "KinglyKick",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 4,
+    "variables": {
+      "Damage": 27
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 35
+      }
+    }
+  },
+  {
+    "id": "KinglyPunch",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 8,
+      "Increase": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "KnifeTrap",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Knockdown",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Damage": 10,
+      "KnockdownPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "KnockoutBlow",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Damage": 30,
+      "Stars": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 38
+      }
+    }
+  },
+  {
+    "id": "KnowThyPlace",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "WeakPower": 1,
+      "VulnerablePower": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "LanternKey",
+    "pool": "quest",
+    "type": "quest",
+    "rarity": "quest",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Largesse",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "LeadingStrike",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Shivs": 2,
+      "Damage": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "Leap",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 12
+      }
+    }
+  },
+  {
+    "id": "LegionOfBone",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Summon": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Summon": 8
+      }
+    }
+  },
+  {
+    "id": "LegSweep",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 11,
+      "WeakPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 14,
+        "WeakPower": 3
+      }
+    }
+  },
+  {
+    "id": "Lethality",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "LethalityPower": 50
+    },
+    "keywords": [
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "Lift",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 11
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 16
+      }
+    }
+  },
+  {
+    "id": "LightningRod",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 4,
+      "LightningRodPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Loop",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Loop": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Luminesce",
+    "pool": "token",
+    "type": "skill",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "LunarBlast",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 4,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 5
+      }
+    }
+  },
+  {
+    "id": "MachineLearning",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "MadScience",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Damage": 12,
+      "Block": 8,
+      "SappingWeak": 2,
+      "SappingVulnerable": 2,
+      "ViolenceHits": 3,
+      "ChokingDamage": 6,
+      "EnergizedEnergy": 2,
+      "WisdomCards": 3,
+      "ExpertiseStrength": 2,
+      "ExpertiseDexterity": 2,
+      "CuriousReduction": 1,
+      "CardType": "Attack",
+      "Chaos": 0,
+      "Choking": 0,
+      "Curious": 0,
+      "Energized": 0,
+      "Expertise": 0,
+      "HasRider": 0,
+      "Improvement": 0,
+      "Sapping": 0,
+      "Violence": 0,
+      "Wisdom": 0
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "MakeItSo",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 6,
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "Malaise",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": "X",
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Mangle",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Damage": 15,
+      "StrengthLoss": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "ManifestAuthority",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 8
+      }
+    }
+  },
+  {
+    "id": "MasterOfStrategy",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "MasterPlanner",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Maul",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "Damage": 5,
+      "Increase": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "Mayhem",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Melancholy",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Block": 13,
+      "Energy": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 17
+      }
+    }
+  },
+  {
+    "id": "MementoMori",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 9,
+      "ExtraDamage": 4,
+      "CalculatedDamage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 11,
+        "ExtraDamage": 5,
+        "CalculatedDamage": 11
+      }
+    }
+  },
+  {
+    "id": "Metamorphosis",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 2,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 5
+      }
+    }
+  },
+  {
+    "id": "MeteorShower",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 0,
+    "secondEnergy": 2,
+    "variables": {
+      "Damage": 14,
+      "VulnerablePower": 2,
+      "WeakPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 21
+      }
+    }
+  },
+  {
+    "id": "MeteorStrike",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 5,
+    "variables": {
+      "Damage": 24
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 30
+      }
+    }
+  },
+  {
+    "id": "Midnight",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 12,
+    "variables": {
+      "Damage": 60
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 72
+      }
+    }
+  },
+  {
+    "id": "Mimic",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "MindBlast",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "ExtraDamage": 1
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "MindRot",
+    "pool": "token",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "MindRotPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "MinionDiveBomb",
+    "pool": "token",
+    "type": "attack",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Damage": 13
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 16
+      }
+    }
+  },
+  {
+    "id": "MinionSacrifice",
+    "pool": "token",
+    "type": "skill",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Block": 7
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 10
+      }
+    }
+  },
+  {
+    "id": "MinionStrike",
+    "pool": "token",
+    "type": "attack",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Damage": 6,
+      "Cards": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "Mirage",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 2
+      }
+    }
+  },
+  {
+    "id": "Misery",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "Modded",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Repeat": 1,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "MoltenFist",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "MomentumStrike",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 11
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 15
+      }
+    }
+  },
+  {
+    "id": "MonarchsGaze",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "StrengthLoss": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Monologue",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Power": 1
+    },
+    "keywords": [
+      "Retain"
+    ]
+  },
+  {
+    "id": "MultiCast",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": "X",
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Murder",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "CalculationBase": 1,
+      "ExtraDamage": 1,
+      "CalculatedDamage": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "NecroMastery",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Summon": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Summon": 8
+      }
+    }
+  },
+  {
+    "id": "NegativePulse",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 5,
+      "DoomPower": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 6,
+        "DoomPower": 11
+      }
+    }
+  },
+  {
+    "id": "NeowsFury",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "Cards": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 14,
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Neurosurge",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "NeurosurgePower": 3,
+      "Energy": 3,
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 4
+      }
+    }
+  },
+  {
+    "id": "Neutralize",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 0,
+    "variables": {
+      "Damage": 3,
+      "WeakPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4,
+        "WeakPower": 2
+      }
+    }
+  },
+  {
+    "id": "NeutronAegis",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "secondEnergy": 5,
+    "variables": {
+      "PlatingPower": 8
+    },
+    "keywords": []
+  },
+  {
+    "id": "Nightmare",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "NoEscape",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "DoomThreshold": 10,
+      "CalculationBase": 10,
+      "CalculationExtra": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 15
+      }
+    }
+  },
+  {
+    "id": "Normality",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "CalculationBase": 3,
+      "CalculationExtra": -1
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Nostalgia",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "NotYet",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Heal": 10
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Heal": 13
+      }
+    }
+  },
+  {
+    "id": "NoxiousFumes",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "PoisonPerTurn": 2
+    },
+    "keywords": []
+  },
+  {
+    "id": "Null",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 10,
+      "WeakPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13,
+        "WeakPower": 3
+      }
+    }
+  },
+  {
+    "id": "Oblivion",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "DoomPower": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "DoomPower": 4
+      }
+    }
+  },
+  {
+    "id": "Offering",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "HpLoss": 6,
+      "Energy": 2,
+      "Cards": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 5
+      }
+    }
+  },
+  {
+    "id": "Omnislice",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "OneForAll",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "OneForAllPower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "OneTwoPunch",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Attacks": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Orbit",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Outbreak",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "OutbreakPower": 4,
+      "Repeat": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Outmaneuver",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Outrage",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13
+      }
+    }
+  },
+  {
+    "id": "Overclock",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "PactsEnd",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Damage": 17,
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 23
+      }
+    }
+  },
+  {
+    "id": "Pagestorm",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "PaleBlueDot",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 1,
+      "CardPlay": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "Panache",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "PanacheDamage": 10
+    },
+    "keywords": []
+  },
+  {
+    "id": "PanicButton",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Block": 30,
+      "Turns": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 40
+      }
+    }
+  },
+  {
+    "id": "Parry",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "ParryPower": 10
+    },
+    "keywords": []
+  },
+  {
+    "id": "Parse",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Ethereal"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "ParticleWall",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": 2,
+    "variables": {
+      "Block": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 12
+      }
+    }
+  },
+  {
+    "id": "Patter",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 8,
+      "VigorPower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 10
+      }
+    }
+  },
+  {
+    "id": "Peck",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Damage": 2,
+      "Repeat": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 4
+      }
+    }
+  },
+  {
+    "id": "PerfectedStrike",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "CalculationBase": 6,
+      "ExtraDamage": 2,
+      "CalculatedDamage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 3
+      }
+    }
+  },
+  {
+    "id": "PhantomBlades",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "PhantomBladesPower": 9
+    },
+    "keywords": []
+  },
+  {
+    "id": "PhotonCut",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "Cards": 1,
+      "PutBack": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13,
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "PiercingWail",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "StrengthLoss": 6
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Pillage",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "PillarOfCreation",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Pinpoint",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Damage": 15
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 19
+      }
+    }
+  },
+  {
+    "id": "Plot",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "PoisonedStab",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 6,
+      "PoisonPower": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8,
+        "PoisonPower": 4
+      }
+    }
+  },
+  {
+    "id": "Poke",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "OstyDamage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 9
+      }
+    }
+  },
+  {
+    "id": "PommelStrike",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10,
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "PoorSleep",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable",
+      "Retain"
+    ]
+  },
+  {
+    "id": "Pounce",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 14
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "PreciseCut",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "CalculationBase": 13,
+      "ExtraDamage": 2,
+      "CalculatedDamage": 13
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 16,
+        "CalculatedDamage": 16
+      }
+    }
+  },
+  {
+    "id": "Predator",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Damage": 15
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "Prepared",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "PrepTime",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "PrepTimePower": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "PrimalForce",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Production",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Prolong",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Prophesize",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Cards": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 9
+      }
+    }
+  },
+  {
+    "id": "Protector",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 10,
+      "ExtraDamage": 1,
+      "CalculatedDamage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 15,
+        "CalculatedDamage": 15
+      }
+    }
+  },
+  {
+    "id": "Prowess",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StrengthPower": 1,
+      "DexterityPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 2,
+        "DexterityPower": 2
+      }
+    }
+  },
+  {
+    "id": "PullAggro",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Summon": 4,
+      "Block": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Summon": 5,
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "PullFromBelow",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 5,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "Purity",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [
+      "Retain",
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 5
+      }
+    }
+  },
+  {
+    "id": "Putrefy",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Power": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Pyre",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 2
+      }
+    }
+  },
+  {
+    "id": "Quadcast",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 1,
+    "variables": {
+      "Repeat": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "Quasar",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Radiate",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 3,
+      "Stars": 1,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4
+      }
+    }
+  },
+  {
+    "id": "Rage",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Power": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Rainbow",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Rally",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Block": 12
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 17
+      }
+    }
+  },
+  {
+    "id": "Rampage",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 9,
+      "Increase": 5
+    },
+    "keywords": []
+  },
+  {
+    "id": "Rattle",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "OstyDamage": 7,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 9
+      }
+    }
+  },
+  {
+    "id": "Reanimate",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "Summon": 20
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Summon": 25
+      }
+    }
+  },
+  {
+    "id": "Reap",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 3,
+    "variables": {
+      "Damage": 27
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 33
+      }
+    }
+  },
+  {
+    "id": "ReaperForm",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {},
+    "keywords": [
+      "Retain"
+    ]
+  },
+  {
+    "id": "Reave",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13
+      }
+    }
+  },
+  {
+    "id": "Reboot",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Cards": 4
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 6
+      }
+    }
+  },
+  {
+    "id": "Rebound",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Damage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "RefineBlade",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Forge": 9,
+      "Energy": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 13
+      }
+    }
+  },
+  {
+    "id": "Reflect",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "secondEnergy": 3,
+    "variables": {
+      "Block": 15
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 20
+      }
+    }
+  },
+  {
+    "id": "Reflex",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [
+      "Sly"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Refract",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Repeat": 2,
+      "Damage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "Regret",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Relax",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 3,
+    "variables": {
+      "Block": 15,
+      "Cards": 2,
+      "Energy": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 17,
+        "Cards": 3,
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Rend",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "CalculationBase": 15,
+      "ExtraDamage": 5,
+      "CalculatedDamage": 15
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 18,
+        "ExtraDamage": 8,
+        "CalculatedDamage": 18
+      }
+    }
+  },
+  {
+    "id": "Resonance",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "secondEnergy": 2,
+    "variables": {
+      "StrengthPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Restlessness",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 2,
+      "Energy": 2
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 3,
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Ricochet",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Damage": 3,
+      "Repeat": 4
+    },
+    "keywords": [
+      "Sly"
+    ],
+    "upgrade": {
+      "variables": {
+        "Repeat": 5
+      }
+    }
+  },
+  {
+    "id": "RightHandHand",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "OstyDamage": 4,
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 6
+      }
+    }
+  },
+  {
+    "id": "RipAndTear",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "RocketPunch",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 13,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 14,
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "RollingBoulder",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "RollingBoulderPower": 5,
+      "IncrementAmount": 5
+    },
+    "keywords": []
+  },
+  {
+    "id": "RoyalGamble",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": 5,
+    "variables": {
+      "Stars": 9
+    },
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "Royalties",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Gold": 30
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Gold": 40
+      }
+    }
+  },
+  {
+    "id": "Rupture",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StrengthPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "StrengthPower": 2
+      }
+    }
+  },
+  {
+    "id": "Sacrifice",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [
+      "Retain"
+    ]
+  },
+  {
+    "id": "Salvo",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 12
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 16
+      }
+    }
+  },
+  {
+    "id": "Scare",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Scavenge",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Scourge",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "DoomPower": 13,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "DoomPower": 16,
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "Scrape",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 7,
+      "Cards": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10,
+        "Cards": 5
+      }
+    }
+  },
+  {
+    "id": "Scrawl",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "SculptingStrike",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "Seance",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "SecondWind",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "SecretTechnique",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "SecretWeapon",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "SeekerStrike",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 9,
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12
+      }
+    }
+  },
+  {
+    "id": "SeekingEdge",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Forge": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 11
+      }
+    }
+  },
+  {
+    "id": "SentryMode",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "SentryModePower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "SerpentForm",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "SerpentFormPower": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "SetupStrike",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7,
+      "StrengthPower": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9,
+        "StrengthPower": 4
+      }
+    }
+  },
+  {
+    "id": "SevenStars",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "secondEnergy": 7,
+    "variables": {
+      "Damage": 7,
+      "Repeat": 7
+    },
+    "keywords": []
+  },
+  {
+    "id": "Severance",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 13
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 18
+      }
+    }
+  },
+  {
+    "id": "Shadowmeld",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Power": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "ShadowShield",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Block": 11
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 15
+      }
+    }
+  },
+  {
+    "id": "ShadowStep",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Shame",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {
+      "Frail": 1
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "SharedFate",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "EnemyStrengthLoss": 2,
+      "PlayerStrengthLoss": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Shatter",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 7
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "ShiningStrike",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 8,
+      "Stars": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "Shiv",
+    "pool": "token",
+    "type": "attack",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Damage": 4,
+      "TargetType": "AnyEnemy"
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "Shockwave",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Power": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Shroud",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 3
+      }
+    }
+  },
+  {
+    "id": "ShrugItOff",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 8,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 11
+      }
+    }
+  },
+  {
+    "id": "SicEm",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "OstyDamage": 5,
+      "SicEmPower": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 6
+      }
+    }
+  },
+  {
+    "id": "SignalBoost",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "SignalBoostPower": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Skewer",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": "X",
+    "variables": {
+      "Damage": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "Skim",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "SleightOfFlesh",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "SleightOfFleshPower": 9
+    },
+    "keywords": []
+  },
+  {
+    "id": "Slice",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "Slimed",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Sloth",
+    "pool": "token",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "SlothPower": 3
+    },
+    "keywords": []
+  },
+  {
+    "id": "Smokestack",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "SmokestackPower": 5
+    },
+    "keywords": []
+  },
+  {
+    "id": "Snakebite",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "PoisonPower": 7
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "PoisonPower": 10
+      }
+    }
+  },
+  {
+    "id": "Snap",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "OstyDamage": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 10
+      }
+    }
+  },
+  {
+    "id": "Sneaky",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "SneakyPower": 1
+    },
+    "keywords": [
+      "Sly"
+    ]
+  },
+  {
+    "id": "SolarStrike",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 9,
+      "Stars": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10,
+        "Stars": 2
+      }
+    }
+  },
+  {
+    "id": "Soot",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Soul",
+    "pool": "token",
+    "type": "skill",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Cards": 3
+      }
+    }
+  },
+  {
+    "id": "Soulbound",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "SoulStorm",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 9,
+      "ExtraDamage": 4,
+      "CalculatedDamage": 9
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 6
+      }
+    }
+  },
+  {
+    "id": "SovereignBlade",
+    "pool": "token",
+    "type": "attack",
+    "rarity": "token",
+    "cost": 2,
+    "variables": {
+      "Damage": 10,
+      "CalculationBase": 0,
+      "CalculationExtra": 1,
+      "Repeat": 1,
+      "SeekingEdgeAmount": 0
+    },
+    "keywords": [
+      "Retain"
+    ]
+  },
+  {
+    "id": "Sow",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 8
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 11
+      }
+    }
+  },
+  {
+    "id": "SpectrumShift",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Speedster",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "SpeedsterPower": 2
+    },
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "Spinner",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "SpinnerPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "SpiritOfAsh",
+    "pool": "necrobinder",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "BlockOnExhaust": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "Spite",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 5,
+      "Repeat": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 3
+      }
+    }
+  },
+  {
+    "id": "Splash",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "SpoilsMap",
+    "pool": "quest",
+    "type": "quest",
+    "rarity": "quest",
+    "cost": -1,
+    "variables": {
+      "Gold": 600
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "SpoilsOfBattle",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Forge": 5,
+      "Cards": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 8
+      }
+    }
+  },
+  {
+    "id": "SporeMind",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Spur",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Summon": 3,
+      "Heal": 5
+    },
+    "keywords": [
+      "Retain"
+    ],
+    "upgrade": {
+      "variables": {
+        "Summon": 5,
+        "Heal": 7
+      }
+    }
+  },
+  {
+    "id": "Squash",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "VulnerablePower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 12,
+        "VulnerablePower": 3
+      }
+    }
+  },
+  {
+    "id": "Squeeze",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "CalculationBase": 25,
+      "ExtraDamage": 5,
+      "CalculatedDamage": 25
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 30,
+        "ExtraDamage": 6,
+        "CalculatedDamage": 30
+      }
+    }
+  },
+  {
+    "id": "Stack",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 3
+      }
+    }
+  },
+  {
+    "id": "Stampede",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Power": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Stardust",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "secondEnergy": "X",
+    "variables": {
+      "Damage": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "Stoke",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Stomp",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Damage": 12
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 15
+      }
+    }
+  },
+  {
+    "id": "StoneArmor",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "PlatingPower": 4
+    },
+    "keywords": []
+  },
+  {
+    "id": "Storm",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "StormPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "StormOfSteel",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Strangle",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 8,
+      "StranglePower": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10
+      }
+    }
+  },
+  {
+    "id": "Stratagem",
+    "pool": "colorless",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "StrikeDefect",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "StrikeIronclad",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "StrikeNecrobinder",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "StrikeRegent",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "StrikeSilent",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "Subroutine",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "SuckerPunch",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 8,
+      "WeakPower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 10,
+        "WeakPower": 2
+      }
+    }
+  },
+  {
+    "id": "SummonForth",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Forge": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 11
+      }
+    }
+  },
+  {
+    "id": "Sunder",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Damage": 26,
+      "Energy": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 34
+      }
+    }
+  },
+  {
+    "id": "Supercritical",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Energy": 4
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 6
+      }
+    }
+  },
+  {
+    "id": "Supermassive",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 5,
+      "ExtraDamage": 3,
+      "CalculatedDamage": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "ExtraDamage": 4
+      }
+    }
+  },
+  {
+    "id": "Suppress",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 0,
+    "variables": {
+      "Damage": 11,
+      "WeakPower": 3
+    },
+    "keywords": [
+      "Innate"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 17,
+        "WeakPower": 5
+      }
+    }
+  },
+  {
+    "id": "Survivor",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Block": 8
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 11
+      }
+    }
+  },
+  {
+    "id": "SweepingBeam",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 6,
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9
+      }
+    }
+  },
+  {
+    "id": "SweepingGaze",
+    "pool": "token",
+    "type": "attack",
+    "rarity": "token",
+    "cost": 0,
+    "variables": {
+      "OstyDamage": 10
+    },
+    "keywords": [
+      "Ethereal",
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "OstyDamage": 15
+      }
+    }
+  },
+  {
+    "id": "SwordBoomerang",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 3,
+      "Repeat": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Repeat": 4
+      }
+    }
+  },
+  {
+    "id": "SwordSage",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "SwordSagePower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Synchronize",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 0,
+      "CalculationExtra": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Synthesis",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 14
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "Tactician",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 3,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": [
+      "Sly"
+    ],
+    "upgrade": {
+      "variables": {
+        "Energy": 2
+      }
+    }
+  },
+  {
+    "id": "TagTeam",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 11
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 15
+      }
+    }
+  },
+  {
+    "id": "Tank",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "DamageIncrease": 1.5,
+      "DamageDecrease": 0.5
+    },
+    "keywords": []
+  },
+  {
+    "id": "Taunt",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 6,
+      "VulnerablePower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7,
+        "VulnerablePower": 2
+      }
+    }
+  },
+  {
+    "id": "TearAsunder",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Damage": 5,
+      "Repeat": 1,
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "Tempest",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": "X",
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Terraforming",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "VigorPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "TeslaCoil",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Damage": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 4
+      }
+    }
+  },
+  {
+    "id": "TheBall",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 10,
+      "Increase": 10
+    },
+    "keywords": []
+  },
+  {
+    "id": "TheBomb",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Turns": 3,
+      "BombDamage": 40
+    },
+    "keywords": []
+  },
+  {
+    "id": "TheGambit",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Block": 50
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 75
+      }
+    }
+  },
+  {
+    "id": "TheHunt",
+    "pool": "silent",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 15
+      }
+    }
+  },
+  {
+    "id": "TheScythe",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "Increase": 4,
+      "Damage": 13
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "TheSealedThrone",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "ancient",
+    "cost": 1,
+    "secondEnergy": 3,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "TheSmith",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "secondEnergy": 4,
+    "variables": {
+      "Forge": 30
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Forge": 40
+      }
+    }
+  },
+  {
+    "id": "ThinkingAhead",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 0,
+    "variables": {
+      "Cards": 2
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Thrash",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Damage": 4
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 6
+      }
+    }
+  },
+  {
+    "id": "ThrummingHatchet",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 11
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "Thunder",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "ThunderPower": 6
+    },
+    "keywords": []
+  },
+  {
+    "id": "Thunderclap",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 4,
+      "VulnerablePower": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "TimesUp",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {
+      "CalculationBase": 0,
+      "ExtraDamage": 1
+    },
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "ToolsOfTheTrade",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "ToricToughness",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "event",
+    "cost": 2,
+    "variables": {
+      "Turns": 2,
+      "Block": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 7
+      }
+    }
+  },
+  {
+    "id": "Toxic",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": 1,
+    "variables": {
+      "Damage": 5
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Tracking",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Transfigure",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "TrashToTreasure",
+    "pool": "defect",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Tremble",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "VulnerablePower": 3
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "VulnerablePower": 4
+      }
+    }
+  },
+  {
+    "id": "TrueGrit",
+    "pool": "ironclad",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Block": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "Turbo",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Energy": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Energy": 3
+      }
+    }
+  },
+  {
+    "id": "Tutor",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "TwinStrike",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 7
+      }
+    }
+  },
+  {
+    "id": "Tyranny",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Innate"
+    ]
+  },
+  {
+    "id": "UltimateDefend",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Block": 11
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 15
+      }
+    }
+  },
+  {
+    "id": "UltimateStrike",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 14
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "Undeath",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 0,
+    "variables": {
+      "Block": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "Underworld",
+    "pool": "colorless",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Unleash",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "CalculationBase": 6,
+      "ExtraDamage": 1,
+      "CalculatedDamage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "CalculationBase": 9,
+        "CalculatedDamage": 9
+      }
+    }
+  },
+  {
+    "id": "Unmovable",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 2,
+    "variables": {},
+    "keywords": []
+  },
+  {
+    "id": "Unrelenting",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 14
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 20
+      }
+    }
+  },
+  {
+    "id": "Untouchable",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Block": 6
+    },
+    "keywords": [
+      "Sly"
+    ],
+    "upgrade": {
+      "variables": {
+        "Block": 9
+      }
+    }
+  },
+  {
+    "id": "UpMySleeve",
+    "pool": "silent",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Cards": 3
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 4
+      }
+    }
+  },
+  {
+    "id": "Uppercut",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 2,
+    "variables": {
+      "Damage": 13,
+      "Power": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Uproar",
+    "pool": "defect",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 2,
+    "variables": {
+      "Damage": 6
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "Veilpiercer",
+    "pool": "necrobinder",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 13
+      }
+    }
+  },
+  {
+    "id": "Venerate",
+    "pool": "regent",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {
+      "Stars": 2
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Stars": 3
+      }
+    }
+  },
+  {
+    "id": "Vicious",
+    "pool": "ironclad",
+    "type": "power",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {
+      "Cards": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Cards": 2
+      }
+    }
+  },
+  {
+    "id": "Void",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": [
+      "Unplayable",
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "VoidForm",
+    "pool": "regent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "VoidFormPower": 2
+    },
+    "keywords": [
+      "Ethereal"
+    ]
+  },
+  {
+    "id": "Volley",
+    "pool": "colorless",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": "X",
+    "variables": {
+      "Damage": 10
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 14
+      }
+    }
+  },
+  {
+    "id": "Voltaic",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "rare",
+    "cost": 3,
+    "variables": {
+      "CalculationBase": 0,
+      "CalculationExtra": 1
+    },
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "WasteAway",
+    "pool": "token",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "WasteAwayPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "WellLaidPlans",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "rare",
+    "cost": 1,
+    "variables": {
+      "RetainAmount": 1
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "RetainAmount": 2
+      }
+    }
+  },
+  {
+    "id": "Whirlwind",
+    "pool": "ironclad",
+    "type": "attack",
+    "rarity": "uncommon",
+    "cost": "X",
+    "variables": {
+      "Damage": 5
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 8
+      }
+    }
+  },
+  {
+    "id": "Whistle",
+    "pool": "event",
+    "type": "attack",
+    "rarity": "ancient",
+    "cost": 3,
+    "variables": {
+      "Damage": 33
+    },
+    "keywords": [
+      "Exhaust"
+    ],
+    "upgrade": {
+      "variables": {
+        "Damage": 44
+      }
+    }
+  },
+  {
+    "id": "WhiteNoise",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "uncommon",
+    "cost": 1,
+    "variables": {},
+    "keywords": [
+      "Exhaust"
+    ]
+  },
+  {
+    "id": "Wish",
+    "pool": "event",
+    "type": "skill",
+    "rarity": "ancient",
+    "cost": 0,
+    "variables": {},
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "Wisp",
+    "pool": "necrobinder",
+    "type": "skill",
+    "rarity": "common",
+    "cost": 0,
+    "variables": {
+      "Energy": 1
+    },
+    "keywords": [
+      "Exhaust",
+      "Retain"
+    ]
+  },
+  {
+    "id": "Wither",
+    "pool": "colorless",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {
+      "Damage": 3
+    },
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "Wound",
+    "pool": "status",
+    "type": "status",
+    "rarity": "status",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "WraithForm",
+    "pool": "silent",
+    "type": "power",
+    "rarity": "ancient",
+    "cost": 3,
+    "variables": {
+      "IntangiblePower": 2,
+      "WraithFormPower": 1
+    },
+    "keywords": []
+  },
+  {
+    "id": "Writhe",
+    "pool": "curse",
+    "type": "curse",
+    "rarity": "curse",
+    "cost": -1,
+    "variables": {},
+    "keywords": [
+      "Innate",
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "WroughtInWar",
+    "pool": "regent",
+    "type": "attack",
+    "rarity": "common",
+    "cost": 1,
+    "variables": {
+      "Damage": 7,
+      "Forge": 7
+    },
+    "keywords": [],
+    "upgrade": {
+      "variables": {
+        "Damage": 9,
+        "Forge": 9
+      }
+    }
+  },
+  {
+    "id": "Zap",
+    "pool": "defect",
+    "type": "skill",
+    "rarity": "basic",
+    "cost": 1,
+    "variables": {},
+    "keywords": []
+  }
+]

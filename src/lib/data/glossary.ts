@@ -1,10 +1,7 @@
-import { BUFFS } from './buffs';
-import { DEBUFFS } from './debuffs';
+import { MOD_POWERS } from './mods';
 import type { MotifName } from './cards';
 
-export { BUFFS, DEBUFFS };
-
-export type GlossaryKind = 'keyword' | 'buff' | 'debuff';
+export type GlossaryKind = 'keyword' | 'power';
 export type StackType =
 	| 'Intensity'
 	| 'Duration'
@@ -24,6 +21,26 @@ export type TurnBehavior =
 	| 'Reset'
 	| 'Special';
 
+export type StackKind = 'Intensity' | 'Duration' | 'Counter'
+
+export const STACK_KINDS: Record<StackType, readonly StackKind[]> = {
+	Intensity: ['Intensity'],
+	Duration: ['Duration'],
+	Counter: ['Counter'],
+	Passive: [],
+	NoStack: [],
+	IntensityDuration: ['Intensity', 'Duration'],
+	IntensityCounter: ['Intensity', 'Counter'],
+	CounterDuration: ['Counter', 'Duration'],
+	DurationStacks: ['Duration']
+}
+
+export function matchesStackFilter(stack: StackType | undefined, selected: readonly StackKind[]) {
+	if (!selected.length) return true
+	const kinds = stack ? STACK_KINDS[stack] : undefined
+	return kinds?.some((kind) => selected.includes(kind)) ?? false
+}
+
 export interface GlossaryEntry {
 	id: string;
 	name: string;
@@ -39,16 +56,30 @@ export interface GlossaryEntry {
 	icon?: string;
 	/** Monster-only powers are excluded from card-text term linking. */
 	enemyOnly?: boolean;
+	/** 来源模组；存在时名称与描述由该模组的本地化 Key 解析 */
+	mod?: string;
 }
+
+/** 各模组（含基础游戏 sts2）声明的 Buff；名称与描述由本地化文件提供 */
+export const POWERS: GlossaryEntry[] = MOD_POWERS;
 
 export const ROUTES: Record<GlossaryKind, string> = {
 	keyword: '/keywords',
-	buff: '/buffs',
-	debuff: '/debuffs'
+	power: '/powers'
 };
 
+export const POWER_ROUTE = '/power'
+
+export function powerHref(entry: GlossaryEntry) {
+	return `${POWER_ROUTE}/${encodeURIComponent(entry.id)}`
+}
+
 export function glossaryHref(entry: GlossaryEntry) {
-	return `${ROUTES[entry.kind]}#${entry.id}`;
+	return `${ROUTES[entry.kind]}#${entry.id}`
+}
+
+export function entryHref(entry: GlossaryEntry) {
+	return entry.kind === 'power' ? powerHref(entry) : glossaryHref(entry)
 }
 
 export const KEYWORDS: GlossaryEntry[] = [
@@ -110,7 +141,7 @@ export const KEYWORDS: GlossaryEntry[] = [
 	}
 ];
 
-export const ALL_ENTRIES: GlossaryEntry[] = [...KEYWORDS, ...BUFFS, ...DEBUFFS];
+export const ALL_ENTRIES: GlossaryEntry[] = [...KEYWORDS, ...POWERS];
 
 export const ENTRY_BY_ID = new Map(ALL_ENTRIES.map((entry) => [entry.id, entry]));
 
@@ -127,7 +158,7 @@ export interface GlossaryLink {
 	entryId: string;
 }
 
-const KIND_PRIORITY: Record<GlossaryKind, number> = { debuff: 3, buff: 2, keyword: 1 };
+const KIND_PRIORITY: Record<GlossaryKind, number> = { power: 2, keyword: 1 };
 
 const linkMap = new Map<string, GlossaryLink>();
 
@@ -139,7 +170,7 @@ for (const entry of ALL_ENTRIES) {
 		if (existing && KIND_PRIORITY[existing.kind] >= KIND_PRIORITY[entry.kind]) continue;
 		linkMap.set(key, {
 			term,
-			href: glossaryHref(entry),
+			href: entryHref(entry),
 			kind: entry.kind,
 			name: entry.name,
 			summary: entry.summary,

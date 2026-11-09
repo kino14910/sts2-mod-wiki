@@ -1,32 +1,17 @@
 <script lang="ts">
-	import { COLORS, RARITIES, type Card, type CardType } from '#lib/data/cards';
-	import { rarityName, typeName } from '#lib/data/localize';
-	import CardTypeIcon from './CardTypeIcon.svelte';
-	import Motif from './Motif.svelte';
+	import { COLORS, type CardType, type CardView, type Rarity } from '#lib/data/cards';
+	import { keywordPlacement, typeName } from '#lib/data/localize';
+	import { CHARACTER_ASSETS } from '#lib/data/mods';
+	import { frameTintFilterId } from '#lib/frame-tint';
+	import { bbcodeToHtml } from '#lib/text/bbcode';
+	import { cardTextToHtml } from '#lib/text/card-text';
+	import { cardUiImage } from '#lib/data/card-images'
 
-	interface FrameSpec {
-		src: string;
-		art: { left: string; top: string; width: string; height: string };
-	}
-
-	// 美术窗口坐标按 598x844 的卡框实测（透明区域边界）。
-	const FRAMES: Record<'attack' | 'skill' | 'power' | 'quest', FrameSpec> = {
-		attack: {
-			src: '/images/card_frames/attack.png',
-			art: { left: '8.03%', top: '10.07%', width: '83.11%', height: '44.79%' }
-		},
-		skill: {
-			src: '/images/card_frames/skill.png',
-			art: { left: '8.03%', top: '10.07%', width: '83.28%', height: '44.79%' }
-		},
-		power: {
-			src: '/images/card_frames/power.png',
-			art: { left: '8.53%', top: '10.31%', width: '82.44%', height: '44.31%' }
-		},
-		quest: {
-			src: '/images/card_frames/quest.png',
-			art: { left: '13.19%', top: '14.22%', width: '73.12%', height: '37.09%' }
-		}
+	const FRAMES: Record<'attack' | 'skill' | 'power' | 'quest', string> = {
+		attack: '/images/card_frames/attack.png',
+		skill: '/images/card_frames/skill.png',
+		power: '/images/card_frames/power.png',
+		quest: '/images/card_frames/quest.png'
 	};
 
 	const FRAME_TYPE: Record<CardType, keyof typeof FRAMES> = {
@@ -38,48 +23,181 @@
 		curse: 'skill'
 	};
 
-	let { card, class: className = '' }: { card: Card; class?: string } = $props();
+	const PORTRAIT_BORDER_TYPE: Record<CardType, 'attack' | 'skill' | 'power'> = {
+		attack: 'attack',
+		skill: 'skill',
+		power: 'power',
+		quest: 'skill',
+		status: 'skill',
+		curse: 'skill'
+	};
+
+	const BANNER_RARITY: Record<Rarity, string> = {
+		basic: 'common',
+		common: 'common',
+		uncommon: 'uncommon',
+		rare: 'rare',
+		ancient: 'ancient',
+		event: 'event',
+		token: 'common',
+		curse: 'curse',
+		status: 'status',
+		quest: 'quest'
+	};
+
+	// 原版 GetTitleLabelOutlineColor()：按稀有度取标题描边色
+	const TITLE_OUTLINE: Record<Rarity, string> = {
+		basic: '#4d4b40',
+		common: '#4d4b40',
+		token: '#4d4b40',
+		ancient: '#4d4b40',
+		uncommon: '#005c75',
+		rare: '#6b4b00',
+		event: '#1b6131',
+		curse: '#550b9e',
+		status: '#4f522f',
+		quest: '#7e3e15'
+	};
+
+	// 原版把诅咒 / 状态 / 任务当作独立稀有度，这里按卡牌类型补上
+	const TYPE_TITLE_OUTLINE: Partial<Record<CardType, string>> = {
+		curse: '#550b9e',
+		status: '#4f522f',
+		quest: '#7e3e15'
+	};
+
+	let {
+		card,
+		class: className = '',
+		upgraded = false,
+		inCombat = false,
+		showText = true,
+		priority = false,
+		useThumb = true
+	}: {
+		card: CardView
+		class?: string
+		upgraded?: boolean
+		inCombat?: boolean
+		showText?: boolean
+		priority?: boolean
+		useThumb?: boolean
+	} = $props()
 
 	let color = $derived(COLORS[card.color]);
-	let rarity = $derived(RARITIES[card.rarity]);
 	let typeLabel = $derived(typeName(card.type));
-	let rarityLabel = $derived(rarityName(card.rarity));
 	let cost = $derived(card.cost === null ? '—' : card.cost);
-	let frame = $derived(FRAMES[FRAME_TYPE[card.type]]);
+	let bannerRarity = $derived(BANNER_RARITY[card.rarity]);
+	let bannerSrc = $derived(`/images/card_banners/${bannerRarity}.png`);
+	let plaqueSrc = $derived(`/images/card_plaques/${bannerRarity}.png`);
+	let portraitBorderSrc = $derived(
+		`/images/card_portrait_borders/${PORTRAIT_BORDER_TYPE[card.type]}-${bannerRarity}.png`
+	);
+	let titleOutline = $derived(TYPE_TITLE_OUTLINE[card.type] ?? TITLE_OUTLINE[card.rarity]);
+	let characterAssets = $derived(CHARACTER_ASSETS[card.color]);
+	let frameSrc = $derived(
+		characterAssets?.cardFrame?.[FRAME_TYPE[card.type]] ?? FRAMES[FRAME_TYPE[card.type]]
+	);
+	let frameFilter = $derived(
+		characterAssets?.shader
+			? `url(#${frameTintFilterId(card.color)}) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5))`
+			: undefined
+	);
+	let accent = $derived(characterAssets?.accent ?? color.accent);
+	let energyOutline = $derived(characterAssets?.energyOutline ?? color.accent);
+	let description = $derived(
+		cardTextToHtml(card.text ?? '', {
+			upgraded,
+			variables: card.variables,
+			baseVariables: card.baseVariables,
+			sizeUnit: 'cqw',
+			energyIconSrc: characterAssets?.textEnergy,
+			secondEnergyIconSrc: characterAssets?.secondTextEnergy,
+			inCombat
+		})
+	);
+	let keywordLines = $derived(keywordPlacement(card.keywords));
 </script>
 
+{#snippet keywordLine(line: string)}
+	<p class="desc-keyword">{@html bbcodeToHtml(line, { sizeUnit: 'cqw' })}</p>
+{/snippet}
+
+{#snippet uiImage(src: string, className: string, filter?: string)}
+	{@const picture = cardUiImage(src)}
+	{#if picture}
+		<enhanced:img class={className} src={picture} alt="" aria-hidden="true" style:filter={filter} />
+	{:else}
+		<img class={className} {src} alt="" aria-hidden="true" style:filter={filter} />
+	{/if}
+{/snippet}
+
 <div
-	class="card-thumb {className}"
-	style:--accent={color.accent}
-	style:--rarity={rarity.color}
+	class={['card-thumb', className]}
+	style:--accent={accent}
+	style:--title-outline={titleOutline}
+	style:--energy-outline={energyOutline}
+	style:--cost-image={characterAssets?.cardEnergy
+		? `url('${characterAssets.cardEnergy}')`
+		: null}
+	style:--star-image={characterAssets?.secondCardEnergy
+		? `url('${characterAssets.secondCardEnergy}')`
+		: null}
 >
-	<div
-		class="art-window"
-		style:left={frame.art.left}
-		style:top={frame.art.top}
-		style:width={frame.art.width}
-		style:height={frame.art.height}
-	>
+	<div class="art-window">
 		{#if card.image}
-			<img class="art-image" src={card.image} alt="" loading="lazy" decoding="async" />
-		{:else}
-			<div class="art-glow" aria-hidden="true"></div>
-			<div class="art-lines" aria-hidden="true"></div>
-			<div class="motif"><Motif name={card.art} /></div>
+			<picture>
+				{#if useThumb && card.thumb}
+					<source srcset={card.thumb} type="image/webp" />
+				{/if}
+				<img
+					class="art-image"
+					src={card.image}
+					alt=""
+					loading={priority ? 'eager' : 'lazy'}
+					fetchpriority={priority ? 'high' : 'auto'}
+					decoding="async"
+				/>
+			</picture>
 		{/if}
 	</div>
 
-	<img class="card-frame" src={frame.src} alt="" aria-hidden="true" />
+	{@render uiImage(frameSrc, 'card-frame', frameFilter)}
+	{#if card.rarity !== 'ancient'}
+		{@render uiImage(portraitBorderSrc, 'portrait-border')}
+	{/if}
+	{@render uiImage(bannerSrc, 'title-banner')}
+	{#if showText}
+		<span class={['thumb-name', { 'is-upgraded': upgraded }]}>{card.name}</span>
+	{/if}
 
-	<span class="cost" class:is-x={card.cost === 'X'} class:is-empty={card.cost === null}>{cost}</span>
+	{#if showText}
+		<div class="desc">
+			<div class="desc-text">
+				{#each keywordLines.before as line (line)}
+					{@render keywordLine(line)}
+				{/each}
+				<p class="desc-body">{@html description}</p>
+				{#each keywordLines.after as line (line)}
+					{@render keywordLine(line)}
+				{/each}
+			</div>
+		</div>
+	{/if}
 
-	<div class="thumb-plate">
-		<span class="thumb-name">{card.name}</span>
-		<span class="thumb-type">
-			<CardTypeIcon type={card.type} />
-			{typeLabel}
+	<span class={['cost', { 'is-x': card.cost === 'X', 'is-empty': card.cost === null }]}>
+		{showText ? cost : ''}
+	</span>
+
+	{#if card.secondEnergy !== undefined && card.secondEnergy !== null}
+		<span class={['energy-star', { 'is-x': card.secondEnergy === 'X' }]}>
+			{showText ? (card.secondEnergy === 'X' ? 'X' : card.secondEnergy) : ''}
 		</span>
-		<span class="rarity-gem" title={rarityLabel} aria-label={rarityLabel}></span>
+	{/if}
+
+	<div class="type-plaque">
+		{@render uiImage(plaqueSrc, 'type-plaque-img')}
+		<span class="thumb-type">{showText ? typeLabel : ''}</span>
 	</div>
 </div>
 
@@ -92,20 +210,22 @@
 		aspect-ratio: 598 / 844;
 	}
 
+	/* picture 包裹层用 contents 让内部 img 仍按 .card-thumb / .art-window 定位与铺满 */
+	.card-thumb :global(picture) {
+		display: contents;
+	}
+
 	.art-window {
 		position: absolute;
+		left: 8.333%;
+		top: 10.19%;
+		z-index: 1;
+		width: 83.333%;
+		height: 45.024%;
 		overflow: hidden;
 		background:
 			radial-gradient(70% 78% at 50% 42%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 70%),
 			linear-gradient(160deg, #263238 0%, #12191b 60%, #0b0f10 100%);
-	}
-
-	.art-window::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border: 1px solid color-mix(in srgb, var(--accent) 45%, #4f6668);
-		pointer-events: none;
 	}
 
 	.art-image {
@@ -113,41 +233,6 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-	}
-
-	.art-glow {
-		position: absolute;
-		inset: 0;
-		background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 66%);
-	}
-
-	.art-lines {
-		position: absolute;
-		inset: -20%;
-		opacity: 0.13;
-		background-image:
-			linear-gradient(color-mix(in srgb, var(--accent) 60%, transparent) 1px, transparent 1px),
-			linear-gradient(90deg, color-mix(in srgb, var(--accent) 60%, transparent) 1px, transparent 1px);
-		background-size: 22cqw 22cqw;
-		background-position: center;
-		transform: rotate(10deg);
-	}
-
-	.motif {
-		position: absolute;
-		width: 54cqw;
-		height: 54cqw;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		color: color-mix(in srgb, var(--accent) 72%, #f7e9c6);
-		opacity: 0.88;
-		filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 45%, transparent));
-	}
-
-	.motif :global(svg) {
-		width: 100%;
-		height: 100%;
 	}
 
 	.card-frame {
@@ -161,96 +246,187 @@
 		filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
 	}
 
+	.portrait-border {
+		position: absolute;
+		left: 4.167%;
+		top: 11.137%;
+		z-index: 3;
+		display: block;
+		width: 91.667%;
+		height: 49.763%;
+		object-fit: fill;
+		pointer-events: none;
+	}
+
+	.title-banner {
+		position: absolute;
+		left: -4.333%;
+		top: 0.948%;
+		z-index: 4;
+		display: block;
+		width: 109%;
+		height: 19.668%;
+		object-fit: cover;
+		pointer-events: none;
+	}
+
 	.cost {
 		position: absolute;
-		left: 3cqw;
-		top: 2.5cqw;
-		z-index: 3;
+		left: -5.333%;
+		top: -3.791%;
+		z-index: 5;
 		display: grid;
 		place-items: center;
-		width: 16cqw;
-		height: 16cqw;
-		border-radius: 50%;
-		border: 1px solid color-mix(in srgb, var(--accent) 66%, #f0e2c0);
-		background:
-			radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.18), transparent 55%),
-			linear-gradient(180deg, #263034, #0c1113);
+		width: 21.333%;
+		height: 15.165%;
+		background: var(--cost-image, none) center / 100% 100% no-repeat;
 		font-family: var(--font-display);
-		font-size: clamp(7px, 8.4cqw, 21px);
+		font-size: clamp(7px, 10.667cqw, 32px);
 		font-weight: 700;
 		line-height: 1;
-		color: #f6e6bd;
-		box-shadow:
-			0 0 0 2px rgba(8, 10, 11, 0.65),
-			0 2px 6px rgba(0, 0, 0, 0.6);
+		color: #fff6e2;
+		/* 原版费用 32px + outline_size 16：描边按字级等比，外侧约 2px */
+		-webkit-text-stroke: 0.16em var(--energy-outline);
+		paint-order: stroke fill;
 	}
 
 	.cost.is-x {
 		font-family: var(--font-sans);
 		font-style: italic;
-		font-size: clamp(6px, 7.2cqw, 18px);
+		font-size: clamp(6px, 7.333cqw, 22px);
 	}
 
 	.cost.is-empty {
-		font-size: clamp(5px, 6.2cqw, 15px);
+		font-size: clamp(5px, 6.4cqw, 19px);
 		color: rgba(231, 236, 234, 0.55);
-	}
-
-	.thumb-plate {
-		position: absolute;
-		left: 12%;
-		right: 12%;
-		top: 58%;
-		height: 28%;
-		z-index: 3;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 2.2cqw;
-		text-align: center;
-		pointer-events: none;
+		-webkit-text-stroke-width: 0;
 	}
 
 	.thumb-name {
-		font-family: var(--font-display);
-		font-size: clamp(6px, 6.1cqw, 15px);
-		font-weight: 600;
-		line-height: 1.05;
-		color: #f0e2bd;
-		text-wrap: balance;
-		display: -webkit-box;
-		line-clamp: 2;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
+		position: absolute;
+		left: 15%;
+		top: 1%;
+		z-index: 5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 70%;
+		height: 12.796%;
 		overflow: hidden;
+		font-family: var(--font-display);
+		font-size: clamp(7px, 8.667cqw, 26px);
+		font-weight: 400;
+		/* 原版标题用 kreon_regular + spacing_glyph=1（26px 下即 1px） */
+		letter-spacing: 0.0385em;
+		line-height: 1.05;
+		color: #fff6e2;
+		text-align: center;
+		text-wrap: balance;
+		/* 原版标题 26px + outline_size 12：描边按字级等比，外侧约 2px */
+		-webkit-text-stroke: 0.16em var(--title-outline);
+		paint-order: stroke fill;
+		pointer-events: none;
+	}
+
+	.thumb-name.is-upgraded {
+		color: #7fff00;
+	}
+
+	.desc {
+		position: absolute;
+		left: 9.333%;
+		top: 58.768%;
+		z-index: 5;
+		display: flex;
+		align-items: center;
+		width: 81%;
+		height: 32.227%;
+		overflow: hidden;
+		font-family: var(--font-display);
+		/* 原版 DescriptionLabel：21px、MinFontSize 12，卡片宽 300 时 1px = 1/3cqw */
+		font-size: clamp(5px, 7cqw, 21px);
+		font-weight: 400;
+		line-height: 1.2;
+		color: #fff6e2;
+		text-align: center;
+		/* 原版 font_shadow (2, 2)，alpha 0.25098 */
+		text-shadow: 0.667cqw 0.667cqw 0 rgba(0, 0, 0, 0.251);
+		pointer-events: none;
+	}
+
+	.desc-text {
+		width: 100%;
+		overflow-wrap: break-word;
+	}
+
+	.desc-body {
+  		white-space: pre-wrap;
+	}
+
+	.desc :global(.sts-energy-icon) {
+		display: inline-block;
+		height: 1.05em;
+		width: auto;
+		margin: 0 0.03em;
+		vertical-align: -0.15em;
+	}
+
+	.type-plaque {
+		position: absolute;
+		left: 50%;
+		top: 50.237%;
+		z-index: 5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 20.33%;
+		width: max-content;
+		height: 8.77%;
+		padding: 0 2.84cqw;
+		box-sizing: border-box;
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+
+	.type-plaque img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
 	}
 
 	.thumb-type {
-		display: flex;
-		align-items: center;
-		gap: 1.4cqw;
-		font-family: var(--font-mono);
-		font-size: clamp(4.5px, 3cqw, 8px);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: color-mix(in srgb, var(--accent) 60%, #c8d2cf);
+		position: relative;
+		font-family: var(--font-display);
+		font-size: clamp(5px, 5.333cqw, 16px);
+		font-weight: 700;
+		line-height: 1;
+		color: rgba(0, 0, 0, 0.753);
+		white-space: nowrap;
 	}
 
-	.thumb-type :global(svg) {
-		width: 3.8cqw;
-		height: 3.8cqw;
-	}
-
-	.rarity-gem {
+	.energy-star {
 		position: absolute;
-		right: 2cqw;
-		top: -1.6cqw;
-		width: 4.4cqw;
-		height: 4.4cqw;
-		transform: rotate(45deg);
-		border: 1px solid color-mix(in srgb, var(--rarity) 70%, #fff);
-		background: var(--rarity);
-		box-shadow: 0 0 6px color-mix(in srgb, var(--rarity) 45%, transparent);
+		left: -12%;
+		top: 5.213%;
+		z-index: 6;
+		display: grid;
+		place-items: center;
+		width: 19.333%;
+		height: 13.744%;
+		background: var(--star-image, none) center / 100% 100% no-repeat;
+		font-family: var(--font-display);
+		font-size: clamp(5px, 7.333cqw, 22px);
+		font-weight: 700;
+		line-height: 1;
+		color: #fff6e2;
+		-webkit-text-stroke: 0.16em #1a5e6b;
+		paint-order: stroke fill;
+	}
+
+	.energy-star.is-x {
+		font-family: var(--font-sans);
+		font-style: italic;
+		font-size: clamp(5px, 6.667cqw, 20px);
 	}
 </style>

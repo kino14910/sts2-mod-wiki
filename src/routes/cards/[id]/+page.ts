@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { CARDS, MOD_BY_ID } from '#lib/data/cards';
+import { CARDS, MOD_BY_ID } from '#lib/data/mods';
 import { m } from '#lib/paraglide/messages';
 
 export function load({ params }: { params: { id: string } }) {

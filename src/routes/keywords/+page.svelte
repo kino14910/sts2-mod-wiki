@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import GlossaryView from '#lib/components/GlossaryView.svelte';
-	import { BUFFS, DEBUFFS, KEYWORDS } from '#lib/data/glossary';
+	import { KEYWORDS, POWERS } from '#lib/data/glossary';
 	import { m } from '#lib/paraglide/messages';
 
 	const otherLinks = [
-		{ href: resolve('/buffs'), label: m.nav_buffs(), count: BUFFS.length },
-		{ href: resolve('/debuffs'), label: m.nav_debuffs(), count: DEBUFFS.length }
+		{ href: resolve('/powers'), label: m.nav_powers(), count: POWERS.length }
 	];
 </script>
 

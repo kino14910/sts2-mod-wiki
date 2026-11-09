@@ -1,0 +1,692 @@
+[
+  {
+    "id": "AttackPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/attack_potion.png"
+  },
+  {
+    "id": "BlockPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/potions/block_potion.png",
+    "variables": {
+      "Block": "12"
+    }
+  },
+  {
+    "id": "ColorlessPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/colorless_potion.png"
+  },
+  {
+    "id": "DexterityPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Dexterity"
+    ],
+    "image": "images/potions/dexterity_potion.png",
+    "variables": {
+      "DexterityPower": "2"
+    }
+  },
+  {
+    "id": "EnergyPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/potions/energy_potion.png",
+    "variables": {
+      "Energy": 2
+    }
+  },
+  {
+    "id": "ExplosiveAmpoule",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/explosive_ampoule.png",
+    "variables": {
+      "Damage": "10"
+    }
+  },
+  {
+    "id": "FirePotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/fire_potion.png",
+    "variables": {
+      "Damage": "20"
+    }
+  },
+  {
+    "id": "FlexPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Flex",
+      "Potion",
+      "Strength"
+    ],
+    "image": "images/potions/flex_potion.png",
+    "variables": {
+      "StrengthPower": "5"
+    }
+  },
+  {
+    "id": "PowerPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/power_potion.png"
+  },
+  {
+    "id": "SkillPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/skill_potion.png"
+  },
+  {
+    "id": "SpeedPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Dexterity",
+      "Speed",
+      "Potion"
+    ],
+    "image": "images/potions/speed_potion.png",
+    "variables": {
+      "DexterityPower": "5"
+    }
+  },
+  {
+    "id": "StrengthPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/potions/strength_potion.png",
+    "variables": {
+      "StrengthPower": "2"
+    }
+  },
+  {
+    "id": "SwiftPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/swift_potion.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "VulnerablePotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Vulnerable"
+    ],
+    "image": "images/potions/vulnerable_potion.png",
+    "variables": {
+      "VulnerablePower": "3"
+    }
+  },
+  {
+    "id": "WeakPotion",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Weak"
+    ],
+    "image": "images/potions/weak_potion.png",
+    "variables": {
+      "WeakPower": "3"
+    }
+  },
+  {
+    "id": "BloodPotion",
+    "rarity": "common",
+    "character": "ironclad",
+    "tags": [],
+    "image": "images/potions/blood_potion.png",
+    "variables": {
+      "HealPercent": "20"
+    }
+  },
+  {
+    "id": "PoisonPotion",
+    "rarity": "common",
+    "character": "silent",
+    "tags": [
+      "Poison"
+    ],
+    "image": "images/potions/poison_potion.png",
+    "variables": {
+      "PoisonPower": "6"
+    }
+  },
+  {
+    "id": "StarPotion",
+    "rarity": "common",
+    "character": "regent",
+    "tags": [
+      "Star"
+    ],
+    "image": "images/potions/star_potion.png",
+    "variables": {
+      "Stars": 3
+    }
+  },
+  {
+    "id": "PotionOfDoom",
+    "rarity": "common",
+    "character": "necrobinder",
+    "tags": [
+      "Doom"
+    ],
+    "image": "images/potions/potion_of_doom.png",
+    "variables": {
+      "DoomPower": "33"
+    }
+  },
+  {
+    "id": "FocusPotion",
+    "rarity": "common",
+    "character": "defect",
+    "tags": [
+      "Focus"
+    ],
+    "image": "images/potions/focus_potion.png",
+    "variables": {
+      "FocusPower": "2"
+    }
+  },
+  {
+    "id": "BlessingOfTheForge",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/potions/blessing_of_the_forge.png"
+  },
+  {
+    "id": "Clarity",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Clarity",
+      "Draw"
+    ],
+    "image": "images/potions/clarity.png",
+    "variables": {
+      "Cards": 1,
+      "ClarityPower": 3
+    }
+  },
+  {
+    "id": "CureAll",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Draw",
+      "Energy"
+    ],
+    "image": "images/potions/cure_all.png",
+    "variables": {
+      "Energy": 1,
+      "Cards": 2
+    }
+  },
+  {
+    "id": "Duplicator",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Duplication"
+    ],
+    "image": "images/potions/duplicator.png"
+  },
+  {
+    "id": "Fortifier",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block",
+      "Block"
+    ],
+    "image": "images/potions/fortifier.png"
+  },
+  {
+    "id": "FyshOil",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Dexterity",
+      "Strength"
+    ],
+    "image": "images/potions/fysh_oil.png",
+    "variables": {
+      "StrengthPower": "1",
+      "DexterityPower": "1"
+    }
+  },
+  {
+    "id": "GamblersBrew",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/gamblers_brew.png"
+  },
+  {
+    "id": "HeartOfIron",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Plating"
+    ],
+    "image": "images/potions/heart_of_iron.png",
+    "variables": {
+      "PlatingPower": "7"
+    }
+  },
+  {
+    "id": "LiquidBronze",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Thorns"
+    ],
+    "image": "images/potions/liquid_bronze.png",
+    "variables": {
+      "ThornsPower": "3"
+    }
+  },
+  {
+    "id": "PotionOfBinding",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Vulnerable",
+      "Weak"
+    ],
+    "image": "images/potions/potion_of_binding.png",
+    "variables": {
+      "WeakPower": "1",
+      "VulnerablePower": "1"
+    }
+  },
+  {
+    "id": "PowderedDemise",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Demise"
+    ],
+    "image": "images/potions/powdered_demise.png",
+    "variables": {
+      "Demise": "9"
+    }
+  },
+  {
+    "id": "RadiantTincture",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Energy",
+      "Radiance"
+    ],
+    "image": "images/potions/radiant_tincture.png",
+    "variables": {
+      "Energy": 1,
+      "RadiancePower": 3
+    }
+  },
+  {
+    "id": "RegenPotion",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Regen"
+    ],
+    "image": "images/potions/regen_potion.png",
+    "variables": {
+      "RegenPower": "5"
+    }
+  },
+  {
+    "id": "StableSerum",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Retain",
+      "Retain",
+      "Hand"
+    ],
+    "image": "images/potions/stable_serum.png",
+    "variables": {
+      "Repeat": "2"
+    }
+  },
+  {
+    "id": "TouchOfInsanity",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/touch_of_insanity.png"
+  },
+  {
+    "id": "Ashwater",
+    "rarity": "uncommon",
+    "character": "ironclad",
+    "tags": [
+      "Exhaust"
+    ],
+    "image": "images/potions/ashwater.png"
+  },
+  {
+    "id": "CunningPotion",
+    "rarity": "uncommon",
+    "character": "silent",
+    "tags": [
+      "Shiv",
+      "Upgrade"
+    ],
+    "image": "images/potions/cunning_potion.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "KingsCourage",
+    "rarity": "uncommon",
+    "character": "regent",
+    "tags": [
+      "Forge"
+    ],
+    "image": "images/potions/kings_courage.png",
+    "variables": {
+      "Forge": "15"
+    }
+  },
+  {
+    "id": "BoneBrew",
+    "rarity": "uncommon",
+    "character": "necrobinder",
+    "tags": [
+      "Summon"
+    ],
+    "image": "images/potions/bone_brew.png",
+    "variables": {
+      "Summon": "15"
+    }
+  },
+  {
+    "id": "PotionOfCapacity",
+    "rarity": "uncommon",
+    "character": "defect",
+    "tags": [],
+    "image": "images/potions/potion_of_capacity.png",
+    "variables": {
+      "Repeat": "2"
+    }
+  },
+  {
+    "id": "BeetleJuice",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Shrink",
+      "(Potion)"
+    ],
+    "image": "images/potions/beetle_juice.png",
+    "variables": {
+      "DamageDecrease": 30,
+      "Repeat": 4
+    }
+  },
+  {
+    "id": "BottledPotential",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/bottled_potential.png",
+    "variables": {
+      "Cards": "5"
+    }
+  },
+  {
+    "id": "DistilledChaos",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/distilled_chaos.png",
+    "variables": {
+      "Repeat": "3"
+    }
+  },
+  {
+    "id": "DropletOfPrecognition",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/droplet_of_precognition.png"
+  },
+  {
+    "id": "EntropicBrew",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/entropic_brew.png"
+  },
+  {
+    "id": "FairyInABottle",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/fairy_in_a_bottle.png"
+  },
+  {
+    "id": "FruitJuice",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/fruit_juice.png",
+    "variables": {
+      "MaxHp": "5"
+    }
+  },
+  {
+    "id": "GigantificationPotion",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Gigantification"
+    ],
+    "image": "images/potions/gigantification_potion.png"
+  },
+  {
+    "id": "LiquidMemories",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/liquid_memories.png"
+  },
+  {
+    "id": "LuckyTonic",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Buffer"
+    ],
+    "image": "images/potions/lucky_tonic.png",
+    "variables": {
+      "BufferPower": "1"
+    }
+  },
+  {
+    "id": "MazalethsGift",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Ritual"
+    ],
+    "image": "images/potions/mazaleths_gift.png",
+    "variables": {
+      "RitualPower": "1"
+    }
+  },
+  {
+    "id": "OrobicAcid",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/orobic_acid.png"
+  },
+  {
+    "id": "ShacklingPotion",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Shackling",
+      "Potion",
+      "Strength"
+    ],
+    "image": "images/potions/shackling_potion.png",
+    "variables": {
+      "StrengthPower": "7"
+    }
+  },
+  {
+    "id": "ShipInABottle",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Block",
+      "Block",
+      "Next",
+      "Turn"
+    ],
+    "image": "images/potions/ship_in_a_bottle.png",
+    "variables": {
+      "Block": "10"
+    }
+  },
+  {
+    "id": "SneckoOil",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/snecko_oil.png",
+    "variables": {
+      "Cards": "7"
+    }
+  },
+  {
+    "id": "SoldiersStew",
+    "rarity": "rare",
+    "character": "ironclad",
+    "tags": [
+      "Replay"
+    ],
+    "image": "images/potions/soldiers_stew.png"
+  },
+  {
+    "id": "GhostInAJar",
+    "rarity": "rare",
+    "character": "silent",
+    "tags": [
+      "Intangible"
+    ],
+    "image": "images/potions/ghost_in_a_jar.png"
+  },
+  {
+    "id": "CosmicConcoction",
+    "rarity": "rare",
+    "character": "regent",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/potions/cosmic_concoction.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "PotOfGhouls",
+    "rarity": "rare",
+    "character": "necrobinder",
+    "tags": [],
+    "image": "images/potions/pot_of_ghouls.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "EssenceOfDarkness",
+    "rarity": "rare",
+    "character": "defect",
+    "tags": [
+      "Channel",
+      "Dark"
+    ],
+    "image": "images/potions/essence_of_darkness.png"
+  },
+  {
+    "id": "Ambergris",
+    "rarity": "special",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/potions/ambergris.png"
+  },
+  {
+    "id": "FoulPotion",
+    "rarity": "special",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/foul_potion.png",
+    "variables": {
+      "Damage": 12,
+      "Gold": 100
+    }
+  },
+  {
+    "id": "GlowwaterPotion",
+    "rarity": "special",
+    "character": "any",
+    "tags": [
+      "Draw",
+      "Exhaust"
+    ],
+    "image": "images/potions/glowwater_potion.png",
+    "variables": {
+      "Cards": "10"
+    }
+  },
+  {
+    "id": "PotionShapedRock",
+    "rarity": "special",
+    "character": "any",
+    "tags": [],
+    "image": "images/potions/potion_shaped_rock.png",
+    "variables": {
+      "Damage": 15
+    }
+  }
+]

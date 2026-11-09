@@ -258,6 +258,7 @@
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: minmax(0, 1fr);
   gap: 12px;
   min-height: 0;
   overflow: hidden;
@@ -268,6 +269,10 @@
 .tp-tag-list {
   overflow-y: auto;
   min-height: 0;
+  max-height: 400px;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong, rgba(255,255,255,0.22)) transparent;
 }
 
 .tp-tag-fold {

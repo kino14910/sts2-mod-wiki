@@ -1,16 +1,15 @@
 <script lang="ts">
-	import { colorName, modName, rarityName, typeName } from '#lib/data/localize';
-	import {
-		CARD_TYPES,
-		COLORS,
-		MODS,
-		RARITIES,
-		type CardType,
-		type ColorId,
-		type Rarity
-	} from '#lib/data/cards';
+	import { rarityName, typeName } from '#lib/data/localize';
+	import { CARD_TYPES, RARITIES, type CardType, type Rarity } from '#lib/data/cards';
+	import { cardCharacterOptions } from '#lib/data/characters';
 	import { m } from '#lib/paraglide/messages';
-	import Motif from './Motif.svelte';
+	import Filter from './Filter.svelte';
+	import FilterButton from './FilterButton.svelte';
+	import FilterPanel from './FilterPanel.svelte';
+	import FilterSearch from './FilterSearch.svelte';
+	import CharacterFilter from './CharacterFilter.svelte';
+	import ModSelect from './ModSelect.svelte';
+	import SortButton from './SortButton.svelte';
 
 	let {
 		query = $bindable(''),
@@ -25,7 +24,8 @@
 		viewBetaArt = $bindable(false),
 		count = 0,
 		onchange = () => {},
-		onclear = () => {}
+		onclear = () => {},
+		onviewupgrades = () => {}
 	}: {
 		query?: string;
 		color?: string;
@@ -40,23 +40,17 @@
 		count?: number;
 		onchange?: () => void;
 		onclear?: () => void;
+		onviewupgrades?: () => void;
 	} = $props();
-
-	const colorOptions = (Object.keys(COLORS) as ColorId[]).map((id) => ({
-		id,
-		name: colorName(id),
-		accent: COLORS[id].accent,
-		motif: COLORS[id].motif
-	}));
 
 	const typeOptions = (Object.keys(CARD_TYPES) as CardType[]).map((id) => ({
 		id,
-		name: typeName(id)
+		label: typeName(id)
 	}));
 
 	const rarityOptions = (Object.keys(RARITIES) as Rarity[]).map((id) => ({
 		id,
-		name: rarityName(id)
+		label: rarityName(id)
 	}));
 
 	const costOptions = [
@@ -81,11 +75,6 @@
 		{ value: 'color-asc', label: m.sort_character() }
 	];
 
-	function toggleColor(id: ColorId) {
-		color = color === id ? 'all' : id;
-		onchange();
-	}
-
 	function setType(id: CardType) {
 		type = type === id ? 'all' : id;
 		onchange();
@@ -101,182 +90,47 @@
 		onchange();
 	}
 
-	function cycleSort(key: 'rarity' | 'type' | 'cost') {
-		if (sort === `${key}-asc`) sort = `${key}-desc`;
-		else if (sort === `${key}-desc`) sort = 'default';
-		else sort = `${key}-asc`;
+	function toggleMultiplayer() {
+		multiplayer = !multiplayer;
+		onchange();
+	}
+
+	function toggleViewUpgrades() {
+		viewUpgrades = !viewUpgrades;
+		onviewupgrades();
+		onchange();
+	}
+
+	function toggleViewBetaArt() {
+		viewBetaArt = !viewBetaArt;
 		onchange();
 	}
 </script>
 
-{#snippet sortButton(key: 'rarity' | 'type' | 'cost', label: string)}
-	<button
-		class="sort-button"
-		class:active={sort.startsWith(`${key}-`)}
-		type="button"
-		aria-label={m.filter_sort_by({ label })}
-		title={m.filter_sort_by({ label })}
-		onclick={() => cycleSort(key)}
-	>
-		<img src="/icons/sort-button.webp" alt="" />
-	</button>
+{#snippet optionPanel<T extends string>(
+	title: string,
+	sortKey: 'rarity' | 'type' | 'cost',
+	options: { id: T; label: string }[],
+	selected: string,
+	onSelect: (id: T) => void
+)}
+	<FilterPanel {title}>
+		{#snippet header()}
+			<SortButton key={sortKey} label={title} bind:sort {onchange} />
+		{/snippet}
+		<div class="flex flex-wrap gap-1.25">
+			{#each options as option (option.id)}
+				<FilterButton pressed={selected === option.id} onclick={() => onSelect(option.id)}>
+					{option.label}
+				</FilterButton>
+			{/each}
+		</div>
+	</FilterPanel>
 {/snippet}
 
-<section class="filter-shell" aria-label={m.filters_label()}>
-	<div class="filter-grid">
-		<div class="panel panel--search">
-			<h2 class="panel-title">{m.filter_search()}</h2>
-			<div class="search-row">
-				<label class="search-field">
-					<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-						<circle cx="9" cy="9" r="5.5" />
-						<path d="M13 13 L17 17" />
-					</svg>
-					<input
-						type="search"
-						placeholder={m.search_placeholder()}
-						aria-label={m.search_placeholder()}
-						bind:value={query}
-						oninput={onchange}
-					/>
-				</label>
-				<button class="tag-button clear-button" type="button" onclick={onclear}>{m.clear_all()}</button>
-			</div>
-		</div>
-
-		<div class="panel">
-			<h2 class="panel-title">{m.filter_character()}</h2>
-			<div class="class-row">
-				{#each colorOptions as option (option.id)}
-					<button
-						class="class-button"
-						type="button"
-						style:--accent={option.accent}
-						aria-pressed={color === option.id}
-						aria-label={m.filter_character_aria({ name: option.name })}
-						title={option.name}
-						onclick={() => toggleColor(option.id)}
-					>
-						<span class="class-icon">
-							<Motif name={option.motif} />
-						</span>
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		<div class="panel">
-			<div class="panel-head">
-				<h2 class="panel-title">{m.filter_rarity()}</h2>
-				{@render sortButton('rarity', m.filter_rarity())}
-			</div>
-			<div class="tag-row">
-				{#each rarityOptions as option (option.id)}
-					<button
-						class="tag-button"
-						type="button"
-						aria-pressed={rarity === option.id}
-						onclick={() => setRarity(option.id)}
-					>
-						{option.name}
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		<div class="panel">
-			<div class="panel-head">
-				<h2 class="panel-title">{m.filter_type()}</h2>
-				{@render sortButton('type', m.filter_type())}
-			</div>
-			<div class="tag-row">
-				{#each typeOptions as option (option.id)}
-					<button
-						class="tag-button"
-						type="button"
-						aria-pressed={type === option.id}
-						onclick={() => setType(option.id)}
-					>
-						{option.name}
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		<div class="panel">
-			<div class="panel-head">
-				<h2 class="panel-title">{m.filter_cost()}</h2>
-				{@render sortButton('cost', m.filter_cost())}
-			</div>
-			<div class="tag-row cost-row">
-				<button
-					class="tag-button energy-button"
-					type="button"
-					aria-pressed={cost === 'all'}
-					aria-label={m.filter_any_cost()}
-					title={m.filter_any_cost()}
-					onclick={() => {
-						cost = 'all';
-						onchange();
-					}}
-				>
-					<img src="/icons/energy.png" alt="" />
-				</button>
-				{#each costOptions as option (option.id)}
-					<button
-						class="tag-button"
-						type="button"
-						aria-pressed={cost === option.id}
-						onclick={() => setCost(option.id)}
-					>
-						{option.label}
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		<div class="panel">
-			<h2 class="panel-title">{m.filter_other()}</h2>
-			<div class="tag-row">
-				<button
-					class="tag-button"
-					type="button"
-					aria-pressed={multiplayer}
-					onclick={() => {
-						multiplayer = !multiplayer;
-						onchange();
-					}}
-				>
-					{m.filter_multiplayer()}
-				</button>
-				<button
-					class="tag-button"
-					type="button"
-					aria-pressed={viewUpgrades}
-					onclick={() => {
-						viewUpgrades = !viewUpgrades;
-						onchange();
-					}}
-				>
-					{m.filter_view_upgrades()}
-				</button>
-				<button
-					class="tag-button"
-					type="button"
-					aria-pressed={viewBetaArt}
-					onclick={() => {
-						viewBetaArt = !viewBetaArt;
-						onchange();
-					}}
-				>
-					{m.filter_view_beta_art()}
-				</button>
-			</div>
-		</div>
-	</div>
-
-	<div class="result-bar">
-		<div class="result-left">
+<Filter label={m.filters_label()}>
+	{#snippet result()}
+		<div class="flex items-center gap-3 min-w-0 max-[860px]:w-full max-[460px]:flex-wrap max-[460px]:gap-1.5">
 			<label class="sort-select">
 				<span class="visually-hidden">{m.sort_results()}</span>
 				<select bind:value={sort} onchange={onchange}>
@@ -285,273 +139,55 @@
 					{/each}
 				</select>
 			</label>
-			<span class="result-divider" aria-hidden="true"></span>
-			<span class="result-count">{m.showing_results({ count })}</span>
+			<span class="w-px h-4.5 bg-line-strong max-[460px]:hidden" aria-hidden="true"></span>
+			<span class="whitespace-nowrap text-ink-dim max-[460px]:w-full">{m.showing_results({ count })}</span>
 		</div>
 
-		<label class="mod-select">
-			<span>{m.filter_mod()}</span>
-			<select bind:value={mod} onchange={onchange} aria-label={m.filter_by_mod()}>
-				<option value="all">{m.filter_all_mods()}</option>
-				{#each MODS as entry (entry.id)}
-					<option value={entry.id}>{modName(entry.id)}</option>
-				{/each}
-			</select>
-		</label>
-	</div>
-</section>
+		<ModSelect bind:value={mod} {onchange} />
+	{/snippet}
+
+	<FilterSearch
+		bind:value={query}
+		title={m.filter_search()}
+		placeholder={m.search_placeholder()}
+		onclear={onclear}
+		oninput={onchange}
+	/>
+
+	<CharacterFilter options={cardCharacterOptions()} bind:value={color} {onchange} />
+
+	{@render optionPanel(m.filter_rarity(), 'rarity', rarityOptions, rarity, setRarity)}
+	{@render optionPanel(m.filter_type(), 'type', typeOptions, type, setType)}
+	{@render optionPanel(m.filter_cost(), 'cost', costOptions, cost, setCost)}
+
+	<FilterPanel title={m.filter_other()}>
+		<div class="flex flex-wrap gap-1.25">
+			<FilterButton
+				pressed={multiplayer}
+				title={m.filter_multiplayer_hint()}
+				onclick={toggleMultiplayer}
+			>
+				{m.filter_multiplayer()}
+			</FilterButton>
+			<FilterButton
+				pressed={viewUpgrades}
+				title={m.filter_view_upgrades_hint()}
+				onclick={toggleViewUpgrades}
+			>
+				{m.filter_view_upgrades()}
+			</FilterButton>
+			<FilterButton
+				pressed={viewBetaArt}
+				title={m.filter_view_beta_art_hint()}
+				onclick={toggleViewBetaArt}
+			>
+				{m.filter_view_beta_art()}
+			</FilterButton>
+		</div>
+	</FilterPanel>
+</Filter>
 
 <style>
-	.filter-shell {
-		--surface-background-color: oklch(0.49 0.04 188);
-		--accent-color: oklch(0.8 0.07 178);
-
-		border: 17px solid transparent;
-		border-image: url('/images/tooltip-border.png') 22 fill / 17px / 0 stretch;
-		border-radius: 8px;
-		background: var(--tooltip-bg);
-		padding: 0;
-		filter: drop-shadow(9px 7px 2px rgba(0, 0, 0, 0.36));
-	}
-
-	.filter-grid {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		gap: 8px;
-		padding: 7px;
-	}
-
-	.panel {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		min-height: 0;
-		padding: 4px 8px 8px;
-		border: 2px solid var(--line-strong);
-		border-radius: 6px;
-		background: var(--surface-secondary);
-	}
-
-	.panel-title {
-		font-family: var(--font-display);
-		font-size: 1.2rem;
-		font-weight: 400;
-		line-height: 1;
-		color: var(--gold);
-		letter-spacing: 0.01em;
-		text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.36);
-	}
-
-	.panel-head {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-	}
-
-	.sort-button {
-		--bevel-button-border-color: teal darkslategray darkslategray teal;
-		--bevel-button-background-color: darkslategray;
-
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 3px 2px;
-		border: 2px outset;
-		border-color: var(--bevel-button-border-color);
-		border-radius: 5px;
-		background: var(--bevel-button-background-color);
-		filter: brightness(60%);
-		cursor: pointer;
-		transition: filter 0.18s ease, border-color 0.18s ease;
-	}
-
-	.sort-button:hover {
-		filter: brightness(85%);
-	}
-
-	.sort-button.active {
-		border-color: var(--gold);
-		filter: brightness(100%);
-	}
-
-	.sort-button img {
-		width: 18px;
-		height: auto;
-		filter: drop-shadow(0 0 4px rgba(242, 219, 116, 0.2));
-	}
-
-	.search-row {
-		display: flex;
-		gap: 7px;
-	}
-
-	.search-field {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		flex: 1;
-		min-width: 0;
-		height: 36px;
-		padding: 0 10px;
-		border: 1px solid var(--line);
-		border-radius: 4px;
-		background: var(--table);
-		transition: border-color 0.18s ease;
-	}
-
-	.search-field:focus-within {
-		border-color: var(--accent);
-	}
-
-	.search-field svg {
-		width: 14px;
-		height: 14px;
-		flex: none;
-		color: var(--muted);
-	}
-
-	.search-field input {
-		width: 100%;
-		min-width: 0;
-		border: 0;
-		padding: 0;
-		background: transparent;
-		box-shadow: none;
-		outline: 0;
-		font-size: 0.95rem;
-		color: var(--text);
-	}
-
-	.search-field input::placeholder {
-		color: var(--muted);
-	}
-
-	.tag-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 5px;
-	}
-
-	.tag-button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 6px;
-		min-width: 16px;
-		padding: 3px 6px;
-		border: 0;
-		border-radius: 3px;
-		background: var(--surface-background-color);
-		color: var(--text);
-		font-family: var(--font-display);
-		font-size: 1rem;
-		line-height: 1.5;
-		letter-spacing: 0.02em;
-		user-select: none;
-		transition: all ease-in-out 0.1s;
-	}
-
-	.tag-button:hover {
-		filter: brightness(1.2);
-	}
-
-	.tag-button[aria-pressed='true'] {
-		outline: 2px solid var(--accent-color);
-		outline-offset: 0;
-		filter: brightness(1.12);
-	}
-
-	.clear-button {
-		height: 36px;
-		min-height: 36px;
-		white-space: nowrap;
-	}
-
-	.class-row {
-		display: flex;
-		align-items: flex-start;
-		gap: clamp(7px, 1.4vw, 15px);
-		flex-wrap: wrap;
-	}
-
-	.class-button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 34px;
-		aspect-ratio: 1 / 1;
-		padding: 3px;
-		border: 0;
-		border-radius: 3px;
-		background: color-mix(in srgb, var(--accent) 22%, var(--surface-background-color));
-		color: color-mix(in srgb, var(--accent) 72%, white);
-		letter-spacing: 0.02em;
-		user-select: none;
-		transition: all ease-in-out 0.1s;
-	}
-
-	.class-button:hover {
-		filter: brightness(1.2);
-	}
-
-	.class-button[aria-pressed='true'] {
-		outline: 2px solid var(--accent-color);
-		outline-offset: 0;
-		filter: brightness(1.15);
-	}
-
-	.class-icon {
-		display: grid;
-		place-items: center;
-		width: 100%;
-		height: 100%;
-	}
-
-	.class-icon :global(svg) {
-		width: 100%;
-		height: 100%;
-		opacity: 1;
-		stroke-width: 2.6;
-	}
-
-	.cost-row {
-		align-items: stretch;
-	}
-
-	.energy-button {
-		min-width: 0;
-		padding: 3px 6px;
-	}
-
-	.energy-button img {
-		width: 17px;
-		height: 17px;
-	}
-
-	.result-bar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 16px;
-		min-height: 34px;
-		margin-top: 10px;
-		padding: 2px 10px;
-		border: 2px solid var(--tooltip-border);
-		border-radius: 6px;
-		background: var(--tooltip-bg);
-		font-family: var(--font-display);
-		font-size: 1rem;
-		color: var(--text);
-	}
-
-	.result-left {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		min-width: 0;
-	}
-
 	.sort-select select {
 		appearance: none;
 		height: 27px;
@@ -567,109 +203,8 @@
 		cursor: pointer;
 	}
 
-	.sort-select option,
-	.mod-select option {
+	.sort-select option {
 		background: var(--tooltip-bg);
 		color: var(--text);
-	}
-
-	.result-divider {
-		width: 1px;
-		height: 18px;
-		background: var(--line-strong);
-	}
-
-	.result-count {
-		white-space: nowrap;
-		color: var(--text-dim);
-	}
-
-	.mod-select {
-		display: flex;
-		align-items: center;
-		gap: 7px;
-		flex: none;
-	}
-
-	.mod-select > span {
-		font-family: var(--font-mono);
-		font-size: 0.55rem;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.mod-select select {
-		appearance: none;
-		height: 27px;
-		max-width: 180px;
-		border: 1px solid var(--line);
-		border-radius: 4px;
-		padding: 0 23px 0 7px;
-		background:
-			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M1 1 L4.5 4.5 L8 1' stroke='%23d0d8d6' fill='none'/%3E%3C/svg%3E")
-				no-repeat right 8px center,
-			var(--table);
-		box-shadow: none;
-		outline: 0;
-		font-family: var(--font-display);
-		font-size: 0.85rem;
-		color: var(--text);
-		cursor: pointer;
-	}
-
-	@media (max-width: 860px) {
-		.filter-grid {
-			grid-template-columns: 1fr;
-		}
-
-		.panel--search {
-			order: -1;
-		}
-
-		.result-bar {
-			flex-wrap: wrap;
-			padding: 6px 9px;
-		}
-
-		.result-left {
-			width: 100%;
-		}
-
-		.mod-select {
-			margin-left: auto;
-		}
-	}
-
-	@media (max-width: 460px) {
-		.search-row {
-			flex-direction: column;
-			align-items: stretch;
-		}
-
-		.clear-button {
-			width: 100%;
-		}
-
-		.class-row {
-			gap: 8px;
-		}
-
-		.class-button {
-			width: 30px;
-		}
-
-		.result-left {
-			flex-wrap: wrap;
-			gap: 6px;
-		}
-
-		.result-divider {
-			display: none;
-		}
-
-		.result-count {
-			width: 100%;
-		}
 	}
 </style>

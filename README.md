@@ -30,6 +30,10 @@ npm run build
 
 Preview the production build with `npm run preview`.
 
+## Mod data
+
+Mods live under `static/mods/{modid}/`. See [docs/mod-manifest.md](docs/mod-manifest.md) for the manifest dependency schema and generated localization keys.
+
 ## Adding features
 
 Add features to your project with `sv add`:

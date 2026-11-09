@@ -10,8 +10,9 @@
 	const links = [
 		{ href: resolve('/cards'), label: m.nav_cards() },
 		{ href: resolve('/keywords'), label: m.nav_keywords() },
-		{ href: resolve('/buffs'), label: m.nav_buffs() },
-		{ href: resolve('/debuffs'), label: m.nav_debuffs() },
+		{ href: resolve('/powers'), label: m.nav_powers() },
+		{ href: resolve('/relics'), label: m.nav_relics() },
+		{ href: resolve('/potions'), label: m.nav_potions() },
 		{ href: resolve('/tools'), label: m.nav_tools() }
 	];
 
@@ -51,7 +52,7 @@
 
 		<a
 			class="wiki-link"
-			href="https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Cards_List"
+			href="https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Main"
 			target="_blank"
 			rel="noreferrer"
 		>
@@ -70,6 +71,7 @@
 			</button>
 			<button
 				type="button"
+				class="locale-zh"
 				aria-pressed={locale === 'zhs'}
 				aria-label={m.language_zh()}
 				onclick={() => changeLocale('zhs')}
@@ -85,8 +87,8 @@
 			aria-label={open ? m.nav_close() : m.nav_open()}
 			onclick={() => (open = !open)}
 		>
-			<span class:open></span>
-			<span class:open></span>
+			<span class={{ open }}></span>
+			<span class={{ open }}></span>
 		</button>
 	</div>
 
@@ -244,6 +246,12 @@
 
 	.locale-switch button + button {
 		border-left: 1px solid var(--tooltip-border);
+	}
+
+	/* 英文页只有这两个中文字，用系统字体即可，避免为它拉取整套中文字体 */
+	.locale-switch button.locale-zh {
+		font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui,
+			sans-serif;
 	}
 
 	.locale-switch button:hover {

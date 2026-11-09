@@ -1,0 +1,3297 @@
+[
+  {
+    "id": "BurningBlood",
+    "rarity": "starter",
+    "character": "ironclad",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/burning_blood.png",
+    "variables": {
+      "Heal": "6"
+    }
+  },
+  {
+    "id": "BlackBlood",
+    "rarity": "starter",
+    "character": "ironclad",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/black_blood.png",
+    "variables": {
+      "Heal": "12"
+    },
+    "upgraded": true
+  },
+  {
+    "id": "RingOfTheSnake",
+    "rarity": "starter",
+    "character": "silent",
+    "tags": [],
+    "image": "images/relics/ring_of_the_snake.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "RingOfTheDrake",
+    "rarity": "starter",
+    "character": "silent",
+    "tags": [],
+    "image": "images/relics/ring_of_the_drake.png",
+    "variables": {
+      "Turns": 3,
+      "Cards": 2
+    },
+    "upgraded": true
+  },
+  {
+    "id": "DivineRight",
+    "rarity": "starter",
+    "character": "regent",
+    "tags": [
+      "Star"
+    ],
+    "image": "images/relics/divine_right.png",
+    "variables": {
+      "Stars": 3
+    }
+  },
+  {
+    "id": "DivineDestiny",
+    "rarity": "starter",
+    "character": "regent",
+    "tags": [
+      "Star"
+    ],
+    "image": "images/relics/divine_destiny.png",
+    "variables": {
+      "Stars": 7
+    },
+    "upgraded": true
+  },
+  {
+    "id": "BoundPhylactery",
+    "rarity": "starter",
+    "character": "necrobinder",
+    "tags": [
+      "Summon"
+    ],
+    "image": "images/relics/bound_phylactery.png",
+    "variables": {
+      "Summon": "1"
+    }
+  },
+  {
+    "id": "PhylacteryUnbound",
+    "rarity": "starter",
+    "character": "necrobinder",
+    "tags": [
+      "Summon"
+    ],
+    "image": "images/relics/phylactery_unbound.png",
+    "variables": {
+      "StartOfCombat": "5",
+      "StartOfTurn": "2"
+    },
+    "upgraded": true
+  },
+  {
+    "id": "CrackedCore",
+    "rarity": "starter",
+    "character": "defect",
+    "tags": [
+      "Channel",
+      "Lightning"
+    ],
+    "image": "images/relics/cracked_core.png",
+    "variables": {
+      "Lightning": "1"
+    }
+  },
+  {
+    "id": "InfusedCore",
+    "rarity": "starter",
+    "character": "defect",
+    "tags": [
+      "Channel",
+      "Lightning"
+    ],
+    "image": "images/relics/infused_core.png",
+    "variables": {
+      "Lightning": 3
+    },
+    "upgraded": true
+  },
+  {
+    "id": "AmethystAubergine",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/amethyst_aubergine.png",
+    "variables": {
+      "Gold": "15"
+    }
+  },
+  {
+    "id": "Anchor",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/anchor.png",
+    "variables": {
+      "Block": "10"
+    }
+  },
+  {
+    "id": "BagOfMarbles",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Vulnerable"
+    ],
+    "image": "images/relics/bag_of_marbles.png",
+    "variables": {
+      "VulnerablePower": "1"
+    }
+  },
+  {
+    "id": "BagOfPreparation",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/bag_of_preparation.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "BloodVial",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/blood_vial.png",
+    "variables": {
+      "Heal": "2"
+    }
+  },
+  {
+    "id": "BookOfFiveRings",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/book_of_five_rings.png",
+    "variables": {
+      "Cards": "5",
+      "Heal": "20"
+    }
+  },
+  {
+    "id": "BronzeScales",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Thorns"
+    ],
+    "image": "images/relics/bronze_scales.png",
+    "variables": {
+      "ThornsPower": "3"
+    }
+  },
+  {
+    "id": "CentennialPuzzle",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Draw",
+      "Lose",
+      "HP"
+    ],
+    "image": "images/relics/centennial_puzzle.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "FestivePopper",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/festive_popper.png",
+    "variables": {
+      "Damage": "9"
+    }
+  },
+  {
+    "id": "Gorget",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Plating"
+    ],
+    "image": "images/relics/gorget.png",
+    "variables": {
+      "PlatingPower": "4"
+    }
+  },
+  {
+    "id": "HappyFlower",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/happy_flower.png",
+    "variables": {
+      "Energy": 1,
+      "Turns": 3
+    }
+  },
+  {
+    "id": "JuzuBracelet",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/juzu_bracelet.png"
+  },
+  {
+    "id": "Lantern",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/lantern.png",
+    "variables": {
+      "Energy": 1
+    }
+  },
+  {
+    "id": "MealTicket",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/meal_ticket.png",
+    "variables": {
+      "Heal": "15"
+    }
+  },
+  {
+    "id": "OddlySmoothStone",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Dexterity"
+    ],
+    "image": "images/relics/oddly_smooth_stone.png",
+    "variables": {
+      "DexterityPower": "1"
+    }
+  },
+  {
+    "id": "Pendulum",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/pendulum.png",
+    "variables": {
+      "Turns": "3",
+      "Cards": "1"
+    }
+  },
+  {
+    "id": "PotionBelt",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/potion_belt.png",
+    "variables": {
+      "PotionSlots": "2"
+    }
+  },
+  {
+    "id": "RedMask",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Weak"
+    ],
+    "image": "images/relics/red_mask.png",
+    "variables": {
+      "WeakPower": 1
+    }
+  },
+  {
+    "id": "RegalPillow",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/regal_pillow.png",
+    "variables": {
+      "Heal": "15"
+    }
+  },
+  {
+    "id": "Strawberry",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/strawberry.png",
+    "variables": {
+      "MaxHp": "7"
+    }
+  },
+  {
+    "id": "StrikeDummy",
+    "rarity": "common",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/strike_dummy.png",
+    "variables": {
+      "ExtraDamage": 3
+    }
+  },
+  {
+    "id": "Vajra",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/vajra.png",
+    "variables": {
+      "StrengthPower": "1"
+    }
+  },
+  {
+    "id": "VenerableTeaSet",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/venerable_tea_set.png",
+    "variables": {
+      "Energy": 2
+    }
+  },
+  {
+    "id": "WarPaint",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/war_paint.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "Whetstone",
+    "rarity": "common",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/whetstone.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "RedSkull",
+    "rarity": "common",
+    "character": "ironclad",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/red_skull.png",
+    "variables": {
+      "HpThreshold": "50",
+      "StrengthPower": "3"
+    }
+  },
+  {
+    "id": "SneckoSkull",
+    "rarity": "common",
+    "character": "silent",
+    "tags": [
+      "Poison"
+    ],
+    "image": "images/relics/snecko_skull.png",
+    "variables": {
+      "PoisonPower": "1"
+    }
+  },
+  {
+    "id": "FencingManual",
+    "rarity": "common",
+    "character": "regent",
+    "tags": [
+      "Forge"
+    ],
+    "image": "images/relics/fencing_manual.png",
+    "variables": {
+      "Forge": "10"
+    }
+  },
+  {
+    "id": "BoneFlute",
+    "rarity": "common",
+    "character": "necrobinder",
+    "tags": [
+      "Block",
+      "Osty"
+    ],
+    "image": "images/relics/bone_flute.png",
+    "variables": {
+      "Block": "2"
+    }
+  },
+  {
+    "id": "DataDisk",
+    "rarity": "common",
+    "character": "defect",
+    "tags": [
+      "Focus"
+    ],
+    "image": "images/relics/data_disk.png",
+    "variables": {
+      "FocusPower": "1"
+    }
+  },
+  {
+    "id": "Akabeko",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Vigor"
+    ],
+    "image": "images/relics/akabeko.png",
+    "variables": {
+      "VigorPower": "8"
+    }
+  },
+  {
+    "id": "BowlerHat",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/bowler_hat.png",
+    "variables": {
+      "GoldIncrease": "25"
+    }
+  },
+  {
+    "id": "Candelabra",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/candelabra.png",
+    "variables": {
+      "Energy": 2
+    }
+  },
+  {
+    "id": "EternalFeather",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/eternal_feather.png",
+    "variables": {
+      "Cards": 5,
+      "Heal": 3
+    }
+  },
+  {
+    "id": "GremlinHorn",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Draw",
+      "Energy"
+    ],
+    "image": "images/relics/gremlin_horn.png",
+    "variables": {
+      "Energy": 1,
+      "Cards": 1
+    }
+  },
+  {
+    "id": "HornCleat",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/horn_cleat.png",
+    "variables": {
+      "Block": "14"
+    }
+  },
+  {
+    "id": "JossPaper",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Draw",
+      "Exhaust"
+    ],
+    "image": "images/relics/joss_paper.png",
+    "variables": {
+      "ExhaustAmount": "5",
+      "Cards": "1"
+    }
+  },
+  {
+    "id": "Kusarigama",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/kusarigama.png",
+    "variables": {
+      "Cards": "3",
+      "Damage": "6"
+    }
+  },
+  {
+    "id": "LastingCandy",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/lasting_candy.png"
+  },
+  {
+    "id": "LetterOpener",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/letter_opener.png",
+    "variables": {
+      "Cards": "3",
+      "Damage": "5"
+    }
+  },
+  {
+    "id": "LuckyFysh",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/lucky_fysh.png",
+    "variables": {
+      "Gold": "15"
+    }
+  },
+  {
+    "id": "MercuryHourglass",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/mercury_hourglass.png",
+    "variables": {
+      "Damage": "3"
+    }
+  },
+  {
+    "id": "MiniatureCannon",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/miniature_cannon.png",
+    "variables": {
+      "ExtraDamage": "3"
+    }
+  },
+  {
+    "id": "Nunchaku",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/nunchaku.png",
+    "variables": {
+      "Energy": 1,
+      "Cards": 10
+    }
+  },
+  {
+    "id": "Orichalcum",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/orichalcum.png",
+    "variables": {
+      "Block": "6"
+    }
+  },
+  {
+    "id": "OrnamentalFan",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/ornamental_fan.png",
+    "variables": {
+      "Cards": "3",
+      "Block": "4"
+    }
+  },
+  {
+    "id": "Pantograph",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/pantograph.png",
+    "variables": {
+      "Heal": "25"
+    }
+  },
+  {
+    "id": "ParryingShield",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/parrying_shield.png",
+    "variables": {
+      "Block": "10",
+      "Damage": "6"
+    }
+  },
+  {
+    "id": "Pear",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/pear.png",
+    "variables": {
+      "MaxHp": "10"
+    }
+  },
+  {
+    "id": "PenNib",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/pen_nib.png"
+  },
+  {
+    "id": "Permafrost",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/permafrost.png",
+    "variables": {
+      "Block": "7"
+    }
+  },
+  {
+    "id": "PetrifiedToad",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/petrified_toad.png"
+  },
+  {
+    "id": "Planisphere",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/planisphere.png",
+    "variables": {
+      "Heal": "5"
+    }
+  },
+  {
+    "id": "ReptileTrinket",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Reptile",
+      "Trinket",
+      "Strength"
+    ],
+    "image": "images/relics/reptile_trinket.png",
+    "variables": {
+      "StrengthPower": "3"
+    }
+  },
+  {
+    "id": "RippleBasin",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/ripple_basin.png",
+    "variables": {
+      "Block": "4"
+    }
+  },
+  {
+    "id": "SparklingRouge",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Dexterity",
+      "Strength"
+    ],
+    "image": "images/relics/sparkling_rouge.png",
+    "variables": {
+      "StrengthPower": "1",
+      "DexterityPower": "1"
+    }
+  },
+  {
+    "id": "StoneCracker",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/stone_cracker.png",
+    "variables": {
+      "Cards": 2
+    }
+  },
+  {
+    "id": "TinyMailbox",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/tiny_mailbox.png"
+  },
+  {
+    "id": "TuningFork",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/tuning_fork.png",
+    "variables": {
+      "Cards": "10",
+      "Block": "7"
+    }
+  },
+  {
+    "id": "Vambrace",
+    "rarity": "uncommon",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/vambrace.png"
+  },
+  {
+    "id": "PaperPhrog",
+    "rarity": "uncommon",
+    "character": "ironclad",
+    "tags": [
+      "Vulnerable"
+    ],
+    "image": "images/relics/paper_phrog.png"
+  },
+  {
+    "id": "SelfFormingClay",
+    "rarity": "uncommon",
+    "character": "ironclad",
+    "tags": [
+      "Block",
+      "Self-Forming",
+      "Clay"
+    ],
+    "image": "images/relics/self_forming_clay.png",
+    "variables": {
+      "BlockNextTurn": "3"
+    }
+  },
+  {
+    "id": "Tingsha",
+    "rarity": "uncommon",
+    "character": "silent",
+    "tags": [
+      "Discard"
+    ],
+    "image": "images/relics/tingsha.png",
+    "variables": {
+      "Damage": "3"
+    }
+  },
+  {
+    "id": "TwistedFunnel",
+    "rarity": "uncommon",
+    "character": "silent",
+    "tags": [
+      "Poison"
+    ],
+    "image": "images/relics/twisted_funnel.png",
+    "variables": {
+      "PoisonPower": "4"
+    }
+  },
+  {
+    "id": "GalacticDust",
+    "rarity": "uncommon",
+    "character": "regent",
+    "tags": [
+      "Block",
+      "Star"
+    ],
+    "image": "images/relics/galactic_dust.png",
+    "variables": {
+      "Stars": 10,
+      "Block": 10
+    }
+  },
+  {
+    "id": "Regalite",
+    "rarity": "uncommon",
+    "character": "regent",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/regalite.png",
+    "variables": {
+      "Block": 4
+    }
+  },
+  {
+    "id": "BookRepairKnife",
+    "rarity": "uncommon",
+    "character": "necrobinder",
+    "tags": [
+      "Doom",
+      "Heal"
+    ],
+    "image": "images/relics/book_repair_knife.png",
+    "variables": {
+      "Heal": "3"
+    }
+  },
+  {
+    "id": "FuneraryMask",
+    "rarity": "uncommon",
+    "character": "necrobinder",
+    "tags": [],
+    "image": "images/relics/funerary_mask.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "GoldPlatedCables",
+    "rarity": "uncommon",
+    "character": "defect",
+    "tags": [],
+    "image": "images/relics/gold_plated_cables.png"
+  },
+  {
+    "id": "SymbioticVirus",
+    "rarity": "uncommon",
+    "character": "defect",
+    "tags": [
+      "Channel",
+      "Dark"
+    ],
+    "image": "images/relics/symbiotic_virus.png",
+    "variables": {
+      "Dark": "1"
+    }
+  },
+  {
+    "id": "ArtOfWar",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Energy",
+      "Next",
+      "Turn"
+    ],
+    "image": "images/relics/art_of_war.png",
+    "variables": {
+      "Energy": 1
+    }
+  },
+  {
+    "id": "BeatingRemnant",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/beating_remnant.png"
+  },
+  {
+    "id": "Bellows",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/bellows.png"
+  },
+  {
+    "id": "CaptainsWheel",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/captains_wheel.png",
+    "variables": {
+      "Block": "18"
+    }
+  },
+  {
+    "id": "Chandelier",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/chandelier.png",
+    "variables": {
+      "Energy": 3
+    }
+  },
+  {
+    "id": "CloakClasp",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/cloak_clasp.png",
+    "variables": {
+      "Block": "1"
+    }
+  },
+  {
+    "id": "FrozenEgg",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/frozen_egg.png"
+  },
+  {
+    "id": "GamblingChip",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Discard",
+      "Draw"
+    ],
+    "image": "images/relics/gambling_chip.png"
+  },
+  {
+    "id": "GamePiece",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/game_piece.png",
+    "variables": {
+      "Cards": "1"
+    }
+  },
+  {
+    "id": "Girya",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/girya.png"
+  },
+  {
+    "id": "IceCream",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/ice_cream.png"
+  },
+  {
+    "id": "IntimidatingHelmet",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Block",
+      "Energy"
+    ],
+    "image": "images/relics/intimidating_helmet.png",
+    "variables": {
+      "Energy": 2,
+      "Block": 4
+    }
+  },
+  {
+    "id": "Kunai",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Dexterity"
+    ],
+    "image": "images/relics/kunai.png",
+    "variables": {
+      "Cards": "3",
+      "DexterityPower": "1"
+    }
+  },
+  {
+    "id": "LizardTail",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/lizard_tail.png",
+    "variables": {
+      "Heal": "50"
+    }
+  },
+  {
+    "id": "Mango",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/mango.png",
+    "variables": {
+      "MaxHp": "14"
+    }
+  },
+  {
+    "id": "MeatOnTheBone",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/meat_on_the_bone.png",
+    "variables": {
+      "HpThreshold": "50",
+      "Heal": "12"
+    }
+  },
+  {
+    "id": "MoltenEgg",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/molten_egg.png"
+  },
+  {
+    "id": "MummifiedHand",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/mummified_hand.png"
+  },
+  {
+    "id": "OldCoin",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/old_coin.png",
+    "variables": {
+      "Gold": "300"
+    }
+  },
+  {
+    "id": "Pocketwatch",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/pocketwatch.png",
+    "variables": {
+      "CardThreshold": "3",
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "PrayerWheel",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/prayer_wheel.png"
+  },
+  {
+    "id": "RainbowRing",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Dexterity",
+      "Strength"
+    ],
+    "image": "images/relics/rainbow_ring.png",
+    "variables": {
+      "StrengthPower": "1",
+      "DexterityPower": "1"
+    }
+  },
+  {
+    "id": "RazorTooth",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/razor_tooth.png"
+  },
+  {
+    "id": "Shovel",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/shovel.png"
+  },
+  {
+    "id": "Shuriken",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/shuriken.png",
+    "variables": {
+      "Cards": "3",
+      "StrengthPower": "1"
+    }
+  },
+  {
+    "id": "StoneCalendar",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/stone_calendar.png",
+    "variables": {
+      "DamageTurn": "7",
+      "Damage": "52"
+    }
+  },
+  {
+    "id": "SturdyClamp",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/sturdy_clamp.png",
+    "variables": {
+      "Block": "10"
+    }
+  },
+  {
+    "id": "TheCourier",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/the_courier.png"
+  },
+  {
+    "id": "ToxicEgg",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/toxic_egg.png"
+  },
+  {
+    "id": "TungstenRod",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/tungsten_rod.png",
+    "variables": {
+      "HpLossReduction": "1"
+    }
+  },
+  {
+    "id": "UnceasingTop",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/unceasing_top.png"
+  },
+  {
+    "id": "UnsettlingLamp",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [
+      "Debuff"
+    ],
+    "image": "images/relics/unsettling_lamp.png"
+  },
+  {
+    "id": "VexingPuzzlebox",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/vexing_puzzlebox.png"
+  },
+  {
+    "id": "WhiteBeastStatue",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/white_beast_statue.png"
+  },
+  {
+    "id": "WhiteStar",
+    "rarity": "rare",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/white_star.png"
+  },
+  {
+    "id": "CharonsAshes",
+    "rarity": "rare",
+    "character": "ironclad",
+    "tags": [
+      "Exhaust"
+    ],
+    "image": "images/relics/charons_ashes.png",
+    "variables": {
+      "Damage": "3"
+    }
+  },
+  {
+    "id": "DemonTongue",
+    "rarity": "rare",
+    "character": "ironclad",
+    "tags": [
+      "Heal",
+      "Lose",
+      "HP"
+    ],
+    "image": "images/relics/demon_tongue.png"
+  },
+  {
+    "id": "RuinedHelmet",
+    "rarity": "rare",
+    "character": "ironclad",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/ruined_helmet.png"
+  },
+  {
+    "id": "HelicalDart",
+    "rarity": "rare",
+    "character": "silent",
+    "tags": [
+      "Dexterity",
+      "Helical",
+      "Dart"
+    ],
+    "image": "images/relics/helical_dart.png",
+    "variables": {
+      "DexterityPower": "1"
+    }
+  },
+  {
+    "id": "PaperKrane",
+    "rarity": "rare",
+    "character": "silent",
+    "tags": [
+      "Weak"
+    ],
+    "image": "images/relics/paper_krane.png"
+  },
+  {
+    "id": "ToughBandages",
+    "rarity": "rare",
+    "character": "silent",
+    "tags": [
+      "Block",
+      "Discard"
+    ],
+    "image": "images/relics/tough_bandages.png",
+    "variables": {
+      "Block": "3"
+    }
+  },
+  {
+    "id": "LunarPastry",
+    "rarity": "rare",
+    "character": "regent",
+    "tags": [
+      "Star"
+    ],
+    "image": "images/relics/lunar_pastry.png",
+    "variables": {
+      "Stars": 1
+    }
+  },
+  {
+    "id": "MiniRegent",
+    "rarity": "rare",
+    "character": "regent",
+    "tags": [
+      "Star",
+      "Strength"
+    ],
+    "image": "images/relics/mini_regent.png",
+    "variables": {
+      "StrengthPower": 1
+    }
+  },
+  {
+    "id": "OrangeDough",
+    "rarity": "rare",
+    "character": "regent",
+    "tags": [],
+    "image": "images/relics/orange_dough.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "BigHat",
+    "rarity": "rare",
+    "character": "necrobinder",
+    "tags": [
+      "Ethereal"
+    ],
+    "image": "images/relics/big_hat.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "Bookmark",
+    "rarity": "rare",
+    "character": "necrobinder",
+    "tags": [
+      "Retain"
+    ],
+    "image": "images/relics/bookmark.png"
+  },
+  {
+    "id": "IvoryTile",
+    "rarity": "rare",
+    "character": "necrobinder",
+    "tags": [
+      "Energy",
+      "Energy"
+    ],
+    "image": "images/relics/ivory_tile.png",
+    "variables": {
+      "Energy": 1,
+      "EnergyThreshold": 3
+    }
+  },
+  {
+    "id": "EmotionChip",
+    "rarity": "rare",
+    "character": "defect",
+    "tags": [],
+    "image": "images/relics/emotion_chip.png"
+  },
+  {
+    "id": "Metronome",
+    "rarity": "rare",
+    "character": "defect",
+    "tags": [
+      "Channel"
+    ],
+    "image": "images/relics/metronome.png",
+    "variables": {
+      "OrbCount": "7",
+      "Damage": "30"
+    }
+  },
+  {
+    "id": "PowerCell",
+    "rarity": "rare",
+    "character": "defect",
+    "tags": [],
+    "image": "images/relics/power_cell.png",
+    "variables": {
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "ArcaneScroll",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/arcane_scroll.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "BoomingConch",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Draw",
+      "Energy"
+    ],
+    "image": "images/relics/booming_conch.png",
+    "variables": {
+      "Cards": 2
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "CursedPearl",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/cursed_pearl.png",
+    "variables": {
+      "Gold": "333"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "DowsingRod",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/dowsing_rod.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "FishingRod",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/fishing_rod.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "GoldenPearl",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/golden_pearl.png",
+    "variables": {
+      "Gold": "150"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "HeftyTablet",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/hefty_tablet.png",
+    "variables": {
+      "Cards": 3
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "Kaleidoscope",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/kaleidoscope.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "LargeCapsule",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/large_capsule.png",
+    "variables": {
+      "Relics": "2"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "LavaRock",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/lava_rock.png",
+    "variables": {
+      "Relics": "2"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "LeadPaperweight",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/lead_paperweight.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "LeafyPoultice",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Transform"
+    ],
+    "image": "images/relics/leafy_poultice.png",
+    "variables": {
+      "MaxHp": "12"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "LostCoffer",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/lost_coffer.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "MassiveScroll",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/massive_scroll.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "NeowsBones",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/neows_bones.png",
+    "variables": {
+      "Relics": "2",
+      "Curses": "1"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "NeowsSacrifice",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/neows_sacrifice.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "NeowsTalisman",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/neows_talisman.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "NeowsTorment",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/neows_torment.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "NewLeaf",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Transform"
+    ],
+    "image": "images/relics/new_leaf.png",
+    "variables": {
+      "Cards": "1"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "NutritiousOyster",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/nutritious_oyster.png",
+    "variables": {
+      "MaxHp": "11"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "PhialHolster",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/phial_holster.png",
+    "variables": {
+      "PotionSlots": "1",
+      "Potions": "2"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "Pomander",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/pomander.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "PrecariousShears",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/precarious_shears.png",
+    "variables": {
+      "Cards": 2,
+      "Damage": 16
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "PreciseScissors",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/precise_scissors.png",
+    "variables": {
+      "Cards": "1"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "ScrollBoxes",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/scroll_boxes.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "SilkenTress",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Glam"
+    ],
+    "image": "images/relics/silken_tress.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "SilverCrucible",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/silver_crucible.png",
+    "variables": {
+      "Cards": "3"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "SmallCapsule",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/small_capsule.png",
+    "ancient": "Neow"
+  },
+  {
+    "id": "StoneHumidifier",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/stone_humidifier.png",
+    "variables": {
+      "MaxHp": "5"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "WingedBoots",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/winged_boots.png",
+    "variables": {
+      "Rooms": "3"
+    },
+    "ancient": "Neow"
+  },
+  {
+    "id": "AlchemicalCoffer",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/alchemical_coffer.png",
+    "variables": {
+      "PotionSlots": 4
+    },
+    "ancient": "Orobas"
+  },
+  {
+    "id": "ArchaicTooth",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Transform"
+    ],
+    "image": "images/relics/archaic_tooth.png",
+    "ancient": "Orobas"
+  },
+  {
+    "id": "Driftwood",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/driftwood.png",
+    "ancient": "Orobas"
+  },
+  {
+    "id": "ElectricShrymp",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Imbued"
+    ],
+    "image": "images/relics/electric_shrymp.png",
+    "ancient": "Orobas"
+  },
+  {
+    "id": "GlassEye",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/glass_eye.png",
+    "ancient": "Orobas"
+  },
+  {
+    "id": "PrismaticGem",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/prismatic_gem.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Orobas"
+  },
+  {
+    "id": "RadiantPearl",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/radiant_pearl.png",
+    "variables": {
+      "Cards": "1"
+    },
+    "ancient": "Orobas"
+  },
+  {
+    "id": "SandCastle",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/sand_castle.png",
+    "variables": {
+      "Cards": "6"
+    },
+    "ancient": "Orobas"
+  },
+  {
+    "id": "SeaGlass",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/sea_glass.png",
+    "variables": {
+      "Cards": 15
+    },
+    "ancient": "Orobas"
+  },
+  {
+    "id": "TouchOfOrobas",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/touch_of_orobas.png",
+    "ancient": "Orobas"
+  },
+  {
+    "id": "PaelsBlood",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/paels_blood.png",
+    "variables": {
+      "Cards": "1"
+    },
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsClaw",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Goopy"
+    ],
+    "image": "images/relics/paels_claw.png",
+    "variables": {
+      "EnchantmentName": "Goopy"
+    },
+    "ancient": "Pael",
+    "variablesZh": {
+      "EnchantmentName": "黏糊"
+    }
+  },
+  {
+    "id": "PaelsEye",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Exhaust"
+    ],
+    "image": "images/relics/paels_eye.png",
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsFlesh",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/paels_flesh.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsGrowth",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Clone",
+      "Enchant"
+    ],
+    "image": "images/relics/paels_growth.png",
+    "variables": {
+      "EnchantmentName": "Clone"
+    },
+    "ancient": "Pael",
+    "variablesZh": {
+      "EnchantmentName": "克隆"
+    }
+  },
+  {
+    "id": "PaelsHorn",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/paels_horn.png",
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsLegion",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/paels_legion.png",
+    "variables": {
+      "Turns": "2"
+    },
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsTears",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/paels_tears.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsTooth",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/paels_tooth.png",
+    "variables": {
+      "Cards": 5
+    },
+    "ancient": "Pael"
+  },
+  {
+    "id": "PaelsWing",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/paels_wing.png",
+    "variables": {
+      "Sacrifices": 2
+    },
+    "ancient": "Pael"
+  },
+  {
+    "id": "BiiigHug",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/biiig_hug.png",
+    "variables": {
+      "Cards": "4"
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "GoldenCompass",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/golden_compass.png",
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "NutritiousSoup",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Tezcatara's",
+      "Ember"
+    ],
+    "image": "images/relics/nutritious_soup.png",
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "PumpkinCandle",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/pumpkin_candle.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "SealOfGold",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/seal_of_gold.png",
+    "variables": {
+      "Energy": 1,
+      "Gold": 3
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "Storybook",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/storybook.png",
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "ToastyMittens",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Exhaust",
+      "Strength"
+    ],
+    "image": "images/relics/toasty_mittens.png",
+    "variables": {
+      "StrengthPower": 1
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "ToyBox",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/toy_box.png",
+    "variables": {
+      "Relics": "5",
+      "Combats": "3"
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "VeryHotCocoa",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/very_hot_cocoa.png",
+    "variables": {
+      "Energy": 4
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "YummyCookie",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/yummy_cookie.png",
+    "variables": {
+      "Cards": "4"
+    },
+    "ancient": "Tezcatara"
+  },
+  {
+    "id": "BeautifulBracelet",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Swift"
+    ],
+    "image": "images/relics/beautiful_bracelet.png",
+    "variables": {
+      "Cards": 4
+    },
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "BlessedAntler",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/blessed_antler.png",
+    "variables": {
+      "Energy": 1,
+      "Cards": 3
+    },
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "BrilliantScarf",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/brilliant_scarf.png",
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "DelicateFrond",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/delicate_frond.png",
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "DiamondDiadem",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Block",
+      "Blur"
+    ],
+    "image": "images/relics/diamond_diadem.png",
+    "variables": {
+      "CardThreshold": 2
+    },
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "FurCoat",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/fur_coat.png",
+    "variables": {
+      "Combats": "8"
+    },
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "Glitter",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Glam"
+    ],
+    "image": "images/relics/glitter.png",
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "JewelryBox",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/jewelry_box.png",
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "LoomingFruit",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/looming_fruit.png",
+    "variables": {
+      "MaxHp": "31"
+    },
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "SignetRing",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/signet_ring.png",
+    "variables": {
+      "Gold": "888"
+    },
+    "ancient": "Nonupeipe"
+  },
+  {
+    "id": "Claws",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Transform"
+    ],
+    "image": "images/relics/claws.png",
+    "variables": {
+      "Cards": "6"
+    },
+    "ancient": "Tanx"
+  },
+  {
+    "id": "Crossbow",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/crossbow.png",
+    "ancient": "Tanx"
+  },
+  {
+    "id": "IronClub",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/iron_club.png",
+    "variables": {
+      "Cards": "4"
+    },
+    "ancient": "Tanx"
+  },
+  {
+    "id": "MeatCleaver",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/meat_cleaver.png",
+    "ancient": "Tanx"
+  },
+  {
+    "id": "Sai",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/sai.png",
+    "variables": {
+      "Block": "7"
+    },
+    "ancient": "Tanx"
+  },
+  {
+    "id": "SpikedGauntlets",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/spiked_gauntlets.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Tanx"
+  },
+  {
+    "id": "TanxsWhistle",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/tanxs_whistle.png",
+    "ancient": "Tanx"
+  },
+  {
+    "id": "ThrowingAxe",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/throwing_axe.png",
+    "ancient": "Tanx"
+  },
+  {
+    "id": "TriBoomerang",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Instinct"
+    ],
+    "image": "images/relics/tri_boomerang.png",
+    "variables": {
+      "Cards": "3"
+    },
+    "ancient": "Tanx"
+  },
+  {
+    "id": "WarHammer",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/war_hammer.png",
+    "variables": {
+      "Cards": "4"
+    },
+    "ancient": "Tanx"
+  },
+  {
+    "id": "BloodSoakedRose",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/blood_soaked_rose.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "ChoicesParadox",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Retain"
+    ],
+    "image": "images/relics/choices_paradox.png",
+    "variables": {
+      "Cards": "5"
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "DistinguishedCape",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/distinguished_cape.png",
+    "variables": {
+      "Cards": 3
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "Fiddle",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/fiddle.png",
+    "variables": {
+      "Cards": "2"
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "JeweledMask",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/jeweled_mask.png",
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "LordsParasol",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/lords_parasol.png",
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "MusicBox",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Ethereal"
+    ],
+    "image": "images/relics/music_box.png",
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "PreservedFog",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/preserved_fog.png",
+    "variables": {
+      "Cards": "3"
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "SereTalon",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/sere_talon.png",
+    "variables": {
+      "Wishes": 3
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "WhisperingEarring",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/whispering_earring.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Vakuu"
+  },
+  {
+    "id": "Astrolabe",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Transform",
+      "Upgrade"
+    ],
+    "image": "images/relics/astrolabe.png",
+    "variables": {
+      "Cards": "3"
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "BlackStar",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/black_star.png",
+    "ancient": "Darv"
+  },
+  {
+    "id": "CallingBell",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/calling_bell.png",
+    "variables": {
+      "Relics": "3"
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "DustyTome",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/dusty_tome.png",
+    "ancient": "Darv"
+  },
+  {
+    "id": "Ectoplasm",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy",
+      "Gold"
+    ],
+    "image": "images/relics/ectoplasm.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "EmptyCage",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/empty_cage.png",
+    "variables": {
+      "Cards": "2"
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "PandorasBox",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Transform"
+    ],
+    "image": "images/relics/pandoras_box.png",
+    "ancient": "Darv"
+  },
+  {
+    "id": "PhilosophersStone",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy",
+      "Strength"
+    ],
+    "image": "images/relics/philosophers_stone.png",
+    "variables": {
+      "Energy": 1,
+      "StrengthPower": 1
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "RunicPyramid",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Retain"
+    ],
+    "image": "images/relics/runic_pyramid.png",
+    "ancient": "Darv"
+  },
+  {
+    "id": "SneckoEye",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Confused",
+      "Draw"
+    ],
+    "image": "images/relics/snecko_eye.png",
+    "variables": {
+      "Cards": "2"
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "Sozu",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/sozu.png",
+    "variables": {
+      "Energy": 1
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "VelvetChoker",
+    "rarity": "ancient",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/velvet_choker.png",
+    "variables": {
+      "Energy": 1,
+      "Cards": 6
+    },
+    "ancient": "Darv"
+  },
+  {
+    "id": "BeltBuckle",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Dexterity"
+    ],
+    "image": "images/relics/belt_buckle.png",
+    "variables": {
+      "DexterityPower": "2"
+    }
+  },
+  {
+    "id": "Bread",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/bread.png",
+    "variables": {
+      "LoseEnergy": 2,
+      "GainEnergy": 1
+    }
+  },
+  {
+    "id": "BurningSticks",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Exhaust"
+    ],
+    "image": "images/relics/burning_sticks.png"
+  },
+  {
+    "id": "Cauldron",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/cauldron.png",
+    "variables": {
+      "Potions": "5"
+    }
+  },
+  {
+    "id": "ChemicalX",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/chemical_x.png",
+    "variables": {
+      "Increase": "2"
+    }
+  },
+  {
+    "id": "DingyRug",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/dingy_rug.png"
+  },
+  {
+    "id": "DollysMirror",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/dollys_mirror.png"
+  },
+  {
+    "id": "DragonFruit",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/dragon_fruit.png",
+    "variables": {
+      "MaxHp": "1"
+    }
+  },
+  {
+    "id": "GhostSeed",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Ethereal"
+    ],
+    "image": "images/relics/ghost_seed.png"
+  },
+  {
+    "id": "GnarledHammer",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Sharp"
+    ],
+    "image": "images/relics/gnarled_hammer.png",
+    "variables": {
+      "Cards": "3",
+      "SharpAmount": "3"
+    }
+  },
+  {
+    "id": "Kifuda",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Adroit",
+      "Enchant"
+    ],
+    "image": "images/relics/kifuda.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "LavaLamp",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/lava_lamp.png"
+  },
+  {
+    "id": "LeesWaffle",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/lees_waffle.png",
+    "variables": {
+      "MaxHp": "7"
+    }
+  },
+  {
+    "id": "MembershipCard",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/membership_card.png",
+    "variables": {
+      "Discount": "50"
+    }
+  },
+  {
+    "id": "MiniatureTent",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/miniature_tent.png"
+  },
+  {
+    "id": "MysticLighter",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Enchant"
+    ],
+    "image": "images/relics/mystic_lighter.png",
+    "variables": {
+      "Damage": "9"
+    }
+  },
+  {
+    "id": "Orrery",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/orrery.png",
+    "variables": {
+      "Cards": "5"
+    }
+  },
+  {
+    "id": "PunchDagger",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Momentum"
+    ],
+    "image": "images/relics/punch_dagger.png",
+    "variables": {
+      "Momentum": "5"
+    }
+  },
+  {
+    "id": "RingingTriangle",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Retain"
+    ],
+    "image": "images/relics/ringing_triangle.png"
+  },
+  {
+    "id": "RoyalStamp",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Royally",
+      "Approved"
+    ],
+    "image": "images/relics/royal_stamp.png",
+    "variables": {
+      "Enchantment": "Royally Approved"
+    },
+    "variablesZh": {
+      "Enchantment": "御准"
+    }
+  },
+  {
+    "id": "ScreamingFlagon",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/screaming_flagon.png",
+    "variables": {
+      "Damage": "20"
+    }
+  },
+  {
+    "id": "SlingOfCourage",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/sling_of_courage.png",
+    "variables": {
+      "StrengthPower": "2"
+    }
+  },
+  {
+    "id": "TheAbacus",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/the_abacus.png",
+    "variables": {
+      "Block": "6"
+    }
+  },
+  {
+    "id": "Toolbox",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/toolbox.png",
+    "variables": {
+      "Cards": "3"
+    }
+  },
+  {
+    "id": "WingCharm",
+    "rarity": "shop",
+    "character": "any",
+    "tags": [
+      "Enchant",
+      "Swift"
+    ],
+    "image": "images/relics/wing_charm.png",
+    "variables": {
+      "SwiftAmount": "1"
+    }
+  },
+  {
+    "id": "Brimstone",
+    "rarity": "shop",
+    "character": "ironclad",
+    "tags": [
+      "Strength",
+      "Strength"
+    ],
+    "image": "images/relics/brimstone.png",
+    "variables": {
+      "SelfStrength": "2",
+      "EnemyStrength": "1"
+    }
+  },
+  {
+    "id": "NinjaScroll",
+    "rarity": "shop",
+    "character": "silent",
+    "tags": [],
+    "image": "images/relics/ninja_scroll.png",
+    "variables": {
+      "Shivs": "3"
+    }
+  },
+  {
+    "id": "VitruvianMinion",
+    "rarity": "shop",
+    "character": "regent",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/vitruvian_minion.png"
+  },
+  {
+    "id": "UndyingSigil",
+    "rarity": "shop",
+    "character": "necrobinder",
+    "tags": [
+      "Doom"
+    ],
+    "image": "images/relics/undying_sigil.png"
+  },
+  {
+    "id": "RunicCapacitor",
+    "rarity": "shop",
+    "character": "defect",
+    "tags": [],
+    "image": "images/relics/runic_capacitor.png",
+    "variables": {
+      "Repeat": "3"
+    }
+  },
+  {
+    "id": "Circlet",
+    "rarity": "special",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/circlet.png"
+  },
+  {
+    "id": "Byrdpip",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/byrdpip.png"
+  },
+  {
+    "id": "PollinousCore",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/pollinous_core.png",
+    "variables": {
+      "Turns": "4",
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "BingBong",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/bing_bong.png"
+  },
+  {
+    "id": "DaughterOfTheWind",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/daughter_of_the_wind.png",
+    "variables": {
+      "Block": "1"
+    }
+  },
+  {
+    "id": "MrStruggles",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/mr_struggles.png"
+  },
+  {
+    "id": "FresnelLens",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Block",
+      "Enchant",
+      "Nimble"
+    ],
+    "image": "images/relics/fresnel_lens.png",
+    "variables": {
+      "NimbleAmount": "2"
+    }
+  },
+  {
+    "id": "ForgottenSoul",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Exhaust"
+    ],
+    "image": "images/relics/forgotten_soul.png",
+    "variables": {
+      "Damage": "1"
+    }
+  },
+  {
+    "id": "BigMushroom",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Draw"
+    ],
+    "image": "images/relics/big_mushroom.png",
+    "variables": {
+      "MaxHp": "20",
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "FragrantMushroom",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/fragrant_mushroom.png",
+    "variables": {
+      "HpLoss": "15",
+      "Cards": "2"
+    }
+  },
+  {
+    "id": "ChosenCheese",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/chosen_cheese.png",
+    "variables": {
+      "MaxHp": "1"
+    }
+  },
+  {
+    "id": "BoneTea",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Upgrade"
+    ],
+    "image": "images/relics/bone_tea.png",
+    "variables": {
+      "Combats": 1
+    }
+  },
+  {
+    "id": "EmberTea",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/ember_tea.png",
+    "variables": {
+      "Combats": 5,
+      "StrengthPower": 2
+    }
+  },
+  {
+    "id": "TeaOfDiscourtesy",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/tea_of_discourtesy.png",
+    "variables": {
+      "DazedCount": "2"
+    }
+  },
+  {
+    "id": "LostWisp",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/lost_wisp.png",
+    "variables": {
+      "Damage": "8"
+    }
+  },
+  {
+    "id": "FakeAnchor",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/fake_anchor.png",
+    "variables": {
+      "Block": "4"
+    }
+  },
+  {
+    "id": "FakeBloodVial",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/fake_blood_vial.png",
+    "variables": {
+      "Heal": "1"
+    }
+  },
+  {
+    "id": "FakeHappyFlower",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/fake_happy_flower.png",
+    "variables": {
+      "Energy": 1,
+      "Turns": 5
+    }
+  },
+  {
+    "id": "FakeLeesWaffle",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Heal"
+    ],
+    "image": "images/relics/fake_lees_waffle.png",
+    "variables": {
+      "Heal": "10"
+    }
+  },
+  {
+    "id": "FakeMango",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/fake_mango.png",
+    "variables": {
+      "MaxHp": "3"
+    }
+  },
+  {
+    "id": "FakeOrichalcum",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Block"
+    ],
+    "image": "images/relics/fake_orichalcum.png",
+    "variables": {
+      "Block": "3"
+    }
+  },
+  {
+    "id": "FakeSneckoEye",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Confused"
+    ],
+    "image": "images/relics/fake_snecko_eye.png"
+  },
+  {
+    "id": "FakeStrikeDummy",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/fake_strike_dummy.png",
+    "variables": {
+      "ExtraDamage": 1
+    }
+  },
+  {
+    "id": "FakeMerchantsRug",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/fake_merchants_rug.png"
+  },
+  {
+    "id": "FakeVenerableTeaSet",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Energy"
+    ],
+    "image": "images/relics/fake_venerable_tea_set.png",
+    "variables": {
+      "Energy": 1
+    }
+  },
+  {
+    "id": "RoyalPoison",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/royal_poison.png",
+    "variables": {
+      "Damage": "4"
+    }
+  },
+  {
+    "id": "SwordOfJade",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Strength"
+    ],
+    "image": "images/relics/sword_of_jade.png",
+    "variables": {
+      "StrengthPower": "3"
+    }
+  },
+  {
+    "id": "SwordOfStone",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/sword_of_stone.png",
+    "variables": {
+      "Elites": "5"
+    }
+  },
+  {
+    "id": "DarkstonePeriapt",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/darkstone_periapt.png",
+    "variables": {
+      "MaxHp": "6"
+    }
+  },
+  {
+    "id": "DreamCatcher",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/dream_catcher.png"
+  },
+  {
+    "id": "HandDrill",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Block",
+      "Vulnerable"
+    ],
+    "image": "images/relics/hand_drill.png",
+    "variables": {
+      "VulnerablePower": "2"
+    }
+  },
+  {
+    "id": "MawBank",
+    "rarity": "event",
+    "character": "any",
+    "tags": [
+      "Gold"
+    ],
+    "image": "images/relics/maw_bank.png",
+    "variables": {
+      "Gold": "12"
+    }
+  },
+  {
+    "id": "TheBoot",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/the_boot.png",
+    "variables": {
+      "DamageThreshold": "4",
+      "DamageMinimum": "5"
+    }
+  },
+  {
+    "id": "HistoryCourse",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/history_course.png"
+  },
+  {
+    "id": "WongoCustomerAppreciationBadge",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/wongo_customer_appreciation_badge.png"
+  },
+  {
+    "id": "WongosMysteryTicket",
+    "rarity": "event",
+    "character": "any",
+    "tags": [],
+    "image": "images/relics/wongos_mystery_ticket.png",
+    "variables": {
+      "Repeat": "3",
+      "RemainingCombats": "5"
+    }
+  }
+]

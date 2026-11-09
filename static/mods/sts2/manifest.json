@@ -1,0 +1,102 @@
+{
+	"id": "sts2",
+	"name": "Slay the Spire 2",
+	"author": "Mega Crit",
+	"blurb": "A wandering blade and a quiet knife, rewriting the road one fight at a time.",
+	"dependency": {
+		"type": "other",
+		"prefix": ""
+	},
+	"cards": "cards.json",
+	"powers": "powers.json",
+	"relics": "relics.json",
+	"potions": "potions.json",
+	"cardPool": {
+		"colorless": {
+			"char": "images/energy_colorless.png",
+			"cardEnergy": "images/energy_colorless.png",
+			"textEnergy": "images/colorless_energy_icon.png",
+			"accent": "#a6a199",
+			"energyOutline": "#5c5440",
+			"cardFrame": {
+				"attack": "/images/card_frames/attack.png",
+				"skill": "/images/card_frames/skill.png",
+				"power": "/images/card_frames/power.png",
+				"quest": "/images/card_frames/quest.png"
+			},
+			"shader": { "h": 1.0, "s": 0.0, "v": 1.2 }
+		},
+		"ironclad": {
+			"char": "images/character_icon_ironclad.png",
+			"cardEnergy": "images/energy_ironclad.png",
+			"textEnergy": "images/ironclad_energy_icon.png",
+			"accent": "#c65a42",
+			"energyOutline": "#802020",
+			"cardFrame": {
+				"attack": "/images/card_frames/attack.png",
+				"skill": "/images/card_frames/skill.png",
+				"power": "/images/card_frames/power.png",
+				"quest": "/images/card_frames/quest.png"
+			},
+			"shader": { "h": 0.025, "s": 0.85, "v": 1.0 }
+		},
+		"defect": {
+			"char": "images/character_icon_defect.png",
+			"cardEnergy": "images/energy_defect.png",
+			"textEnergy": "images/defect_energy_icon.png",
+			"accent": "#5aa9c9",
+			"energyOutline": "#1d5673",
+			"cardFrame": {
+				"attack": "/images/card_frames/attack.png",
+				"skill": "/images/card_frames/skill.png",
+				"power": "/images/card_frames/power.png",
+				"quest": "/images/card_frames/quest.png"
+			},
+			"shader": { "h": 0.55, "s": 0.9, "v": 1.0 }
+		},
+		"necrobinder": {
+			"char": "images/character_icon_necrobinder.png",
+			"cardEnergy": "images/energy_necrobinder.png",
+			"textEnergy": "images/necrobinder_energy_icon.png",
+			"accent": "#9a73c9",
+			"energyOutline": "#803367",
+			"cardFrame": {
+				"attack": "/images/card_frames/attack.png",
+				"skill": "/images/card_frames/skill.png",
+				"power": "/images/card_frames/power.png",
+				"quest": "/images/card_frames/quest.png"
+			},
+			"shader": { "h": 0.965, "s": 0.55, "v": 1.2 }
+		},
+		"regent": {
+			"char": "images/character_icon_regent.png",
+			"cardEnergy": "images/energy_regent.png",
+			"textEnergy": "images/regent_energy_icon.png",
+			"secondCardEnergy": "images/energy_star.png",
+			"secondTextEnergy": "images/star_icon.png",
+			"accent": "#d5aa5b",
+			"energyOutline": "#803d0e",
+			"cardFrame": {
+				"attack": "/images/card_frames/attack.png",
+				"skill": "/images/card_frames/skill.png",
+				"power": "/images/card_frames/power.png",
+				"quest": "/images/card_frames/quest.png"
+			},
+			"shader": { "h": 0.12, "s": 1.5, "v": 1.2 }
+		},
+		"silent": {
+			"char": "images/character_icon_silent.png",
+			"cardEnergy": "images/energy_silent.png",
+			"textEnergy": "images/silent_energy_icon.png",
+			"accent": "#55a47c",
+			"energyOutline": "#1a6625",
+			"cardFrame": {
+				"attack": "/images/card_frames/attack.png",
+				"skill": "/images/card_frames/skill.png",
+				"power": "/images/card_frames/power.png",
+				"quest": "/images/card_frames/quest.png"
+			},
+			"shader": { "h": 0.32, "s": 0.45, "v": 1.2 }
+		}
+	}
+}

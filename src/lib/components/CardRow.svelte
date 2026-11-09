@@ -1,51 +1,41 @@
 <script lang="ts">
-	import { COLORS, RARITIES, cardHref, isUpgradable, type Card } from '#lib/data/cards';
-	import {
-		colorName,
-		localizedCard,
-		modName,
-		rarityName,
-		typeName
-	} from '#lib/data/localize';
-	import { m } from '#lib/paraglide/messages';
-	import CardThumb from './CardThumb.svelte';
-	import RichText from './RichText.svelte';
+	import { resolve } from '$app/paths'
+	import { COLORS, RARITIES, cardHref, isUpgradable, resolveCard, type Card } from '#lib/data/cards'
+	import { colorName, localizedCard, modName, rarityName, typeName } from '#lib/data/localize'
+	import { CHARACTER_ASSETS } from '#lib/data/mods'
+	import { m } from '#lib/paraglide/messages'
+	import CardDescription from './CardDescription.svelte'
+	import CardThumb from './CardThumb.svelte'
 
 	let {
 		card,
 		upgraded = false,
 		showActions = true,
+		priority = false,
 		onupgraded = () => {}
 	}: {
-		card: Card;
-		upgraded?: boolean;
-		showActions?: boolean;
-		onupgraded?: () => void;
-	} = $props();
+		card: Card
+		upgraded?: boolean
+		showActions?: boolean
+		priority?: boolean
+		onupgraded?: () => void
+	} = $props()
 
-	let localized = $derived(localizedCard(card));
-	let color = $derived(COLORS[card.color]);
-	let rarity = $derived(RARITIES[card.rarity]);
-	let canUpgrade = $derived(isUpgradable(card));
-	let type = $derived(typeName(card.type));
-	let colorLabel = $derived(colorName(card.color));
-	let rarityLabel = $derived(rarityName(card.rarity));
-
-	let display = $derived(
-		upgraded && canUpgrade
-			? {
-					...localized,
-					name: `${localized.name}+`,
-					text: localized.upgradedText,
-					cost: localized.upgradedCost ?? localized.cost
-				}
-			: localized
-	);
+	let localized = $derived(localizedCard(card))
+	let color = $derived(COLORS[card.color])
+	let accent = $derived(CHARACTER_ASSETS[card.color]?.accent ?? color.accent)
+	let rarity = $derived(RARITIES[card.rarity])
+	let canUpgrade = $derived(isUpgradable(card))
+	let upgradedView = $derived(upgraded && canUpgrade)
+	let type = $derived(typeName(card.type))
+	let colorLabel = $derived(colorName(card.color))
+	let rarityLabel = $derived(rarityName(card.rarity))
+	let display = $derived(resolveCard(localized, upgradedView))
 </script>
 
 <article
 	class="card-row card-box"
-	style:--accent={color.accent}
+	style:--accent={accent}
 	data-name={localized.name}
 	data-rarity={rarityLabel}
 	data-type={type}
@@ -57,27 +47,28 @@
 	data-tags={card.keywords.join(' ')}
 >
 	<a class="thumb-link card-image-wrap" href={cardHref(card)} aria-label={m.card_open({ name: localized.name })}>
-		<CardThumb card={display} />
+		<CardThumb card={display} upgraded={upgradedView} {priority} />
 	</a>
 
-	<div class="row-content card-text">
+	<div class="row-content">
 		<div class="row-head">
-			<a class="card-name card-title" href={cardHref(card)}>{display.name}</a>
+			<a class="card-title" href={cardHref(card)}>{display.name}</a>
 			<span class="card-meta">
-				<i class="rarity-dot" style:background={rarity.color} aria-hidden="true"></i>
-				{rarityLabel} - {colorLabel} - {type}
+				<a href="{resolve('/cards')}?rarity={card.rarity}">{rarityLabel}</a>
+				<span aria-hidden="true">-</span>
+				<a href="{resolve('/cards')}?color={card.color}">{colorLabel}</a>
+				<span aria-hidden="true">-</span>
+				<a href="{resolve('/cards')}?type={card.type}">{type}</a>
 			</span>
 		</div>
 
-		<div class="card-desc">
-			<RichText text={display.text} />
-		</div>
+		<CardDescription card={display} upgraded={upgradedView} />
 
 		{#if showActions}
-			<div class="row-actions card-toggles">
+			<div class="row-actions">
 				{#if canUpgrade}
 					<button
-						class="row-button card-toggle-button upgrade-toggle"
+						class="upgrade-button"
 						type="button"
 						aria-pressed={upgraded}
 						title={m.card_toggle_upgraded()}
@@ -106,25 +97,12 @@
 		border: 0;
 		border-radius: 6px;
 		background: var(--list-cell);
-		transition:
-			background 0.18s ease,
-			box-shadow 0.18s ease;
-	}
-
-	.card-row:hover {
-		background: color-mix(in srgb, var(--list-cell) 96%, white 6%);
-		box-shadow: inset 2px 0 0 color-mix(in srgb, var(--gold) 45%, transparent);
 	}
 
 	.thumb-link {
 		flex: none;
 		width: 150px;
 		border-radius: 4px;
-		transition: transform 0.24s var(--ease);
-	}
-
-	.thumb-link:hover {
-		transform: translateY(-2px);
 	}
 
 	.row-content {
@@ -145,7 +123,7 @@
 		min-width: 0;
 	}
 
-	.card-name {
+	.card-title {
 		font-family: var(--font-display);
 		font-size: 1.5rem;
 		font-weight: 400;
@@ -156,7 +134,7 @@
 		transition: color 0.16s ease;
 	}
 
-	.card-name:hover {
+	.card-title:hover {
 		color: #fff3bd;
 		text-decoration: underline;
 		text-decoration-thickness: 1px;
@@ -172,22 +150,6 @@
 		color: var(--link);
 	}
 
-	.rarity-dot {
-		width: 6px;
-		height: 6px;
-		flex: none;
-		transform: rotate(45deg);
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-	}
-
-	.card-desc {
-		max-width: 82ch;
-		font-size: 1rem;
-		line-height: 1.3;
-		color: var(--text);
-		text-wrap: pretty;
-	}
-
 	.row-actions {
 		display: flex;
 		align-items: center;
@@ -197,7 +159,7 @@
 		padding-top: 4px;
 	}
 
-	.row-button {
+	.upgrade-button {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -214,13 +176,7 @@
 			color 0.16s ease;
 	}
 
-	.row-button:hover:not(:disabled) {
-		border-color: var(--accent);
-		background: color-mix(in srgb, var(--accent) 18%, transparent);
-		color: var(--text);
-	}
-
-	.row-button[aria-pressed='true'] {
+	.upgrade-button[aria-pressed='true'] {
 		border-color: mediumseagreen;
 		background: mediumseagreen;
 		color: oklch(0 0 0);
@@ -261,12 +217,8 @@
 			width: 110px;
 		}
 
-		.card-name {
+		.card-title {
 			font-size: 1.25rem;
-		}
-
-		.card-desc {
-			font-size: 0.88rem;
 		}
 
 		.mod-name {
@@ -285,17 +237,13 @@
 			width: 84px;
 		}
 
-		.card-name {
+		.card-title {
 			font-size: 1.1rem;
 		}
 
 		.card-meta {
 			font-size: 0.72rem;
 			flex-wrap: wrap;
-		}
-
-		.card-desc {
-			font-size: 0.82rem;
 		}
 	}
 </style>

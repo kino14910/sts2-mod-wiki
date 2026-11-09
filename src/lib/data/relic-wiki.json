@@ -1,0 +1,333 @@
+{
+	"CrackedCore": {
+		"title": "Cracked Core",
+		"gameTabs": [
+			{
+				"label": "Slay the Spire",
+				"href": "https://slaythespire.wiki.gg/wiki/Cracked_Core"
+			},
+			{
+				"label": "Slay the Spire 2",
+				"current": true
+			}
+		],
+		"infobox": {
+			"variants": [
+				"Normal"
+			],
+			"rarity": {
+				"label": "Starter Relic",
+				"href": "/relics?rarity=starter"
+			},
+			"character": {
+				"label": "Defect Only",
+				"href": "/relics?character=defect",
+				"tone": "defect"
+			},
+			"image": {
+				"backing": "backing",
+				"frame": "frame",
+				"art": "crackedCore",
+				"alt": "StS2 CrackedCore.png",
+				"fileHref": "https://slaythespire.wiki.gg/wiki/File:StS2_CrackedCore.png"
+			},
+			"description": "At the start of each combat, [[Channel]] 1 [[Lightning]].",
+			"flavor": "Details for this relic will be revealed in the future..."
+		},
+		"glossary": [
+			{
+				"title": "Lightning",
+				"icon": "lightningLarge",
+				"infoHref": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Lightning",
+				"text": "A Type of **Orb**.\n**Passive**: Deal 3 (+ [[Focus]]) damage to a random enemy.\n[[Evoke]]: Deals 8 (+ [[Focus]]) damage to a random enemy."
+			},
+			{
+				"title": "Channel",
+				"infoHref": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs",
+				"text": "Channeling an [[Orb]] puts it into your first empty slot. If you have no empty slots, your first [[Orb]] is automatically [[Evoked]] to make room."
+			}
+		],
+		"intro": [
+			"[[Cracked Core]] is the [[Starter]] [[Relic]] for the [[Defect]]."
+		],
+		"sections": [
+			{
+				"id": "Sources",
+				"title": "Sources",
+				"level": 2,
+				"number": "1",
+				"paragraphs": [
+					"The [[Defect]] will always start every new run with this relic in its possession."
+				]
+			},
+			{
+				"id": "Spawn_Restrictions",
+				"title": "Spawn Restrictions",
+				"level": 2,
+				"number": "2",
+				"paragraphs": [
+					"Can only be obtained by the [[Defect]]."
+				]
+			},
+			{
+				"id": "Interactions",
+				"title": "Interactions",
+				"level": 2,
+				"number": "3",
+				"lists": [
+					[
+						"**Cracked Core** can be upgraded to [[Infused Core]] if the player chooses [[Touch of Orobas]] while meeting with the [[Ancient]] [[Orobas]], at the beginning of [[Act 2]]."
+					]
+				]
+			},
+			{
+				"id": "Synergies",
+				"title": "Synergies",
+				"level": 2,
+				"number": "4"
+			},
+			{
+				"id": "Order",
+				"title": "Order",
+				"level": 3,
+				"number": "4.1",
+				"indent": true,
+				"lists": [
+					[
+						"[[Symbiotic Virus]] will [[Channel]] 1 [[Dark]] after the 1 [[Lightning]] is [[Channeled]]."
+					]
+				]
+			},
+			{
+				"id": "Synergies_2",
+				"title": "Synergies",
+				"level": 3,
+				"number": "4.2",
+				"indent": true,
+				"lists": [
+					[
+						"Cards and Relics that provide [[Focus]], such as [[Data Disk]], [[Hotfix]], and [[Defragment]], will increase the damage of the [[Lightning]] channeled by [[Cracked Core]].",
+						"[[Gold-Plated Cables]], [[Tesla Coil]], and [[Loop]] will allow the [[Lightning's]] passive to trigger multiple times in a turn.",
+						"[[Metronome]] will get 1 stacks from [[Cracked Core]] [[Channeling]] 1 [[Lightning]].",
+						"[[Voltaic]] will be able to [[Channel]] 1 additional [[Lightning]]",
+						"[[Dualcast]], [[Quadcast]], and [[Multi-Cast]] can be used to [[Evoke]] the [[Lightning]].",
+						"[[Thunder]] will deal additional damage to each enemy hit when the [[Lightning]] is [[Evoked]].",
+						"[[Coolant]], [[Compile Driver]], and [[Synchronize]] will increase their effectiveness for each Orb type [[Channeled]]."
+					]
+				]
+			},
+			{
+				"id": "Anti-Synergies",
+				"title": "Anti-Synergies",
+				"level": 3,
+				"number": "4.3",
+				"indent": true,
+				"lists": [
+					[
+						"[[Hyperbeam]] will reduce the damage dealt by the [[Lightning]]."
+					]
+				]
+			},
+			{
+				"id": "Trivia",
+				"title": "Trivia",
+				"level": 2,
+				"number": "5"
+			},
+			{
+				"id": "Update_History",
+				"title": "Update History",
+				"level": 2,
+				"number": "6",
+				"table": "updateHistory"
+			}
+		],
+		"updateHistory": {
+			"columns": [
+				"Type",
+				"Version",
+				"Release Date",
+				"Changes"
+			],
+			"rows": [
+				[
+					{
+						"text": "Pre-release"
+					},
+					{
+						"text": "V0.72.0",
+						"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:V0.72.0_-_Pre-release_Version"
+					},
+					{
+						"text": "August 27th, 2025"
+					},
+					{
+						"lines": [
+							"Cracked Core relic now properly triggers before Imbued enchantment"
+						]
+					}
+				],
+				[
+					{
+						"text": "Pre-release"
+					},
+					{
+						"text": "Unknown"
+					},
+					{
+						"text": "—"
+					},
+					{
+						"lines": [
+							"Added Cracked Core to the game"
+						]
+					}
+				]
+			]
+		},
+		"tooltips": {
+			"lightning": "<div class=\"wiki-tip\"><strong>Lightning</strong><br/>A Type of <b>Orb</b>.<br/><b>Passive</b>: Deal 3 (+ <img src=\"/mods/sts2/images/wiki/relic/icon_focus_22px.png\" alt=\"\" /> Focus) damage to a random enemy.<br/><b>Evoke</b>: Deals 8 (+ <img src=\"/mods/sts2/images/wiki/relic/icon_focus_22px.png\" alt=\"\" /> Focus) damage to a random enemy.</div>",
+			"channel": "<div class=\"wiki-tip\"><strong>Channel</strong><br/>Channeling an Orb puts it into your first empty slot. If you have no empty slots, your first Orb is automatically Evoked to make room.</div>"
+		},
+		"tokens": {
+			"Cracked Core": {
+				"icon": "crackedCoreIcon"
+			},
+			"Starter": {
+				"href": "/relics?rarity=starter"
+			},
+			"Relic": {
+				"href": "/relics"
+			},
+			"Defect": {
+				"icon": "defect",
+				"href": "/relics?character=defect"
+			},
+			"Infused Core": {
+				"icon": "infusedCore",
+				"href": "/relic/InfusedCore"
+			},
+			"Touch of Orobas": {
+				"icon": "touchOfOrobas",
+				"href": "/relic/TouchOfOrobas"
+			},
+			"Ancient": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Ancient"
+			},
+			"Orobas": {
+				"icon": "orobas",
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orobas"
+			},
+			"Act 2": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Act_2"
+			},
+			"Symbiotic Virus": {
+				"icon": "symbioticVirus",
+				"href": "/relic/SymbioticVirus"
+			},
+			"Channel": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs",
+				"tooltip": "channel"
+			},
+			"Channeled": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs",
+				"tooltip": "channel"
+			},
+			"Channeling": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs",
+				"tooltip": "channel"
+			},
+			"Dark": {
+				"icon": "dark",
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Dark"
+			},
+			"Lightning": {
+				"icon": "lightning",
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Lightning",
+				"tooltip": "lightning"
+			},
+			"Lightning's": {
+				"icon": "lightning",
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Lightning",
+				"tooltip": "lightning"
+			},
+			"Focus": {
+				"icon": "focus",
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs#Focus"
+			},
+			"Data Disk": {
+				"icon": "dataDisk",
+				"href": "/relic/DataDisk"
+			},
+			"Hotfix": {
+				"icon": "cardSkillCommon",
+				"href": "/cards/Hotfix"
+			},
+			"Defragment": {
+				"icon": "cardPowerRare",
+				"href": "/cards/Defragment"
+			},
+			"Gold-Plated Cables": {
+				"icon": "goldPlatedCables",
+				"href": "/relic/GoldPlatedCables"
+			},
+			"Tesla Coil": {
+				"icon": "cardAttackUncommon",
+				"href": "/cards/TeslaCoil"
+			},
+			"Loop": {
+				"icon": "cardPowerUncommon",
+				"href": "/cards/Loop"
+			},
+			"Metronome": {
+				"icon": "metronome",
+				"href": "/relic/Metronome"
+			},
+			"Voltaic": {
+				"icon": "cardSkillRare",
+				"href": "/cards/Voltaic"
+			},
+			"Dualcast": {
+				"icon": "cardSkillCommon",
+				"href": "/cards/Dualcast"
+			},
+			"Quadcast": {
+				"icon": "cardSkillAncient",
+				"href": "/cards/Quadcast"
+			},
+			"Multi-Cast": {
+				"icon": "cardSkillRare",
+				"href": "/cards/MultiCast"
+			},
+			"Evoke": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs#Evoke"
+			},
+			"Evoked": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orbs#Evoke"
+			},
+			"Thunder": {
+				"icon": "cardPowerUncommon",
+				"href": "/cards/Thunder"
+			},
+			"Coolant": {
+				"icon": "cardPowerRare",
+				"href": "/cards/Coolant"
+			},
+			"Compile Driver": {
+				"icon": "cardAttackCommon",
+				"href": "/cards/CompileDriver"
+			},
+			"Synchronize": {
+				"icon": "cardSkillUncommon",
+				"href": "/cards/Synchronize"
+			},
+			"Hyperbeam": {
+				"icon": "cardAttackRare",
+				"href": "/cards/Hyperbeam"
+			},
+			"Orb": {
+				"href": "https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Orb"
+			}
+		}
+	}
+}

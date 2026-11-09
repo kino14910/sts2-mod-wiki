@@ -1,523 +1,276 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import CardRow from '#lib/components/CardRow.svelte';
-	import CardThumb from '#lib/components/CardThumb.svelte';
-	import Motif from '#lib/components/Motif.svelte';
-	import RichText from '#lib/components/RichText.svelte';
-	import { COLORS, cardHref } from '#lib/data/cards';
+	import { resolve } from '$app/paths'
+	import CardDescription from '#lib/components/CardDescription.svelte'
+	import CardThumb from '#lib/components/CardThumb.svelte'
+	import DetailTitle from '#lib/components/DetailTitle.svelte'
+	import InfoBox from '#lib/components/InfoBox.svelte'
+	import Motif from '#lib/components/Motif.svelte'
+	import WikiHeading from '#lib/components/WikiHeading.svelte'
+	import WikiNavbox from '#lib/components/WikiNavbox.svelte'
+	import WikiTable from '#lib/components/WikiTable.svelte'
+	import WikiToc from '#lib/components/WikiToc.svelte'
+	import { cardHref, isUpgradable, resolveCard } from '#lib/data/cards'
+	import { ENTRY_BY_ID, entryHref } from '#lib/data/glossary'
 	import {
 		colorName,
 		localizedCard,
 		localizedEntries,
+		localizedKeyword,
 		modName,
 		rarityName,
 		typeName
-	} from '#lib/data/localize';
-	import { ENTRY_BY_ID, glossaryHref } from '#lib/data/glossary';
-	import { m } from '#lib/paraglide/messages';
-	import type { PageProps } from './$types';
+	} from '#lib/data/localize'
+	import { CHARACTER_ASSETS, CHARACTER_ICONS, MOD_BY_ID, modContentText } from '#lib/data/mods'
+	import { m } from '#lib/paraglide/messages'
+	import { cardTextToPlain, ENERGY_ICON_SRC } from '#lib/text/card-text'
+	import type { PageProps } from './$types'
 
-	let { data }: PageProps = $props();
+	let { data }: PageProps = $props()
 
-	let card = $derived(localizedCard(data.card));
-	let accent = $derived(COLORS[data.card.color].accent);
-	let colorLabel = $derived(colorName(data.card.color));
-	let rarityLabel = $derived(rarityName(data.card.rarity));
-	let typeLabel = $derived(typeName(data.card.type));
-	let modLabel = $derived(modName(data.card.mod));
-	let upgraded = $state(false);
+	let card = $derived(localizedCard(data.card))
+	let colorLabel = $derived(colorName(data.card.color))
+	let rarityLabel = $derived(rarityName(data.card.rarity))
+	let typeLabel = $derived(typeName(data.card.type))
+	let modLabel = $derived(modName(data.card.mod))
+	let mod = $derived(MOD_BY_ID.get(data.card.mod))
+	let assets = $derived(CHARACTER_ASSETS[data.card.color])
+	let characterIcon = $derived(CHARACTER_ICONS[data.card.color])
+	let energyIcon = $derived(assets?.textEnergy ?? ENERGY_ICON_SRC)
 
-	let shownCard = $derived(
-		upgraded
-			? {
-					...card,
-					name: `${card.name}+`,
-					text: card.upgradedText,
-					cost: card.upgradedCost ?? card.cost
-				}
-			: card
-	);
+	let canUpgrade = $derived(isUpgradable(data.card))
+	let upgraded = $state(false)
+	let upgradedView = $derived(upgraded && canUpgrade)
+	let shownCard = $derived(resolveCard(card, upgradedView))
+	let costLabel = $derived(
+		shownCard.cost === null ? m.unplayable() : shownCard.cost === 'X' ? 'X' : shownCard.cost
+	)
 
 	let keywords = $derived(
 		localizedEntries(
-			data.card.keywords
-				.map((id) => ENTRY_BY_ID.get(id))
+			shownCard.keywords
+				.map((keyword) => ENTRY_BY_ID.get(keyword.toLowerCase()))
 				.filter((entry) => entry !== undefined)
 		)
-	);
+	)
+	let keywordLabels = $derived(shownCard.keywords.map(localizedKeyword))
+	let related = $derived(data.related.map(localizedCard))
 
-	let costLabel = $derived(
-		shownCard.cost === null ? m.unplayable() : shownCard.cost === 'X' ? 'X' : shownCard.cost
-	);
+	let names = $derived.by(() => {
+		const eng = mod ? modContentText(mod, 'card', data.card.id, 'title', 'eng') : undefined
+		const zhs = mod ? modContentText(mod, 'card', data.card.id, 'title', 'zhs') : undefined
+		return [
+			{ locale: 'eng', label: m.language_en(), name: eng ?? data.card.name },
+			{ locale: 'zhs', label: m.language_zh(), name: zhs ?? data.card.name }
+		]
+	})
+
+	let toc = $derived([
+		{ id: 'Obtaining', number: '1', label: m.card_obtaining({ name: card.name }), indent: false },
+		{ id: 'Interactions', number: '2', label: m.card_interactions(), indent: false },
+		{ id: 'Synergies', number: '2.1', label: m.card_synergies(), indent: true },
+		{ id: 'Notes', number: '3', label: m.card_notes(), indent: false },
+		{ id: 'Names_in_Other_Languages', number: '4', label: m.power_other_names(), indent: false },
+		{ id: 'Update_History', number: '5', label: m.card_update_history(), indent: false }
+	])
+
+	let metaText = $derived(cardTextToPlain(card.text, { variables: card.variables }))
 </script>
 
 <svelte:head>
 	<title>{m.card_meta_title({ name: card.name })}</title>
 	<meta
 		name="description"
-		content={m.card_meta_description({ name: card.name, text: card.text, mod: modLabel })}
+		content={m.card_meta_description({ name: card.name, text: metaText, mod: modLabel })}
 	/>
 </svelte:head>
 
-<section class="page" style:--accent={accent}>
-	<div class="wrap">
-		<nav class="crumbs" aria-label={m.breadcrumb()}>
-			<a href={resolve('/cards')}>{m.nav_cards()}</a>
-			<span aria-hidden="true">/</span>
-			<a href="{resolve('/cards')}?color={data.card.color}">{colorLabel}</a>
-			<span aria-hidden="true">/</span>
-			<span aria-current="page">{card.name}</span>
-		</nav>
+<div class="glossary-page">
+	<section class="wrap py-[clamp(22px,3vw,34px)]">
+		<div
+			class="rounded-md border border-line bg-[oklch(0_0_0/62%)] px-[clamp(14px,2.4vw,30px)] py-5"
+		>
+			<div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+				<article class="min-w-0">
+					<DetailTitle name={card.name} />
 
-		<div class="detail-layout">
-			<div class="card-stage">
-				<CardThumb card={shownCard} />
-				<p class="stage-note">{upgraded ? m.card_upgraded_note() : m.card_base_note()}</p>
-			</div>
-
-			<div class="detail-main">
-				<div class="detail-head">
-					<h1 class="display">{shownCard.name}</h1>
-					<p class="meta">{rarityLabel} - {colorLabel} - {typeLabel}</p>
-					<p class="origin">
-						{m.card_from_label()}
-						<a href="{resolve('/cards')}?mod={data.card.mod}">{modLabel}</a>
-					</p>
-				</div>
-
-				<div class="text-panel">
-					<div class="text-tabs">
-						<button type="button" aria-pressed={!upgraded} onclick={() => (upgraded = false)}>{m.card_tab_base()}</button>
-						<button type="button" aria-pressed={upgraded} onclick={() => (upgraded = true)}>{m.card_tab_upgraded()}</button>
-					</div>
-
-					<div class="card-text">
-						<RichText text={shownCard.text} />
-					</div>
-
-					<div class="text-meta">
-						<span>{m.card_cost()} <strong>{costLabel}</strong></span>
-						<span>{upgraded ? m.card_upgraded_text() : m.card_base_text()}</span>
-						{#if upgraded && data.card.upgradedCost !== undefined && data.card.upgradedCost !== data.card.cost}
-							<span>{m.card_base_cost()} <strong>{data.card.cost === null ? '—' : data.card.cost}</strong></span>
+					<p class="mb-4 text-[0.9rem] leading-[1.6]">
+						{#if characterIcon}
+							<img src={characterIcon} alt="" class="inline-block size-4.5 align-[-0.25em]" />
 						{/if}
-					</div>
-				</div>
+						{#if energyIcon}
+							<img src={energyIcon} alt="" class="inline-block h-[1.1em] w-auto align-[-0.2em]" />
+						{/if}
+						{m.card_summary({
+							name: card.name,
+							rarity: rarityLabel,
+							type: typeLabel,
+							color: colorLabel,
+							cost: String(costLabel)
+						})}
+					</p>
 
-				{#if keywords.length}
-					<section class="rules" aria-labelledby="rules-heading">
-						<div class="rules-head">
-							<h2 id="rules-heading" class="display">{m.card_linked_rules()}</h2>
-							<span>{keywords.length === 1
-								? m.card_entries_one({ count: keywords.length })
-								: m.card_entries_many({ count: keywords.length })}</span>
-						</div>
-						<div class="rule-list">
+					<WikiToc items={toc} />
+
+					<WikiHeading id="Obtaining" title={m.card_obtaining({ name: card.name })} />
+					<p class="mb-3 text-[0.9rem] leading-[1.6]">
+						{m.card_obtaining_body({ name: card.name, mod: modLabel, color: colorLabel })}
+					</p>
+
+					<WikiHeading id="Interactions" title={m.card_interactions()} />
+					<WikiHeading id="Synergies" title={m.card_synergies()} level={3} />
+					{#if keywords.length}
+						<ul class="mb-3 ml-5 list-disc space-y-1 text-[0.88rem] leading-[1.55]">
 							{#each keywords as entry (entry.id)}
-								<a class="rule-row" href={glossaryHref(entry)}>
-									<span class="rule-icon"><Motif name={entry.motif ?? 'spiral'} /></span>
-									<span class="rule-copy">
-										<span class="rule-name">{entry.name}</span>
-										<span class="rule-summary">{entry.summary}</span>
-									</span>
-									<span class="rule-arrow" aria-hidden="true">→</span>
-								</a>
+								<li>
+									<a
+										class="inline-flex items-center gap-1 text-link hover:text-gold"
+										href={entryHref(entry)}
+									>
+										<span class="inline-grid size-5.5 place-items-center">
+											{#if entry.icon}
+												<img src={entry.icon} alt="" class="size-5.5" loading="lazy" />
+											{:else}
+												<Motif name={entry.motif ?? 'spiral'} />
+											{/if}
+										</span>
+										{entry.name}
+									</a>
+									<span class="text-muted"> — {entry.summary}</span>
+								</li>
 							{/each}
-						</div>
-					</section>
-				{/if}
+						</ul>
+					{:else}
+						<p class="mb-3 text-[0.88rem] text-muted">—</p>
+					{/if}
 
-				<div class="facts">
-					<span>{rarityLabel}</span>
-					<span>{colorLabel}</span>
-					<span>{typeLabel}</span>
-					<span>{modLabel}</span>
-				</div>
+					<WikiHeading id="Notes" title={m.card_notes()} />
+					<ul class="mb-3 ml-5 list-disc space-y-1 text-[0.88rem] leading-[1.55]">
+						<li>{m.card_cost()}: <strong class="text-ink">{costLabel}</strong></li>
+						{#if canUpgrade}
+							<li>{m.card_base_text()} / {m.card_upgraded_text()}</li>
+						{:else}
+							<li>{m.card_cannot_upgrade()}</li>
+						{/if}
+						{#if keywordLabels.length}
+							<li>{m.nav_keywords()}: {keywordLabels.join(', ')}</li>
+						{/if}
+						<li>
+							{m.card_from_label()}:
+							<a class="text-link hover:text-gold" href="{resolve('/cards')}?mod={data.card.mod}">
+								{modLabel}
+							</a>
+						</li>
+					</ul>
+
+					<WikiHeading id="Names_in_Other_Languages" title={m.power_other_names()} />
+					<WikiTable
+						columns={[m.language(), m.card_table_name()]}
+						rows={names.map((item) => [{ text: item.label }, { text: item.name }])}
+					/>
+
+					<WikiHeading id="Update_History" title={m.card_update_history()} />
+					<WikiTable
+						columns={[m.card_table_version(), m.card_table_changes()]}
+						rows={[[{ text: mod?.version ?? '—' }, { text: m.card_added() }]]}
+					/>
+
+					<WikiNavbox
+						title={m.card_navbox({ name: colorLabel })}
+						href="{resolve('/cards')}?color={data.card.color}"
+						ariaLabel={m.card_navbox({ name: colorLabel })}
+						groups={[
+							{
+								label: rarityLabel,
+								rows: [
+									{
+										items: related.map((item) => ({ name: item.name, href: cardHref(item) }))
+									}
+								]
+							}
+						]}
+						trailing={{ label: m.nav_cards(), href: resolve('/cards') }}
+					/>
+				</article>
+
+			<InfoBox
+				tone="card"
+				ariaLabel={m.card_details()}
+				class="card-infobox w-full max-w-75 justify-self-end max-lg:order-first max-lg:w-[min(100%,340px)] max-lg:justify-self-center"
+			>
+				{#snippet title()}
+					<div
+						class="pb-2.5 pt-1.5 text-center text-[30px] font-medium leading-8.75 text-ink [text-shadow:3px_2px_0_#3d5658]"
+					>
+						{shownCard.name}
+					</div>
+				{/snippet}
+
+				<div class="flex gap-1.25 text-[14px] font-sans">
+						<button
+							type="button"
+							aria-pressed={!upgradedView}
+							onclick={() => (upgraded = false)}
+							class="flex-1 rounded-md bg-[oklch(0.4_0.03_187)] py-px text-ink outline-1 outline-link transition-colors aria-pressed:bg-link aria-pressed:text-black"
+						>
+							{m.card_tab_base()}
+						</button>
+						<button
+							type="button"
+							aria-pressed={upgradedView}
+							disabled={!canUpgrade}
+							onclick={() => (upgraded = true)}
+							class="flex-1 rounded-md bg-[oklch(0.4_0.03_187)] py-px text-ink outline-1 outline-link transition-colors aria-pressed:bg-link aria-pressed:text-black disabled:opacity-45"
+						>
+							{m.card_tab_upgraded()}
+						</button>
+					</div>
+
+					<div
+						class="mt-1.75 flex flex-wrap items-center justify-center gap-1.5 rounded-md bg-[oklch(0.4_0.03_187)] py-0.75 text-center text-[15px] font-semibold font-sans"
+					>
+						<a class="text-link hover:text-gold" href="{resolve('/cards')}?rarity={data.card.rarity}">
+							{rarityLabel}
+						</a>
+						<a class="text-link hover:text-gold" href="{resolve('/cards')}?color={data.card.color}">
+							{colorLabel}
+						</a>
+						<span>{m.card_noun()}</span>
+					</div>
+
+					<div class="mt-1.25 rounded-md bg-[oklch(0.4_0.03_187)] px-1.5 pb-5 pt-3.25">
+						<div class="relative mx-auto w-[min(100%,273px)] @container">
+							<CardThumb showText={false} card={shownCard} upgraded={upgradedView} priority useThumb={false} />
+
+							<span
+								class={[
+									'pointer-events-none absolute left-[15%] top-[1%] z-10 flex h-[12.796%] w-[70%] items-center justify-center text-center text-[clamp(7px,7.1cqw,21px)] leading-[1.05] font-normal [-webkit-text-stroke:0.24rem_#4d4b40] [paint-order:stroke_fill]',
+									upgradedView ? 'text-[#7fff00]' : 'text-[#fdf5e6]'
+								]}
+							>
+								{shownCard.name}
+							</span>
+
+							<span
+								class="pointer-events-none absolute left-[-5.333%] top-[-3.791%] z-10 grid h-[15.165%] w-[21.333%] place-items-center text-[clamp(7px,10.667cqw,32px)] font-bold leading-none text-[#fdf5e6] [-webkit-text-stroke:0.36rem_#802020] [paint-order:stroke_fill]"
+							>
+								{costLabel}
+							</span>
+
+							<span
+								class="pointer-events-none absolute left-1/2 top-[50.237%] z-10 grid h-[8.77%] min-w-[20.33%] -translate-x-1/2 place-items-center text-[clamp(5px,5.333cqw,16px)] font-bold leading-none text-[oklch(0_0_0/75%)]"
+							>
+								{typeLabel}
+							</span>
+
+							<div
+								class="absolute left-[9.333%] top-[58.768%] z-10 flex h-[32.227%] w-[81%] items-center justify-center"
+							>
+								<CardDescription variant="face" card={shownCard} upgraded={upgradedView} />
+							</div>
+						</div>
+					</div>
+				</InfoBox>
 			</div>
 		</div>
-
-		<section class="related" aria-labelledby="related-heading">
-			<div class="list-head">
-				<h2 id="related-heading" class="display">{m.card_more()}</h2>
-				<a href={resolve('/cards')}>{m.card_back()}</a>
-			</div>
-			<div class="related-list">
-				{#each data.related as entry (entry.id)}
-					<CardRow card={entry} showActions={false} />
-				{/each}
-			</div>
-		</section>
-
-		<nav class="card-nav" aria-label={m.card_nav_label()}>
-			{#if data.prev}
-				<a class="nav-card" href={cardHref(data.prev)}>
-					<span>{m.card_prev()}</span>
-					<strong class="display">{localizedCard(data.prev).name}</strong>
-				</a>
-			{:else}
-				<span></span>
-			{/if}
-			{#if data.next}
-				<a class="nav-card nav-card--next" href={cardHref(data.next)}>
-					<span>{m.card_next()}</span>
-					<strong class="display">{localizedCard(data.next).name}</strong>
-				</a>
-			{/if}
-		</nav>
-	</div>
-</section>
-
-<style>
-	.page {
-		padding: clamp(22px, 3vw, 34px) 0 20px;
-	}
-
-	.crumbs {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 8px;
-		margin-bottom: 18px;
-		font-family: var(--font-mono);
-		font-size: 0.58rem;
-		letter-spacing: 0.06em;
-		color: var(--muted);
-	}
-
-	.crumbs a:hover {
-		color: var(--gold);
-	}
-
-	.crumbs span[aria-current='page'] {
-		color: var(--text-dim);
-	}
-
-	.detail-layout {
-		display: grid;
-		grid-template-columns: minmax(170px, 232px) minmax(0, 1fr);
-		gap: clamp(26px, 4.5vw, 56px);
-		align-items: start;
-		padding: 8px 0 6px;
-	}
-
-	.card-stage {
-		position: sticky;
-		top: calc(var(--header-height) + 24px);
-	}
-
-	.stage-note {
-		margin-top: 8px;
-		text-align: center;
-		font-family: var(--font-mono);
-		font-size: 0.54rem;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.detail-main {
-		min-width: 0;
-	}
-
-	.detail-head {
-		padding-bottom: 14px;
-		border-bottom: 1px solid var(--line);
-	}
-
-	.detail-head h1 {
-		font-size: clamp(1.9rem, 3.8vw, 2.9rem);
-		font-weight: 400;
-		line-height: 1.1;
-		color: var(--gold);
-		text-wrap: balance;
-	}
-
-	.meta {
-		margin-top: 4px;
-		font-size: 0.74rem;
-		color: var(--muted);
-	}
-
-	.origin {
-		margin-top: 8px;
-		font-size: 0.76rem;
-		color: var(--muted);
-	}
-
-	.origin a {
-		color: var(--gold-soft);
-		text-decoration: underline;
-		text-decoration-thickness: 1px;
-		text-underline-offset: 3px;
-	}
-
-	.origin a:hover {
-		color: var(--gold);
-	}
-
-	.text-panel {
-		margin-top: 14px;
-		padding: 12px 14px;
-		border: 2px solid var(--tooltip-border);
-		border-radius: 6px;
-		background: var(--tooltip-bg);
-	}
-
-	.text-tabs {
-		display: inline-flex;
-		gap: 4px;
-	}
-
-	.text-tabs button {
-		height: 27px;
-		padding: 0 10px;
-		border: 1px solid var(--line);
-		border-radius: 3px;
-		background: var(--button);
-		font-size: 0.68rem;
-		color: var(--text-dim);
-		transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
-	}
-
-	.text-tabs button:hover {
-		background: var(--button-hover);
-		border-color: var(--line-strong);
-	}
-
-	.text-tabs button[aria-pressed='true'] {
-		border-color: mediumseagreen;
-		background: mediumseagreen;
-		color: oklch(0 0 0);
-	}
-
-	.card-text {
-		padding: 18px 8px 14px;
-		text-align: center;
-		font-size: clamp(0.92rem, 1.6vw, 1.06rem);
-		line-height: 1.6;
-		color: var(--text);
-		text-wrap: pretty;
-	}
-
-	.text-meta {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: center;
-		gap: 13px;
-		padding-top: 10px;
-		border-top: 1px solid var(--line);
-		font-family: var(--font-mono);
-		font-size: 0.53rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.text-meta strong {
-		font-family: var(--font-display);
-		font-size: 0.72rem;
-		font-weight: 600;
-		letter-spacing: 0;
-		color: var(--text-dim);
-	}
-
-	.rules {
-		margin-top: 20px;
-	}
-
-	.rules-head {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 14px;
-		padding-bottom: 6px;
-		border-bottom: 1px solid var(--line);
-	}
-
-	.rules-head h2 {
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--gold);
-	}
-
-	.rules-head span {
-		font-size: 0.63rem;
-		color: var(--muted);
-	}
-
-	.rule-list {
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-		margin-top: 7px;
-	}
-
-	.rule-row {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		padding: 8px 10px;
-		border: 1px solid var(--line);
-		border-radius: 3px;
-		background: var(--row);
-		transition: border-color 0.16s ease, background 0.16s ease;
-	}
-
-	.rule-row:hover {
-		border-color: var(--accent);
-		background: var(--surface-secondary);
-	}
-
-	.rule-icon {
-		width: 25px;
-		height: 25px;
-		flex: none;
-		padding: 4px;
-		border: 1px solid var(--line-strong);
-		border-radius: 50%;
-		color: var(--gold-soft);
-	}
-
-	.rule-copy {
-		display: flex;
-		flex-direction: column;
-		gap: 1px;
-		min-width: 0;
-	}
-
-	.rule-name {
-		font-family: var(--font-display);
-		font-size: 0.92rem;
-		color: var(--text);
-	}
-
-	.rule-summary {
-		font-size: 0.68rem;
-		color: var(--muted);
-		line-height: 1.4;
-	}
-
-	.rule-arrow {
-		margin-left: auto;
-		font-size: 0.75rem;
-		color: var(--gold-soft);
-		opacity: 0.65;
-	}
-
-	.facts {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 5px;
-		margin-top: 18px;
-	}
-
-	.facts span {
-		padding: 3px 8px;
-		border: 1px solid var(--line);
-		border-radius: 3px;
-		font-size: 0.63rem;
-		color: var(--muted);
-	}
-
-	.related {
-		margin-top: clamp(34px, 5vw, 56px);
-	}
-
-	.list-head {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 16px;
-		padding-bottom: 8px;
-		border-bottom: 1px solid var(--line);
-	}
-
-	.list-head h2 {
-		font-size: 1.4rem;
-		font-weight: 400;
-		color: var(--gold);
-	}
-
-	.list-head a {
-		font-size: 0.68rem;
-		color: var(--muted);
-		transition: color 0.16s ease;
-	}
-
-	.list-head a:hover {
-		color: var(--gold);
-	}
-
-	.related-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(30em, 1fr));
-		gap: 1em;
-		margin-top: 8px;
-	}
-
-	.card-nav {
-		display: flex;
-		justify-content: space-between;
-		gap: 16px;
-		margin-top: 28px;
-		padding-top: 12px;
-		border-top: 1px solid var(--line);
-	}
-
-	.nav-card {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-	}
-
-	.nav-card--next {
-		margin-left: auto;
-		text-align: right;
-	}
-
-	.nav-card span {
-		font-family: var(--font-mono);
-		font-size: 0.53rem;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.nav-card strong {
-		font-size: 0.92rem;
-		font-weight: 600;
-		color: var(--text-dim);
-		transition: color 0.16s ease;
-	}
-
-	.nav-card:hover strong {
-		color: var(--gold);
-	}
-
-	@media (max-width: 760px) {
-		.detail-layout {
-			grid-template-columns: 1fr;
-			gap: 20px;
-		}
-
-		.card-stage {
-			position: static;
-			width: min(210px, 56vw);
-		}
-
-		.detail-head h1 {
-			font-size: clamp(1.7rem, 8vw, 2.3rem);
-		}
-	}
-
-	@media (max-width: 480px) {
-		.card-stage {
-			width: min(180px, 52vw);
-		}
-
-		.related-list {
-			gap: 5px;
-		}
-	}
-</style>
+	</section>
+</div>

@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { termIndex, termPattern } from '#lib/data/localize';
-	import type { GlossaryLink } from '#lib/data/glossary';
+	import type { GlossaryKind, GlossaryLink } from '#lib/data/glossary';
 
 	type Token =
 		| { type: 'text'; value: string }
 		| { type: 'number'; value: string }
 		| { type: 'term'; value: string; link: GlossaryLink };
+
+	const TERM_COLOR: Record<GlossaryKind, string> = {
+		keyword: 'text-link',
+		power: 'text-positive'
+	};
 
 	let { text, class: className = '' }: { text: string; class?: string } = $props();
 
@@ -45,55 +50,19 @@
 	}
 </script>
 
-<span class="rich-text {className}">
+<span class={['inline', className]}>
 	{#each tokens as token, index (`${token.type}-${index}-${token.value}`)}
 		{#if token.type === 'term'}
 			<a
-				class="term term--{token.link.kind}"
+				class={[
+					'font-medium underline decoration-dotted decoration-1 underline-offset-2 transition-colors hover:text-[#fff3bd] hover:decoration-[#fff3bd]',
+					TERM_COLOR[token.link.kind]
+				]}
 				href={token.link.href}
 				title="{token.link.name}: {token.link.summary}"
 			>{token.value}</a>
 		{:else if token.type === 'number'}
-			<span class="number">{token.value}</span>
+			<span class="font-semibold tabular-nums text-gold">{token.value}</span>
 		{:else}{token.value}{/if}
 	{/each}
 </span>
-
-<style>
-	.rich-text {
-		display: inline;
-	}
-
-	.term {
-		color: var(--term-color, var(--link));
-		font-weight: 500;
-		text-decoration-line: underline;
-		text-decoration-style: dotted;
-		text-decoration-thickness: 1px;
-		text-underline-offset: 2px;
-		transition: color 0.16s ease;
-	}
-
-	.term--keyword {
-		--term-color: var(--link);
-	}
-
-	.term--buff {
-		--term-color: var(--green);
-	}
-
-	.term--debuff {
-		--term-color: oklch(0.75 0.18 22);
-	}
-
-	.term:hover {
-		color: #fff3bd;
-		text-decoration-color: currentColor;
-	}
-
-	.number {
-		color: var(--gold);
-		font-weight: 600;
-		font-variant-numeric: tabular-nums;
-	}
-</style>
