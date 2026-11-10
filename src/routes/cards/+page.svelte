@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/env'
 	import { afterNavigate, replaceState } from '$app/navigation'
 	import { page } from '$app/state'
 	import CardFilters from '#lib/components/CardFilters.svelte'
@@ -27,7 +28,7 @@
 	import { WindowVirtualizer } from 'virtua/svelte'
 	import type { WindowVirtualizerHandle } from 'virtua/svelte'
 
-	const params = page.url.searchParams
+	const params = browser ? page.url.searchParams : new URLSearchParams()
 
 	let query = $state(params.get('q') ?? '')
 	let color = $state(params.get('color') ?? 'all')

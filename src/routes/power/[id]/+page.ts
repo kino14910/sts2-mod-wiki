@@ -2,12 +2,13 @@ import { error } from '@sveltejs/kit'
 import { POWERS, escapeRegExp, type GlossaryEntry } from '#lib/data/glossary'
 import type { ContentKind } from '#lib/data/mod-dependency'
 import { CARDS, MOD_BY_ID, POTIONS, RELICS, modContentText } from '#lib/data/mods'
-import { POWER_WIKI, powerWikiIntro } from '#lib/data/power-wiki'
+import { powerWikiIntro } from '#lib/data/power-wiki'
 import { GLOSSARY_ZH } from '#lib/data/zh'
 import { m } from '#lib/paraglide/messages'
 import { stripBBCode } from '#lib/text/bbcode'
 import { cardTextToPlain } from '#lib/text/card-text'
 import { collectionTextToPlain } from '#lib/text/collection-text'
+import type { PageLoad } from './$types'
 
 const LOCALES = ['eng', 'zhs'] as const
 
@@ -54,7 +55,7 @@ function matcher(names: string[]) {
 		(pattern?.test(text) ?? false) || wide.some((name) => text.includes(name))
 }
 
-export function load({ params }: { params: { id: string } }) {
+export const load: PageLoad = ({ params, data }) => {
 	const index = POWERS.findIndex((entry) => entry.id === params.id)
 	if (index === -1) error(404, m.power_not_found())
 
@@ -90,8 +91,8 @@ export function load({ params }: { params: { id: string } }) {
 		: []
 
 	return {
+		...data,
 		entry,
-		wiki: POWER_WIKI[params.id] ?? null,
 		intro: powerWikiIntro(params.id),
 		names,
 		cards,

@@ -1,0 +1,366 @@
+{
+	"VulnerablePower": {
+		"title": "易伤",
+		"stackType": "持续",
+		"text": "受到攻击造成的伤害提高 50%，持续 X 回合。",
+		"sources": [
+			{
+				"summary": "施加于敌人",
+				"groups": [
+					{
+						"heading": "卡牌",
+						"subheading": "铁甲战士",
+						"entries": [
+							{
+								"name": "痛击",
+								"description": "造成 8（10）点伤害。施加 2（3）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">痛击</span><span class=\"tooltip-meta\">2 能量 - <span class=\"plainlink\"><span class=\"basic-font\">基础攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 8 (10) damage.<br/>Apply 2 (3) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Bash-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "熔融之拳",
+								"description": "造成 10（14）点伤害。使敌人的 StS2 Icon Vulnerable.png 易伤翻倍。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">熔融之拳</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"none\">普通攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 10 (14) damage.<br/>Double the enemy's <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-MoltenFist-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "闪电霹雳",
+								"description": "造成 4（7）点伤害，并对所有敌人施加 1 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">闪电霹雳</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"none\">普通攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 4 (7) damage and apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> to ALL enemies.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Thunderclap-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "挑衅",
+								"description": "获得 6（7）层 StS2 Intent Defend.png 格挡。施加 1（2）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">挑衅</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"none\">普通技能</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Gain 6 (7) <span class=\"keyword-trigger inline-trigger\"><img alt=\"StS2 Intent Defend.png\" class=\"inline-icon\" height=\"18\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Intent_Defend.png_18px-StS2_Intent_Defend.png_673251.png\" width=\"18\"/> <span title=\"\">Block</span></span>.<br/>Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Taunt-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "战栗",
+								"description": "施加 3（4）层 StS2 Icon Vulnerable.png 易伤。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">战栗</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"none\">普通技能</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Apply 3 (4) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Tremble-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "上勾拳",
+								"description": "造成 13 点伤害。施加 1（2）层 StS2 Icon Weak.png 虚弱。施加 1（2）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">上勾拳</span><span class=\"tooltip-meta\">2 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 13 damage.<br/>Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Uppercut-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "主宰",
+								"description": "施加 1（2）层 StS2 Icon Vulnerable.png 易伤。对敌人每有 1 层 StS2 Icon Strength.png 易伤，获得 1 层 StS2 Icon Vulnerable.png 力量。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">主宰</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"rare-font\">稀有技能</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/> Gain 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Strength.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Strength.png_22px-StS2_Icon_Strength.png_898bac.png\" width=\"22\"/> Strength</span> for each <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> on the enemy.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Dominate-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "破击",
+								"description": "造成 20（30）点伤害。施加 5（7）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">破击</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"ancient-font\">远古攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 20 (30) damage.<br/>Apply 5 (7) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Break-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "卡牌",
+						"subheading": "静默猎手",
+						"entries": [
+							{
+								"name": "暴露",
+								"description": "移除敌人身上所有人工制品和 StS2 Intent Defend.png 格挡。施加 2（3）层 StS2 Icon Vulnerable.png 易伤。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">暴露</span><span class=\"tooltip-meta\">0 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见技能</span></span> - <span class=\"plainlink\"><span class=\"silent-text\">静默猎手</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Remove all Artifact and <span class=\"keyword-trigger inline-trigger\"><img alt=\"StS2 Intent Defend.png\" class=\"inline-icon\" height=\"18\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Intent_Defend.png_18px-StS2_Intent_Defend.png_673251.png\" width=\"18\"/> <span title=\"\">Block</span></span> from the enemy.<br/>Apply 2 (3) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 静默猎手-Expose-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "刺杀",
+								"description": "固有。造成 10（13）点伤害。施加 1（2）层 StS2 Icon Vulnerable.png 易伤。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">刺杀</span><span class=\"tooltip-meta\">0 能量 - <span class=\"plainlink\"><span class=\"rare-font\">稀有攻击</span></span> - <span class=\"plainlink\"><span class=\"silent-text\">静默猎手</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\"><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Innate</span></span>.<br/>Deal 10 (13) damage.<br/>Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 静默猎手-Assassinate-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "卡牌",
+						"subheading": "摄政者",
+						"entries": [
+							{
+								"name": "陨星",
+								"description": "造成 8（12）点伤害。施加 1 层 StS2 Icon Weak.png 虚弱。施加 1 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">陨星</span><span class=\"tooltip-meta\">0 能量 - 2StS2 Star摄政者.png - <span class=\"plainlink\"><span class=\"basic-font\">基础攻击</span></span> - <span class=\"plainlink\"><span class=\"regent-text\">摄政者</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 8 (12) damage.<br/>Apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 摄政者-FallingStar-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "何人僭越",
+								"description": "施加 1 层 StS2 Icon Weak.png 虚弱。施加 1 层 StS2 Icon Vulnerable.png 易伤。消耗。（失去消耗。）",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">何人僭越</span><span class=\"tooltip-meta\">0 能量 - <span class=\"plainlink\"><span class=\"none\">普通技能</span></span> - <span class=\"plainlink\"><span class=\"regent-text\">摄政者</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>. (<span class=\"ts-positive\">loses <span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</span>)</div></div><div class=\"card-tooltip-art\"><span>StS2 摄政者-KnowThyPlace-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "伽马爆破",
+								"description": "造成 13（18）点伤害。施加 2 层 StS2 Icon Weak.png 虚弱。施加 2 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">伽马爆破</span><span class=\"tooltip-meta\">0 能量 - 3StS2 Star摄政者.png - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见攻击</span></span> - <span class=\"plainlink\"><span class=\"regent-text\">摄政者</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 13 (18) damage.<br/>Apply 2 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 2 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 摄政者-GammaBlast-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "彗星",
+								"description": "造成 33（44）点伤害。施加 3 层 StS2 Icon Weak.png 虚弱。施加 3 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">彗星</span><span class=\"tooltip-meta\">0 能量 - 5StS2 Star摄政者.png - <span class=\"plainlink\"><span class=\"rare-font\">稀有攻击</span></span> - <span class=\"plainlink\"><span class=\"regent-text\">摄政者</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 33 (44) damage.<br/>Apply 3 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 3 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 摄政者-Comet-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "流星雨",
+								"description": "对所有敌人造成 14（21）点伤害。对所有敌人施加 2 层 StS2 Icon Weak.png 虚弱和 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">流星雨</span><span class=\"tooltip-meta\">0 能量 - 2StS2 Star摄政者.png - <span class=\"plainlink\"><span class=\"ancient-font\">远古攻击</span></span> - <span class=\"plainlink\"><span class=\"regent-text\">摄政者</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 14 (21) damage to ALL enemies.<br/>Apply 2 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span> and <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> to ALL enemies.</div></div><div class=\"card-tooltip-art\"><span>StS2 摄政者-MeteorShower-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "卡牌",
+						"subheading": "缚灵师",
+						"entries": [
+							{
+								"name": "恐惧",
+								"description": "虚无。造成 7（8）点伤害。施加 1（2）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">恐惧</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"none\">普通攻击</span></span> - <span class=\"plainlink\"><span class=\"necrobinder-text\">缚灵师</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\"><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Ethereal</span></span>.<br/>Deal 7 (8) damage.<br/>Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 缚灵师-Fear-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "击掌",
+								"description": "奥斯提造成 11（13）点伤害，并对所有敌人施加 2（3）层 StS2 Osty Rest.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">击掌</span><span class=\"tooltip-meta\">2 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见攻击</span></span> - <span class=\"plainlink\"><span class=\"necrobinder-text\">缚灵师</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\"><span class=\"keyword-trigger inline-trigger\"><img alt=\"StS2 Osty Rest.png\" class=\"inline-icon\" height=\"14\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Osty_Rest.png_18px-StS2_Osty_Rest.png_a5654b.png\" width=\"18\"/> <span title=\"\">Osty</span></span> deals 11 (13) damage<br/>and applies 2 (3) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span><br/>to ALL enemies.</div></div><div class=\"card-tooltip-art\"><span>StS2 缚灵师-HighFive-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "腐败",
+								"description": "施加 2（3）层 StS2 Icon Weak.png 虚弱。施加 2（3）层 StS2 Icon Vulnerable.png 易伤。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">腐败</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见技能</span></span> - <span class=\"plainlink\"><span class=\"necrobinder-text\">缚灵师</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Apply 2 (3) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 2 (3) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 缚灵师-Putrefy-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "卡牌",
+						"subheading": "故障机器人",
+						"entries": [
+							{
+								"name": "光束射线",
+								"description": "造成 3（4）点伤害。施加 1（2）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">光束射线</span><span class=\"tooltip-meta\">0 能量 - <span class=\"plainlink\"><span class=\"none\">普通攻击</span></span> - <span class=\"plainlink\"><span class=\"defect-text\">故障机器人</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 3 (4) damage.<br/>Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 故障机器人-BeamCell-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "卡牌",
+						"subheading": "无色",
+						"entries": [
+							{
+								"name": "震荡波",
+								"description": "对所有敌人施加 3（5）层 StS2 Icon Weak.png 虚弱和 StS2 Icon Vulnerable.png 易伤。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">震荡波</span><span class=\"tooltip-meta\">2 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见技能</span></span> - <span class=\"plainlink\"><span class=\"none\">无色</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Apply 3 (5) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span> and <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> to ALL enemies.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 无色-Shockwave-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "疯狂科学（汲取）",
+								"description": "(固有。)造成 12 点伤害。施加 2 层 StS2 Icon Weak.png 虚弱。施加 2 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">疯狂科学（汲取）</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"event-font\">Event 攻击</span></span> - <span class=\"plainlink\"><span class=\"none\">无色</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\"> (<span class=\"ts-positive\"><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Innate</span></span>.</span>)Deal 12 damage.<br/>Apply 2 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span>.<br/>Apply 2 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 无色-MadScience-Sapping-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "压扁",
+								"description": "造成 10（12）点伤害。施加 2（3）层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">压扁</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"event-font\">Event 攻击</span></span> - <span class=\"plainlink\"><span class=\"none\">无色</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 10 (12) damage.<br/>Apply 2 (3) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 无色-Squash-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "遗物",
+						"subheading": "任意",
+						"entries": [
+							{
+								"name": "弹珠袋",
+								"description": "每场战斗开始时，对所有敌人施加 1 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 BagOfMarbles.png\" class=\"inline-icon\" height=\"60\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_BagOfMarbles.png_60px-StS2_BagOfMarbles.png_9cfcdf.png\" width=\"60\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">弹珠袋</span><span class=\"tooltip-meta\"><span class=\"common-font\">普通 Relic</span> - Any Character</span></div></div><div class=\"tooltip-text\">At the start of each combat, apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> to ALL enemies.</div></div>",
+								"kind": "relic"
+							},
+							{
+								"name": "手钻",
+								"description": "每当你打破敌人的 StS2 Intent Defend.png 格挡时，施加 2 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 HandDrill.png\" class=\"inline-icon\" height=\"60\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_HandDrill.png_60px-StS2_HandDrill.png_5e829a.png\" width=\"60\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">手钻</span><span class=\"tooltip-meta\"><span class=\"event-font\"><img alt=\"EventClear.png\" class=\"inline-icon\" height=\"20\" src=\"/mods/sts2/images/wiki/images_thumb_EventClear.png_20px-EventClear.png_8b40cd.png\" style=\"vertical-align: middle\" width=\"20\"/>  Trash Heap</span> - Any Character</span></div></div><div class=\"tooltip-text\">Whenever you break an enemy's <span class=\"keyword-trigger inline-trigger\"><img alt=\"StS2 Intent Defend.png\" class=\"inline-icon\" height=\"18\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Intent_Defend.png_18px-StS2_Intent_Defend.png_673251.png\" width=\"18\"/> <span title=\"\">Block</span></span>, apply 2 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div><div class=\"tooltip-flavor\"><i>Details for this relic will be revealed in the future...</i></div></div>",
+								"kind": "relic"
+							}
+						]
+					},
+					{
+						"heading": "药剂",
+						"subheading": "任意",
+						"entries": [
+							{
+								"name": "易伤药水",
+								"description": "施加 3 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 VulnerablePotion.png\" class=\"inline-icon\" height=\"60\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_VulnerablePotion.png_60px-StS2_VulnerablePotion.png_92d3bc.png\" width=\"60\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">易伤药水</span><span class=\"tooltip-meta\"><span class=\"common-font\">普通</span> - <span class=\"any-text\">Any Only </span></span></div></div><div class=\"tooltip-text\">Apply 3 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.</div></div>",
+								"kind": "potion"
+							},
+							{
+								"name": "缚魂药水",
+								"description": "对所有敌人施加 1 层 StS2 Icon Weak.png 虚弱和 1 层 StS2 Icon Vulnerable.png 易伤。",
+								"tooltip": "<div class=\"tooltip\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 PotionofBinding.png\" class=\"inline-icon\" height=\"60\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_PotionofBinding.png_60px-StS2_PotionofBinding.png_747ca0.png\" width=\"60\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">缚魂药水</span><span class=\"tooltip-meta\"><span class=\"uncommon-font\">罕见</span> - <span class=\"any-text\">Any Only </span></span></div></div><div class=\"tooltip-text\">Apply 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span> and 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> to ALL enemies.</div></div>",
+								"kind": "potion"
+							}
+						]
+					}
+				]
+			}
+		],
+		"interactions": [
+			{
+				"summary": "易伤协同",
+				"groups": [
+					{
+						"heading": "卡牌",
+						"subheading": "铁甲战士",
+						"entries": [
+							{
+								"name": "熔融之拳",
+								"description": "造成 10（14）点伤害。使敌人的 StS2 Icon Vulnerable.png 易伤翻倍。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">熔融之拳</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"none\">普通攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 10 (14) damage.<br/>Double the enemy's <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-MoltenFist-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "欺凌",
+								"description": "造成 4 点伤害。对敌人身上每层 StS2 Icon Vulnerable.png 易伤额外造成 2（3）点伤害。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">欺凌</span><span class=\"tooltip-meta\">0 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 4 damage.<br/>Deals 2 (3) additional damage for each <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> on the enemy.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Bully-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "拆卸",
+								"description": "造成 8（10）点伤害。若敌人处于 StS2 Icon Vulnerable.png 易伤状态，则攻击两次。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">拆卸</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"uncommon-font\">罕见攻击</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 8 (10) damage.<br/>If the enemy is <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>, hits twice.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Dismantle-Art.png</span></div></div>",
+								"kind": "card"
+							},
+							{
+								"name": "主宰",
+								"description": "施加 1（2）层 StS2 Icon Vulnerable.png 易伤。对敌人每有 1 层 StS2 Icon Strength.png 易伤，获得 1 层 StS2 Icon Vulnerable.png 力量。消耗。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">主宰</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"rare-font\">稀有技能</span></span> - <span class=\"plainlink\"><span class=\"ironclad-text\">铁甲战士</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Apply 1 (2) <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>.<br/> Gain 1 <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Strength.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Strength.png_22px-StS2_Icon_Strength.png_898bac.png\" width=\"22\"/> Strength</span> for each <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> on the enemy.<br/><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Exhaust</span></span>.</div></div><div class=\"card-tooltip-art\"><span>StS2 铁甲战士-Dominate-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "遗物",
+						"subheading": "铁甲战士",
+						"entries": [
+							{
+								"name": "纸蛙",
+								"description": "处于 StS2 Icon Vulnerable.png 易伤状态的敌人受到的伤害提高 75% 而非 50%。",
+								"tooltip": "<div class=\"tooltip\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 PaperPhrog.png\" class=\"inline-icon\" height=\"60\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_PaperPhrog.png_60px-StS2_PaperPhrog.png_5d756b.png\" width=\"60\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">纸蛙</span><span class=\"tooltip-meta\"><span class=\"uncommon-font\">罕见 Relic</span> - <span class=\"ironclad-text\">铁甲战士 Only</span></span></div></div><div class=\"tooltip-text\">Enemies with <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> take 75% more damage rather than 50%.</div><div class=\"tooltip-flavor\"><i>Details for this relic will be revealed in the future...</i></div></div>",
+								"kind": "relic"
+							}
+						]
+					},
+					{
+						"heading": "能力",
+						"subheading": "增益",
+						"entries": [
+							{
+								"name": "巨像",
+								"description": "在 X 回合内，你受到处于 StS2 Icon Vulnerable.png 易伤状态的敌人的伤害降低 50%。",
+								"tooltip": "<div class=\"tooltip tooltip-text\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 Icon Colossus.png\" class=\"inline-icon\" height=\"45\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Colossus.png_45px-StS2_Icon_Colossus.png_77a8e6.png\" width=\"45\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">巨像</span><span class=\"tooltip-meta\">Buff · Duration</span></div></div>You receive 50% less damage from <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> enemies for X turns.</div>",
+								"kind": "power"
+							},
+							{
+								"name": "残酷",
+								"description": "处于 StS2 Icon Vulnerable.png 易伤状态的敌人额外受到 X% 伤害。",
+								"tooltip": "<div class=\"tooltip tooltip-text\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 Icon Cruelty.png\" class=\"inline-icon\" height=\"45\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Cruelty.png_45px-StS2_Icon_Cruelty.png_60201f.png\" width=\"45\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">残酷</span><span class=\"tooltip-meta\">Buff · Intensity</span></div></div><span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> enemies take an additional X% damage.</div>",
+								"kind": "power"
+							},
+							{
+								"name": "凶恶",
+								"description": "每当你施加 StS2 Icon Vulnerable.png 易伤时，抽 X 张牌。",
+								"tooltip": "<div class=\"tooltip tooltip-text\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 Icon Vicious.png\" class=\"inline-icon\" height=\"45\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vicious.png_45px-StS2_Icon_Vicious.png_fae38a.png\" width=\"45\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">凶恶</span><span class=\"tooltip-meta\">Buff · Intensity</span></div></div>Whenever you apply <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span>, draw X cards.</div>",
+								"kind": "power"
+							}
+						]
+					},
+					{
+						"heading": "能力",
+						"subheading": "减益",
+						"entries": [
+							{
+								"name": "摧残",
+								"description": "在接下来的 X 回合内， StS2 Icon Vulnerable.png 易伤和 StS2 Icon Weak.png 虚弱的效果翻倍。",
+								"tooltip": "<div class=\"tooltip tooltip-text\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 Icon Debilitate.png\" class=\"inline-icon\" height=\"45\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Debilitate.png_45px-StS2_Icon_Debilitate.png_d2f95a.png\" width=\"45\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">摧残</span><span class=\"tooltip-meta\">Debuff · Duration</span></div></div><span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Vulnerable.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Vulnerable.png_22px-StS2_Icon_Vulnerable.png_d6ca9f.png\" width=\"22\"/> Vulnerable</span> and <span class=\"power-trigger inline-trigger\"><img alt=\"StS2 Icon Weak.png\" class=\"inline-icon\" height=\"22\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_Weak.png_22px-StS2_Icon_Weak.png_30a59d.png\" width=\"22\"/> Weak</span> are twice as effective for the next X turns.</div>",
+								"kind": "power"
+							}
+						]
+					}
+				]
+			},
+			{
+				"summary": "减益协同",
+				"groups": [
+					{
+						"heading": "卡牌",
+						"subheading": "缚灵师",
+						"entries": [
+							{
+								"name": "苦难",
+								"description": "(保留。)造成 7（9）点伤害。将敌人身上所有减益施加给所有其他敌人。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">苦难</span><span class=\"tooltip-meta\">0 能量 - <span class=\"plainlink\"><span class=\"rare-font\">稀有攻击</span></span> - <span class=\"plainlink\"><span class=\"necrobinder-text\">缚灵师</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\"> (<span class=\"ts-positive\"><span class=\"keyword-trigger inline-trigger\"><span title=\"\">Retain</span></span>.</span>)Deal 7 (9) damage.<br/>Apply any debuffs on the enemy to ALL other enemies.</div></div><div class=\"card-tooltip-art\"><span>StS2 缚灵师-Misery-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "卡牌",
+						"subheading": "无色",
+						"entries": [
+							{
+								"name": "撕碎",
+								"description": "造成 10（12）点伤害。对敌人身上每个不同的减益额外造成 5（8）点伤害。",
+								"tooltip": "<div class=\"tooltip-container\"><div style=\"padding:5px\"><div class=\"tooltip-header\" style=\"border-bottom:1px solid gray\"><div class=\"tooltip-header-labels\" style=\"gap:4px;margin-left:0px;padding-bottom:2px\"><span class=\"tooltip-title\">撕碎</span><span class=\"tooltip-meta\">1 能量 - <span class=\"plainlink\"><span class=\"rare-font\">稀有攻击</span></span> - <span class=\"plainlink\"><span class=\"none\">无色</span></span></span></div></div><div class=\"tooltip-text\" style=\"padding-top:5px\">Deal 10 (12) damage.<br/>Deals 5 (8) additional damage for each unique debuff on the enemy.</div></div><div class=\"card-tooltip-art\"><span>StS2 无色-Rend-Art.png</span></div></div>",
+								"kind": "card"
+							}
+						]
+					},
+					{
+						"heading": "遗物",
+						"subheading": "任意",
+						"entries": [
+							{
+								"name": "不安油灯",
+								"description": "每场战斗中，你首次打出使敌人陷入减益状态的牌时，使其效果翻倍。",
+								"tooltip": "<div class=\"tooltip\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 UnsettlingLamp.png\" class=\"inline-icon\" height=\"60\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_UnsettlingLamp.png_60px-StS2_UnsettlingLamp.png_e0a05c.png\" width=\"60\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">不安油灯</span><span class=\"tooltip-meta\"><span class=\"rare-font\">稀有 Relic</span> - Any Character</span></div></div><div class=\"tooltip-text\">每场战斗中，你首次打出使敌人陷入减益状态的牌时，使其效果翻倍。</div><div class=\"tooltip-flavor\"><i>Details for this relic will be revealed in the future...</i></div></div>",
+								"kind": "relic"
+							}
+						]
+					},
+					{
+						"heading": "能力",
+						"subheading": "增益",
+						"entries": [
+							{
+								"name": "血肉戏法",
+								"description": "每当你对敌人施加一个减益时，其受到 X 点伤害。",
+								"tooltip": "<div class=\"tooltip tooltip-text\" style=\"margin:5px\"><div class=\"tooltip-header\"><img alt=\"StS2 Icon SleightOfFlesh.png\" class=\"inline-icon\" height=\"45\" src=\"/mods/sts2/images/wiki/images_thumb_StS2_Icon_SleightOfFlesh.png_45px-StS2_Icon_SleightOfFlesh.png_f214e7.png\" width=\"45\"/><div class=\"tooltip-header-labels\"><span class=\"tooltip-title\">血肉戏法</span><span class=\"tooltip-meta\">Buff · Intensity</span></div></div>每当你对敌人施加一个减益时，其受到 X 点伤害。</div>",
+								"kind": "power"
+							}
+						]
+					}
+				]
+			}
+		],
+		"order": [
+			"加法类效果（如 StS2 Icon Strength.png 力量）会在乘法类效果（如 StS2 Icon Vulnerable.png 易伤）之前结算。例如，若你拥有 2 层 StS2 Icon Strength.png 力量，并对一个处于 StS2 Icon Vulnerable.png 易伤状态的目标打出打击，你将造成 12 点伤害（(6+2)×1.5）而非 11 点伤害（(6×1.5)+2）。加法类效果包括 StS2 Icon Strength.png 力量、 StS2 Icon Vigor.png 活力、精准、 StS2 StrikeDummy.png 练习假人，以及诸如附魔·锐利、附魔·活力、附魔·势头的附魔。乘法类效果包括 StS2 Icon Vulnerable.png 易伤、 StS2 Icon Weak.png 虚弱、 StS2 Icon DoubleDamage.png 双重伤害、 StS2 PenNib.png 钢笔尖、 StS2 Icon Flutter.png 颤栗、 StS2 Icon Shrink.png 萎缩、 StS2 Icon Soar.png 腾升、 StS2 Icon Slow.png 迟缓和 StS2 Icon Surrounded.png 包围。",
+			"由于取整，对于基础伤害值不能被 2 整除（即奇数）的攻击， StS2 Icon Vulnerable.png 易伤会少造成 1 点伤害。这种伤害减免在多段攻击中会被放大。若持有 StS2 PaperPhrog.png 纸蛙或未升级的 §I2§ 残酷，则决定因素是攻击能否被 4 整除，而非 2。"
+		],
+		"effectsImmune": [
+			"造成伤害的遗物和法球不会与 StS2 Icon Vulnerable.png 易伤产生交互。",
+			" StS2 Icon Poison.png 中毒和 StS2 Icon Doom.png 厄运均不受 StS2 Icon Vulnerable.png 易伤影响。",
+			"只有“攻击”类型的牌才能从 StS2 Icon Vulnerable.png 易伤中获益。例如，地狱火、灵蛇形态、捕获之魂和炸弹均不受 StS2 Icon Vulnerable.png 易伤影响。",
+			"直接移除生命值不被视为伤害，因此不受 StS2 Icon Vulnerable.png 易伤影响。攻击牌溶血与扼杀的次级效果也不受 StS2 Icon Vulnerable.png 易伤影响。"
+		]
+	}
+}

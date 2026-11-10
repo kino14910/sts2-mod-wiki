@@ -1,5 +1,3 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
 declare global {
 	namespace App {
 		interface Platform {
@@ -9,10 +7,10 @@ declare global {
 			cf?: IncomingRequestCfProperties
 		}
 
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
+		interface Locals {
+			wikiDb: D1Database | null;
+			session: import('#lib/server/auth/session').AuthSession | null;
+		}
 	}
 }
 

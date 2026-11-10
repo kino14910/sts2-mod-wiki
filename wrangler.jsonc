@@ -10,6 +10,15 @@
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	// Replace database_id with the UUID returned by `wrangler d1 create sts2-mod-wiki` before any remote operation.
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "sts2-mod-wiki",
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			"migrations_dir": "migrations"
+		}
+	],
 	"workers_dev": true,
 	"preview_urls": true
 }

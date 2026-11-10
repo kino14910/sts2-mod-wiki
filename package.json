@@ -14,7 +14,12 @@
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
 		"gen": "wrangler types",
-		"gen:thumbs": "python scripts/gen_card_thumbs.py"
+		"gen:thumbs": "python scripts/gen_card_thumbs.py",
+		"db:seed-sql": "node scripts/gen-wiki-seed-sql.mjs",
+		"db:migrate:local": "wrangler d1 migrations apply sts2-mod-wiki --local",
+		"db:migrate:remote": "wrangler d1 migrations apply sts2-mod-wiki --remote",
+		"mod-wiki:scan": "node --experimental-strip-types scripts/mod-wiki/scan.mjs",
+		"mod-wiki:sync": "node --experimental-strip-types scripts/mod-wiki/sync.mjs"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.2.7",

@@ -197,6 +197,12 @@ export default defineConfig({
 				runes: ({ filename }) =>
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
+			prerender: {
+				handleHttpError: ({ status, path, message }) => {
+					if (status === 404 && path.startsWith('/mods/')) return
+					throw new Error(message)
+				}
+			},
 			adapter: adapter()
 		})
 	],

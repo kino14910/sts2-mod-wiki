@@ -73,12 +73,6 @@
 		font-weight: 700;
 	}
 
-	.wiki-icon-link {
-		color: #85d2e4;
-		white-space: nowrap;
-		text-decoration: none;
-	}
-
 	a.wiki-icon-link:hover {
 		color: #fff3bd;
 		text-decoration: underline;
