@@ -183,3 +183,46 @@ static/mods/{modid}/localization/{locale}/*.json
 ## 基础游戏（sts2）
 
 `static/mods/sts2/manifest.json` 使用 `other` 且前缀为空，因此卡牌 `StrikeIronclad` 对应 `STRIKE_IRONCLAD.title` / `.description`，`DemonForm` 对应 `DEMON_FORM.*`，Buff `AccelerantPower` 对应 `ACCELERANT_POWER.*`，遗物 `Akabeko` 对应 `AKABEKO.*`，药水 `BlockPotion` 对应 `BLOCK_POTION.*`。基础游戏的 Buff、遗物、药水与模组声明的内容都会汇入对应页面。
+
+## Buff 页面的来源 / 交互引用
+
+`sources` 与 `interactions` 属于游戏数据关系，写在 `static/mods/{modid}/powers.json` 中；`src/lib/data/power-wiki.json`（及其中文镜像）只保留叙述字段（`title`、`stackType`、`text`、`order`、`effectsImmune`）。
+
+引用**只保存实体标识**，不保存名称、描述、悬浮提示或分组文案：
+
+```json
+{
+	"id": "VulnerablePower",
+	"group": "Counter",
+	"sources": [
+		{
+			"key": "onEnemies",
+			"groups": [
+				{
+					"kind": "card",
+					"partition": "ironclad",
+					"refs": [{ "type": "card", "id": "Bash" }]
+				},
+				{
+					"kind": "relic",
+					"partition": "any",
+					"refs": [{ "type": "relic", "id": "BagOfMarbles" }]
+				},
+				{
+					"kind": "potion",
+					"partition": "any",
+					"refs": [{ "type": "potion", "id": "VulnerablePotion" }]
+				}
+			]
+		}
+	],
+	"interactions": []
+}
+```
+
+- `type` / `kind` 取 `card`、`relic`、`potion`、`power`，与 `src/lib/entities.ts` 的实体类型一致；`id` 是 `cards.json` / `relics.json` / `potions.json` / `powers.json` 中的原始 ID。
+- `key`（区段）、`kind`（分组标题）、`partition`（分组副标题）都是**结构键**，不是展示文本。`variant` 只用于区分同一实体的不同形态（例如 `MadScience` 的 `sapping`），同样不写死文案。
+- 被引实体的名称与描述由 `static/mods/{modid}/localization/{eng,zhs}/{cards,relics,potions,powers}.json` 的 `.title` / `.description` 提供；卡牌数值与卡池来自 `cards.json`，遗物 / 药水变量来自 `relics.json` / `potions.json`。两个 locale 的键必须成对存在。
+- 区段标题、分组标题与副标题来自 `static/mods/{modid}/localization/{eng,zhs}/wiki.json`，键名规则为 `WIKI_SECTION_<KEY>`、`WIKI_GROUP_<KIND>`、`WIKI_PARTITION_<PARTITION>`、`WIKI_VARIANT_<VARIANT>`（驼峰键转大写下划线）；eng / zhs 两个文件的键集合必须完全一致。
+- `src/lib/data/power-references.ts` 负责读取虚拟模组数据、校验引用并解析成当前语言的渲染结构；`/power/[id]` 的 universal load 调用 `powerReferenceDetails()`，`WikiSources.svelte` 只渲染解析结果。链接由 `entityHref()` 生成。
+- 新增引用时运行 `pnpm test:unit` 中的 `power-references.spec.ts`：它会检查引用能否解析到游戏数据、中英文本是否配对、以及 wiki 文件中是否残留硬编码条目。

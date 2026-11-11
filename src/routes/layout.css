@@ -29,6 +29,24 @@
 	--color-accent: var(--accent);
 	--color-link: var(--link);
 	--color-positive: var(--green);
+
+	--color-red: var(--red);
+	--color-blue: var(--blue);
+	--color-gray: var(--gray);
+	--color-bg: var(--bg);
+	--color-bg-soft: var(--bg-soft);
+	--color-panel: var(--panel);
+	--color-panel-alt: var(--panel-alt);
+	--color-panel-deep: var(--panel-deep);
+	--color-tooltip-bg: var(--tooltip-bg);
+	--color-tooltip-border: var(--tooltip-border);
+	--color-table: var(--table);
+	--color-list-cell: var(--list-cell);
+	--color-button: var(--button);
+	--color-button-hover: var(--button-hover);
+	--color-button-active: var(--button-active);
+
+	--ease-brand: var(--ease);
 }
 
 /* 中文：原版 Kreon / Inter 都没有中文字形，由 ZhsFontPathSet 换成
@@ -104,6 +122,7 @@
 	--red: oklch(0.67 0.21 24);
 	--green: oklch(0.89 0.2 138);
 	--blue: oklch(0.84 0.13 203);
+	--gray: oklch(59.987% 0.00007 271.152);
 	--page-max: 1320px;
 	--header-height: 64px;
 	--ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -403,14 +422,20 @@ svg {
 	color: #fa8c56;
 }
 
-a {
-	color: #85d2e4;
-	text-decoration: none;
-	transition: color 0.16s ease;
-}
+/* 放进 base 层：普通正文链接仍有 hover 下划线，
+   但组件里的工具类（no-underline / text-gold / hover:text-ink …）位于
+   utilities 层，能正确覆盖这里的全局默认。否则未分层的 a 规则会压过
+   Tailwind 工具类（见 .no-underline 被覆盖的问题）。 */
+@layer base {
+	a {
+		color: #85d2e4;
+		text-decoration: none;
+		transition: color 0.16s ease;
+	}
 
-a:hover {
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 3px;
+	a:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
 }

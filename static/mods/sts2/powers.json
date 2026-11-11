@@ -1851,7 +1851,279 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"icon": "images/powers/vulnerable_power.png",
-		"motif": "spiral"
+		"motif": "spiral",
+		"sources": [
+			{
+				"key": "onEnemies",
+				"groups": [
+					{
+						"kind": "card",
+						"partition": "ironclad",
+						"refs": [
+							{
+								"type": "card",
+								"id": "Bash"
+							},
+							{
+								"type": "card",
+								"id": "MoltenFist"
+							},
+							{
+								"type": "card",
+								"id": "Thunderclap"
+							},
+							{
+								"type": "card",
+								"id": "Taunt"
+							},
+							{
+								"type": "card",
+								"id": "Tremble"
+							},
+							{
+								"type": "card",
+								"id": "Uppercut"
+							},
+							{
+								"type": "card",
+								"id": "Dominate"
+							},
+							{
+								"type": "card",
+								"id": "Break"
+							}
+						]
+					},
+					{
+						"kind": "card",
+						"partition": "silent",
+						"refs": [
+							{
+								"type": "card",
+								"id": "Expose"
+							},
+							{
+								"type": "card",
+								"id": "Assassinate"
+							}
+						]
+					},
+					{
+						"kind": "card",
+						"partition": "regent",
+						"refs": [
+							{
+								"type": "card",
+								"id": "FallingStar"
+							},
+							{
+								"type": "card",
+								"id": "KnowThyPlace"
+							},
+							{
+								"type": "card",
+								"id": "GammaBlast"
+							},
+							{
+								"type": "card",
+								"id": "Comet"
+							},
+							{
+								"type": "card",
+								"id": "MeteorShower"
+							}
+						]
+					},
+					{
+						"kind": "card",
+						"partition": "necrobinder",
+						"refs": [
+							{
+								"type": "card",
+								"id": "Fear"
+							},
+							{
+								"type": "card",
+								"id": "HighFive"
+							},
+							{
+								"type": "card",
+								"id": "Putrefy"
+							}
+						]
+					},
+					{
+						"kind": "card",
+						"partition": "defect",
+						"refs": [
+							{
+								"type": "card",
+								"id": "BeamCell"
+							}
+						]
+					},
+					{
+						"kind": "card",
+						"partition": "colorless",
+						"refs": [
+							{
+								"type": "card",
+								"id": "Shockwave"
+							},
+							{
+								"type": "card",
+								"id": "MadScience",
+								"variant": "sapping"
+							},
+							{
+								"type": "card",
+								"id": "Squash"
+							}
+						]
+					},
+					{
+						"kind": "relic",
+						"partition": "any",
+						"refs": [
+							{
+								"type": "relic",
+								"id": "BagOfMarbles"
+							},
+							{
+								"type": "relic",
+								"id": "HandDrill"
+							}
+						]
+					},
+					{
+						"kind": "potion",
+						"partition": "any",
+						"refs": [
+							{
+								"type": "potion",
+								"id": "VulnerablePotion"
+							},
+							{
+								"type": "potion",
+								"id": "PotionOfBinding"
+							}
+						]
+					}
+				]
+			}
+		],
+		"interactions": [
+			{
+				"key": "vulnerableSynergies",
+				"groups": [
+					{
+						"kind": "card",
+						"partition": "ironclad",
+						"refs": [
+							{
+								"type": "card",
+								"id": "MoltenFist"
+							},
+							{
+								"type": "card",
+								"id": "Bully"
+							},
+							{
+								"type": "card",
+								"id": "Dismantle"
+							},
+							{
+								"type": "card",
+								"id": "Dominate"
+							}
+						]
+					},
+					{
+						"kind": "relic",
+						"partition": "ironclad",
+						"refs": [
+							{
+								"type": "relic",
+								"id": "PaperPhrog"
+							}
+						]
+					},
+					{
+						"kind": "power",
+						"partition": "buff",
+						"refs": [
+							{
+								"type": "power",
+								"id": "ColossusPower"
+							},
+							{
+								"type": "power",
+								"id": "CrueltyPower"
+							},
+							{
+								"type": "power",
+								"id": "ViciousPower"
+							}
+						]
+					},
+					{
+						"kind": "power",
+						"partition": "debuff",
+						"refs": [
+							{
+								"type": "power",
+								"id": "DebilitatePower"
+							}
+						]
+					}
+				]
+			},
+			{
+				"key": "debuffSynergies",
+				"groups": [
+					{
+						"kind": "card",
+						"partition": "necrobinder",
+						"refs": [
+							{
+								"type": "card",
+								"id": "Misery"
+							}
+						]
+					},
+					{
+						"kind": "card",
+						"partition": "colorless",
+						"refs": [
+							{
+								"type": "card",
+								"id": "Rend"
+							}
+						]
+					},
+					{
+						"kind": "relic",
+						"partition": "any",
+						"refs": [
+							{
+								"type": "relic",
+								"id": "UnsettlingLamp"
+							}
+						]
+					},
+					{
+						"kind": "power",
+						"partition": "buff",
+						"refs": [
+							{
+								"type": "power",
+								"id": "SleightOfFleshPower"
+							}
+						]
+					}
+				]
+			}
+		]
 	},
 	{
 		"id": "WasteAwayPower",

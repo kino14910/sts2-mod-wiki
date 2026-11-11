@@ -4,46 +4,12 @@
 	let { tabs }: { tabs: RelicWikiTab[] } = $props()
 </script>
 
-<div class="game-tabs">
+<div class="game-tabs flex items-end gap-0.75 mb-2.5 border-b-2 border-accent font-display text-[0.88rem]">
 	{#each tabs as tab (tab.label)}
 		{#if tab.href}
-			<a class="game-tab" href={tab.href}>{tab.label}</a>
+			<a class="game-tab block px-2.25 py-0.75 border-2 border-line-strong border-b-0 rounded-t-sm bg-[oklch(0.4_0.03_187)] text-ink leading-[1.4] hover:bg-[oklch(0.49_0.04_188)] hover:text-gold" href={tab.href}>{tab.label}</a>
 		{:else}
-			<span class="game-tab game-tab--current" aria-current="page">{tab.label}</span>
+			<span class="game-tab game-tab--current block px-2.25 py-0.75 border-2 border-accent border-b-0 rounded-t-sm bg-[oklch(0.89_0.02_200)] text-[oklch(0.22_0.02_220)] leading-[1.4] font-semibold" aria-current="page">{tab.label}</span>
 		{/if}
 	{/each}
 </div>
-
-<style>
-	.game-tabs {
-		display: flex;
-		align-items: flex-end;
-		gap: 3px;
-		margin-bottom: 10px;
-		border-bottom: 2px solid var(--accent);
-		font-family: var(--font-display);
-		font-size: 0.88rem;
-	}
-
-	.game-tab {
-		padding: 2px 9px 3px;
-		border: 2px solid var(--line-strong);
-		border-bottom: none;
-		border-radius: 4px 4px 0 0;
-		background: oklch(0.4 0.03 187);
-		color: var(--text);
-		line-height: 1.4;
-	}
-
-	a.game-tab:hover {
-		background: oklch(0.49 0.04 188);
-		color: var(--gold);
-	}
-
-	.game-tab--current {
-		border-color: var(--accent);
-		background: oklch(0.89 0.02 200);
-		color: oklch(0.22 0.02 220);
-		font-weight: 600;
-	}
-</style>

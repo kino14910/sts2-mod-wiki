@@ -6,6 +6,7 @@
 	import Motif from '#lib/components/Motif.svelte'
 	import RichText from '#lib/components/RichText.svelte'
 	import WikiSources from '#lib/components/WikiSources.svelte'
+	import WikiIntro from '#lib/components/WikiIntro.svelte'
 	import WikiText from '#lib/components/WikiText.svelte'
 	import type { CollectionEntry, CollectionKind } from '#lib/data/collections'
 	import { powerHref } from '#lib/data/glossary'
@@ -27,6 +28,8 @@
 	let entry = $derived(localizedEntry(data.entry))
 	let wiki = $derived(data.wiki)
 	let intro = $derived(data.intro)
+	let sources = $derived(data.sources)
+	let interactions = $derived(data.interactions)
 	let relatedPowers = $derived(localizedEntries(data.powers))
 	let relics = $derived(localizedCollections(data.relics))
 	let potions = $derived(localizedCollections(data.potions))
@@ -80,6 +83,10 @@
 	</h3>
 {/snippet}
 
+{#snippet introParagraph(text: string)}
+	<WikiText text={text} />
+{/snippet}
+
 <div class="glossary-page">
 	<section class="page">
 		<div class="wrap">
@@ -131,14 +138,12 @@
 						</div>
 					</InfoBox>
 
-				{#each intro as paragraph (paragraph)}
-					<p class="wiki-intro"><WikiText text={paragraph} /></p>
-				{/each}
-					<div class="wiki-clear"></div>
+				<WikiIntro intro={intro} paragraph={introParagraph} />
+				<div class="wiki-clear"></div>
 
 					<section aria-labelledby="Sources">
 						<h2 class="wiki-section-title"><span class="mw-headline" id="Sources">Sources</span></h2>
-						{#each wiki.sources as details (details.summary)}
+						{#each sources as details (details.summary)}
 							<WikiSources {details} />
 						{/each}
 					</section>
@@ -147,12 +152,12 @@
 						<h2 class="wiki-section-title">
 							<span class="mw-headline" id="Interactions">Interactions</span>
 						</h2>
-						{#each wiki.interactions as details (details.summary)}
+						{#each interactions as details (details.summary)}
 							<WikiSources {details} />
 						{/each}
 
 						<h3 class="wiki-section-title wiki-h3">
-							<span class="mw-headline" id="Order">Order</span>
+							<span class="mw-headline" id="Order">{m.wiki_order()}</span>
 						</h3>
 						<ul class="wiki-prose">
 							{#each wiki.order as item (item)}
@@ -162,7 +167,7 @@
 
 						<h3 class="wiki-section-title wiki-h3">
 							<span class="mw-headline" id="Effects_Immune_to_Vulnerable">
-								Effects Immune to Vulnerable
+								{m.wiki_effects_immune_to_vulnerable()}
 							</span>
 						</h3>
 						<ul class="wiki-prose">
@@ -418,13 +423,6 @@
 
 	.druid-row-Text .druid-data {
 		line-height: 1.5;
-	}
-
-	.wiki-intro {
-		margin: 0 0 12px;
-		font-size: 0.95rem;
-		line-height: 1.6;
-		text-wrap: pretty;
 	}
 
 	.wiki-clear {

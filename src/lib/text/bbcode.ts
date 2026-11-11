@@ -181,3 +181,6 @@ export function bbcodeToHtml(src: string, options: BBCodeOptions = {}): string {
 
 	return out;
 }
+
+export { NAMED_COLORS, EFFECT_TAGS, ALIGN_TAGS, KNOWN_TAGS, sizeToUnit, parseArg }
+export type { Token as BBCodeToken }

@@ -1,9 +1,10 @@
 import type { CollectionVariables } from '#lib/data/collections';
 import { bbcodeToHtml, stripBBCode } from './bbcode';
-
-const ENERGY_ICON = '/mods/sts2/images/ui/energy_colorless.png';
-const NECRO_ENERGY_ICON = '/mods/sts2/images/ui/energy_necrobinder.png';
-const STAR_ICON = '/mods/sts2/images/ui/star.png';
+import {
+	ENERGY_ICON,
+	NECRO_ENERGY_ICON,
+	STAR_ICON
+} from '#lib/data/icon-assets';
 
 function isTruthy(value: string | number | undefined) {
 	return value !== undefined && value !== '' && value !== 0 && value !== '0' && value !== 'false';

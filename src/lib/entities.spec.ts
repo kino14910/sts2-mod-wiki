@@ -53,7 +53,7 @@ describe('entity identity', () => {
 			'/power/VulnerablePower'
 		)
 		expect(entityHref({ type: 'potion', id: 'BlockPotion' })).toBe(
-			'/relics#potion-BlockPotion'
+			'/potions#potion-BlockPotion'
 		)
 		expect(entityHref({ type: 'keyword', id: 'exhaust' })).toBe('/keywords#exhaust')
 	})

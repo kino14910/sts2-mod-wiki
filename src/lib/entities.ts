@@ -49,7 +49,7 @@ export function entityHref(ref: EntityRef): string {
 		case 'power':
 			return `/power/${id}`
 		case 'potion':
-			return `/relics#potion-${id}`
+			return `/potions#potion-${id}`
 		case 'keyword':
 			return `/keywords#${id}`
 		case 'character':

@@ -12,76 +12,22 @@
 	{id}
 	class="druid-infobox druid-container noexcerpt druid-container-small"
 >
-	<div class="druid-row druid-row-Title">
-		<div class="druid-data druid-data-Title druid-data-nonempty druid-data-wide">
+	<div class="druid-row druid-row-Title flex my-px px-1.25 pt-1 pb-2 border-b border-line-strong text-[18px] font-semibold text-gold">
+		<div class="druid-data druid-data-Title druid-data-nonempty druid-data-wide flex w-full items-center gap-2 text-left p-[6px_5px] bg-[oklch(0.4_0.03_187)]">
 			{#if entry.icon}
 				<a class="image" href={entry.infoHref}>
-					<img src={relicImage(entry.icon)} alt="" width="28" height="28" />
+					<img class="w-7 h-7 filter-[drop-shadow(0_0_2px_black)]" src={relicImage(entry.icon)} alt="" width="28" height="28" />
 				</a>
 			{/if}
 			<span>{entry.title}</span>
 			{#if entry.infoHref}
-				<a class="info" href={entry.infoHref} aria-label={`${entry.title} details`}>ⓘ</a>
+				<a class="info ml-auto text-[0.9rem] font-normal text-link hover:text-gold" href={entry.infoHref} aria-label={`${entry.title} details`}>ⓘ</a>
 			{/if}
 		</div>
 	</div>
-	<div class="druid-row druid-row-Text">
-		<div class="druid-data druid-data-Text druid-data-nonempty druid-data-wide">
+	<div class="druid-row druid-row-Text flex my-px">
+		<div class="druid-data druid-data-Text druid-data-nonempty druid-data-wide w-full p-[6px_5px] bg-[oklch(0.4_0.03_187)] leading-normal text-[0.9rem]">
 			<WikiInline text={entry.text} {page} />
 		</div>
 	</div>
 </InfoBox>
-
-<style>
-	.druid-row {
-		display: flex;
-		margin-block: 1px;
-		font-size: 16px;
-	}
-
-	.druid-row-Title {
-		padding: 4px 5px 8px;
-		border-bottom: 1px solid var(--line-strong);
-		font-size: 18px;
-		font-weight: 600;
-		color: var(--gold);
-	}
-
-	.druid-row-Title .druid-data {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		text-align: left;
-	}
-
-	.druid-row-Title img {
-		width: 28px;
-		height: 28px;
-		filter: drop-shadow(0 0 2px black);
-	}
-
-	.druid-row-Title .info {
-		margin-left: auto;
-		font-size: 0.9rem;
-		font-weight: 400;
-		color: var(--link);
-	}
-
-	.druid-row-Title .info:hover {
-		color: var(--gold);
-	}
-
-	.druid-data {
-		padding: 6px 5px;
-		background: oklch(0.4 0.03 187);
-	}
-
-	.druid-data-wide {
-		width: 100%;
-	}
-
-	.druid-row-Text .druid-data {
-		line-height: 1.5;
-		font-size: 0.9rem;
-	}
-</style>

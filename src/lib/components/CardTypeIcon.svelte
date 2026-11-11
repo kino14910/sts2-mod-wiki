@@ -5,6 +5,7 @@
 </script>
 
 <svg
+	class="flex-none"
 	width={size}
 	height={size}
 	viewBox="0 0 24 24"
@@ -38,9 +39,3 @@
 		<path d="M18 7 C20 7 20 9 18 9" opacity="0.5" />
 	{/if}
 </svg>
-
-<style>
-	svg {
-		flex: none;
-	}
-</style>

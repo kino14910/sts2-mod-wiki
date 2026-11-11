@@ -808,7 +808,7 @@
   "VULNERABLE_POWER.description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
   "VULNERABLE_POWER.smartDescription": "[blue]{Amount}[/blue]回合内，受到的攻击伤害增加[blue]{DamageIncrease:percentMore()}%[/blue]。",
   "VULNERABLE_POWER.title": "易伤",
-  "VULNERABLE_POWER.wikiIntro": "StS2 Icon Vulnerable.png 易伤是玩家和敌人都可以施加给其目标的减益效果。\n\n当角色或敌人拥有 StS2 Icon Vulnerable.png 易伤时，其受到的来自攻击牌和敌人意图的伤害会增加 50%。若最终伤害为小数则向下取整。在回合结束时，玩家或敌人会失去 1 层 StS2 Icon Vulnerable.png 易伤。\n\n尽管所有角色都能使用，但它是 StS2 IconIronclad.png 铁甲战士的标志性特质，铁甲战士对 StS2 Icon Vulnerable.png 易伤有着最多的获取途径与运用方式。铁甲战士通过其唯一独有的初始卡牌“重击”来施加易伤，并构成一套强大的协同体系，既有“巨像”这样的强力防御选项，也有 Dominate 这样的进攻选项。罕见的遗物 StS2 PaperPhrog.png Paper Phrog 同样为铁甲战士专属，可将 StS2 Icon Vulnerable.png 易伤的效果提升至 75%。",
+  "VULNERABLE_POWER.wikiIntro": "易伤是玩家和敌人都可以施加给其目标的减益效果。\n\n当角色或敌人拥有易伤时，其受到的来自攻击牌和敌人意图的伤害会增加 50%。若最终伤害为小数则向下取整。在回合结束时，玩家或敌人会失去 1 层 易伤。\n\n尽管所有角色都能使用，但它是铁甲战士的标志性特质，铁甲战士对易伤有着最多的获取途径与运用方式。铁甲战士通过其唯一独有的初始卡牌痛击来施加易伤，并构成一套强大的协同体系，既有卡牌[[card:Colossus]]这样的强力防御选项，也有主宰这样的进攻选项。罕见的遗物纸蛙同样为铁甲战士专属，可将易伤的效果提升至 75%。",
   "WASTE_AWAY_POWER.description": "每回合获得的[gold]能量[/gold]减少[blue]1[/blue]点。",
   "WASTE_AWAY_POWER.smartDescription": "每回合获得的{energyPrefix:energyIcons(1)}减少[blue]{Amount}[/blue]点。",
   "WASTE_AWAY_POWER.title": "衰朽",

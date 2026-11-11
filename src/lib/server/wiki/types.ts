@@ -1,3 +1,4 @@
+import type { CommentStatus, CommentTargetType } from '#lib/comments'
 import type { GameEntity } from '#lib/data/entities'
 import type { WikiDocument } from '#lib/wiki-document'
 import type {
@@ -75,6 +76,59 @@ export interface WikiSourceUpdateRow {
 	created_at: string
 	reviewed_at: string | null
 	published_revision_id: string | null
+}
+
+export interface CommentRow {
+	id: string
+	target_type: CommentTargetType
+	target_id: string
+	parent_id: string | null
+	author_name: string
+	author_token_hash: string
+	author_ip_hash: string | null
+	content: string
+	status: CommentStatus
+	created_at: string
+	updated_at: string
+}
+
+export interface CommentInsert {
+	id: string
+	targetType: CommentTargetType
+	targetId: string
+	parentId: string | null
+	authorName: string
+	authorTokenHash: string
+	authorIpHash: string | null
+	content: string
+}
+
+export interface AuditLogInsert {
+	id: string
+	actorId: string | null
+	action: string
+	targetType: string
+	targetId: string
+	metadata?: unknown
+}
+
+/** Data access boundary for comments; business rules live in comment-service. */
+export interface CommentStore {
+	listTopLevel(input: {
+		targetType: CommentTargetType
+		targetId: string
+		limit: number
+		offset: number
+	}): Promise<CommentRow[]>
+	listReplies(parentIds: string[]): Promise<CommentRow[]>
+	countTopLevel(targetType: CommentTargetType, targetId: string): Promise<number>
+	findComment(id: string): Promise<CommentRow | null>
+	countRecentByToken(tokenHash: string, since: string): Promise<number>
+	countRecentByIp(ipHash: string, since: string): Promise<number>
+	insertComment(input: CommentInsert): Promise<void>
+	updateContent(id: string, tokenHash: string, content: string): Promise<number>
+	softDelete(id: string, tokenHash: string): Promise<number>
+	insertAuditLog(input: AuditLogInsert): Promise<void>
 }
 
 export interface WikiSectionView {

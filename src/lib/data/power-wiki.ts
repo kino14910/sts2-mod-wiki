@@ -2,50 +2,59 @@ import { localizationFiles } from 'virtual:mods'
 import { getLocale } from '#lib/paraglide/runtime'
 import { cardHref } from './cards'
 import { entryIdFor } from './mod-dependency'
-import { CARDS, MOD_BY_ID, RELICS } from './mods'
+import { POWERS } from './glossary'
+import { CARDS, MOD_BY_ID, POTIONS, RELICS, modContentText } from './mods'
+import {
+	POWER_REFERENCES,
+	listPowerReferences,
+	resolvePowerReference,
+	type PowerEntityRef,
+	type WikiEntry
+} from './power-references'
+import { powerHrefByName } from './wiki-links'
 import raw from './power-wiki.json'
+import zhMirror from './power-wiki.zh.json'
 import tooltips from './wiki-tooltips.json'
+import { KEYWORD_ALIASES, POWER_ALIASES } from './wiki-aliases'
 
-export interface WikiEntry {
-	name: string
-	description: string
-	tooltip: string
-	kind: 'card' | 'relic' | 'potion' | 'power'
+export type { WikiDetails, WikiEntry, WikiGroup } from './power-references'
+
+const POWER_WIKI_ZH = zhMirror as Record<string, Partial<WikiPage>>
+
+/** Overlay the Chinese mirror onto an English wiki page when the locale is zhs. */
+export function localizePowerWiki(page: WikiPage, id: string, locale: string): WikiPage {
+	if (locale !== 'zhs') return page
+	const zh = POWER_WIKI_ZH[id]
+	if (!zh) return page
+	return {
+		title: zh.title ?? page.title,
+		stackType: zh.stackType ?? page.stackType,
+		text: zh.text ?? page.text,
+		order: zh.order ?? page.order,
+		effectsImmune: zh.effectsImmune ?? page.effectsImmune
+	}
 }
 
-export interface WikiGroup {
-	heading: string
-	subheading: string | null
-	entries: WikiEntry[]
-}
-
-export interface WikiDetails {
-	summary: string
-	groups: WikiGroup[]
-}
-
+/** Narrative-only wiki page; sources / interactions live in each mod's powers.json. */
 export interface WikiPage {
 	title: string
 	stackType: string
 	text: string
-	sources: WikiDetails[]
-	interactions: WikiDetails[]
 	order: string[]
 	effectsImmune: string[]
 }
 
 export const POWER_WIKI = raw as unknown as Record<string, WikiPage>
 
+/** English-name index of every entity reachable from a power reference. */
 export const WIKI_ENTRIES: Map<string, WikiEntry> = (() => {
 	const map = new Map<string, WikiEntry>()
-	for (const page of Object.values(POWER_WIKI)) {
-		for (const details of [...page.sources, ...page.interactions]) {
-			for (const group of details.groups) {
-				for (const entry of group.entries) {
-					const key = entry.name.trim().toLowerCase()
-					if (!map.has(key)) map.set(key, entry)
-				}
-			}
+	for (const powerId of Object.keys(POWER_REFERENCES)) {
+		for (const ref of listPowerReferences(powerId)) {
+			const entry = resolvePowerReference(ref, 'eng')
+			if (!entry) continue
+			const key = entry.name.trim().toLowerCase()
+			if (!map.has(key)) map.set(key, entry)
 		}
 	}
 	return map
@@ -53,25 +62,6 @@ export const WIKI_ENTRIES: Map<string, WikiEntry> = (() => {
 
 const POWER_TOOLTIPS = tooltips.powers as Record<string, string>
 const KEYWORD_TOOLTIPS = tooltips.keywords as Record<string, string>
-
-const POWER_ALIASES: Record<string, string> = {
-	易伤: 'Vulnerable',
-	虚弱: 'Weak',
-	力量: 'Strength',
-	活力: 'Vigor',
-	中毒: 'Poison',
-	末日: 'Doom',
-	人工制品: 'Artifact'
-}
-
-const KEYWORD_ALIASES: Record<string, string> = {
-	消耗: 'Exhaust',
-	固有: 'Innate',
-	保留: 'Retain',
-	虚无: 'Ethereal',
-	格挡: 'Block',
-	奥斯提: 'Osty'
-}
 
 export interface WikiTerm {
 	name: string
@@ -97,6 +87,49 @@ export const WIKI_TERMS: Map<string, WikiTerm> = (() => {
 
 export function wikiTerm(name: string) {
 	return WIKI_TERMS.get(name.trim().toLowerCase())
+}
+
+const GAME_ENTITIES: Array<{ ref: PowerEntityRef; name: string; mod: string }> = [
+	...CARDS.map((card) => ({ ref: { type: 'card', id: card.id } as const, name: card.name, mod: card.mod })),
+	...RELICS.map((relic) => ({ ref: { type: 'relic', id: relic.id } as const, name: relic.name, mod: relic.mod })),
+	...POTIONS.map((potion) => ({ ref: { type: 'potion', id: potion.id } as const, name: potion.name, mod: potion.mod })),
+	...POWERS.map((power) => ({ ref: { type: 'power', id: power.id } as const, name: power.name, mod: power.mod ?? 'sts2' }))
+]
+
+function entityNames(entity: (typeof GAME_ENTITIES)[number]) {
+	const names = [entity.name]
+	const mod = MOD_BY_ID.get(entity.mod)
+	const zh = mod ? modContentText(mod, entity.ref.type, entity.ref.id, 'title', 'zhs') : undefined
+	if (zh) names.push(zh)
+	return names
+}
+
+const NAME_IDS = new Map<string, Set<string>>()
+for (const entity of GAME_ENTITIES) {
+	for (const name of entityNames(entity)) {
+		const slot = `${entity.ref.type}:${name.trim().toLowerCase()}`
+		const ids = NAME_IDS.get(slot) ?? new Set<string>()
+		ids.add(entity.ref.id)
+		NAME_IDS.set(slot, ids)
+	}
+}
+
+/** Short or same-kind duplicate names would link ordinary words or the wrong card. */
+function isSafeGlobalName(name: string, kind: PowerEntityRef['type']) {
+	const key = name.trim().toLowerCase()
+	if (!key || NAME_IDS.get(`${kind}:${key}`)?.size !== 1) return false
+	return !/^[\x20-\x7e]+$/.test(name) || name.replace(/\s/g, '').length >= 6
+}
+
+const GAME_REFS = new Map<string, PowerEntityRef>()
+const GAME_EXACT_NAMES = new Set<string>()
+for (const entity of GAME_ENTITIES) {
+	for (const name of entityNames(entity)) {
+		if (!isSafeGlobalName(name, entity.ref.type)) continue
+		GAME_EXACT_NAMES.add(name.trim())
+		const key = name.trim().toLowerCase()
+		if (!GAME_REFS.has(key)) GAME_REFS.set(key, entity.ref)
+	}
 }
 
 const WIKI_TEXTS_EN = localizationFiles['/static/mods/sts2/localization/eng/powers.json'] as
@@ -129,15 +162,17 @@ function compactName(value: string) {
 
 export const WIKI_ENTITY_ALIASES: Map<string, WikiEntry> = (() => {
 	const map = new Map(WIKI_ENTRIES)
-	for (const card of CARDS) {
-		const localized = zhTitle('card', card.id)
-		const entry = localized && WIKI_ENTRIES.get(localized.trim().toLowerCase())
-		if (entry) map.set(card.name.trim().toLowerCase(), entry)
-	}
-	for (const relic of RELICS) {
-		const localized = zhTitle('relic', relic.id)
-		const entry = localized && WIKI_ENTRIES.get(localized.trim().toLowerCase())
-		if (entry) map.set(relic.name.trim().toLowerCase(), entry)
+	for (const powerId of Object.keys(POWER_REFERENCES)) {
+		for (const ref of listPowerReferences(powerId)) {
+			const entry = resolvePowerReference(ref, 'eng')
+			if (!entry) continue
+			const zh = resolvePowerReference(ref, 'zhs')
+			const aliases = [ref.id, ...(zh && zh.name !== entry.name ? [zh.name] : [])]
+			for (const alias of aliases) {
+				const key = alias.trim().toLowerCase()
+				if (!map.has(key)) map.set(key, entry)
+			}
+		}
 	}
 	return map
 })()
@@ -147,8 +182,47 @@ export function wikiEntity(name: string) {
 }
 
 export const WIKI_TERM_NAMES = [
-	...new Set([...WIKI_ENTITY_ALIASES.keys(), ...WIKI_TERMS.keys()])
+	...new Set([...WIKI_ENTITY_ALIASES.keys(), ...WIKI_TERMS.keys(), ...GAME_REFS.keys()])
 ].sort((a, b) => b.length - a.length)
+
+const RESOLVED_ENTRIES = new Map<string, WikiEntry>()
+
+const EXACT_NAMES = new Set<string>()
+for (const entry of WIKI_ENTRIES.values()) {
+	EXACT_NAMES.add(entry.name)
+	if (entry.id) EXACT_NAMES.add(entry.id)
+}
+for (const name of GAME_EXACT_NAMES) EXACT_NAMES.add(name)
+
+/** One lookup for every inline wiki token: referenced entries, tooltip terms, game entities. */
+export function wikiEntryFor(name: string): WikiEntry | null {
+	const value = name.trim()
+	const key = value.toLowerCase()
+	const ascii = /^[\x20-\x7e]+$/.test(value)
+	const referenced = WIKI_ENTITY_ALIASES.get(key)
+	if (referenced) return ascii && !EXACT_NAMES.has(value) ? null : referenced
+
+	const term = wikiTerm(key)
+	if (term) {
+		return {
+			name: term.name,
+			description: '',
+			tooltip: term.tooltip,
+			kind: 'power',
+			href: powerHrefByName(term.name)
+		}
+	}
+
+	if (!EXACT_NAMES.has(value)) return null
+	const ref = GAME_REFS.get(key)
+	if (!ref) return null
+	const cached = RESOLVED_ENTRIES.get(key)
+	if (cached) return cached
+	const entry = resolvePowerReference(ref, 'eng')
+	if (!entry) return null
+	RESOLVED_ENTRIES.set(key, entry)
+	return entry
+}
 
 export interface WikiRelic {
 	name: string
@@ -161,14 +235,19 @@ const RELIC_ICONS = new Map(
 	RELICS.filter((relic) => relic.image).map((relic) => [compactName(relic.name), relic] as const)
 )
 
+const RELIC_ICONS_BY_ID = new Map(
+	RELICS.filter((relic) => relic.image).map((relic) => [relic.id.toLowerCase(), relic] as const)
+)
+
 export function wikiRelic(name: string): WikiRelic | undefined {
-	const relic = RELIC_ICONS.get(compactName(name))
+	const relic =
+		RELIC_ICONS_BY_ID.get(name.trim().toLowerCase()) ?? RELIC_ICONS.get(compactName(name))
 	if (!relic) return undefined
 	const localized = zhTitle('relic', relic.id)
 	return {
 		name: relic.name,
 		icon: relic.image ?? '',
-		tooltip: wikiEntity(relic.name)?.tooltip ?? '',
+		tooltip: wikiEntryFor(relic.name)?.tooltip ?? '',
 		aliases: [relic.name, ...(localized ? [localized] : []), relic.id].sort(
 			(a, b) => b.length - a.length
 		)

@@ -55,7 +55,7 @@
 		{#if token.type === 'term'}
 			<a
 				class={[
-					'font-medium underline decoration-dotted decoration-1 underline-offset-2 transition-colors hover:text-[#fff3bd] hover:decoration-[#fff3bd]',
+					'font-medium underline decoration-dotted decoration-1 underline-offset-2 transition-colors hover:decoration-[#fff3bd]',
 					TERM_COLOR[token.link.kind]
 				]}
 				href={token.link.href}

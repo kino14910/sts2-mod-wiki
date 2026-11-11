@@ -28,30 +28,30 @@
 	}
 </script>
 
-<header class="site-header">
-	<div class="wrap header-inner">
-		<a class="brand" href={resolve('/cards')} aria-label={m.brand_home()}>
-			<svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+<header class="site-header sticky top-0 z-60 [background:color-mix(in_srgb,var(--tooltip-bg)_88%,transparent)] backdrop-blur-md border-b-2 border-tooltip-border [box-shadow:0_4px_12px_rgba(0,0,0,0.45)]">
+	<div class="wrap header-inner h-(--header-height) flex items-center gap-7">
+		<a class="brand flex items-center gap-2.5 flex-none text-gold no-underline hover:no-underline" href={resolve('/cards')} aria-label={m.brand_home()}>
+			<svg class="brand-mark w-7.75 h-7.75 text-gold filter-[drop-shadow(0_0_10px_rgba(242,219,116,0.15))]" viewBox="0 0 36 36" fill="none" aria-hidden="true">
 				<path d="M18 2.5 L31 9.5 V26.5 L18 33.5 L5 26.5 V9.5 Z" stroke="currentColor" stroke-width="1.2" />
 				<path d="M18 8 L26 12.5 V23.5 L18 28 L10 23.5 V12.5 Z" fill="currentColor" fill-opacity="0.08" stroke="currentColor" stroke-width="0.9" />
 				<path d="M18 12 V24 M14.5 15 L18 12 L21.5 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
 			</svg>
-			<span class="brand-text">
-				<span class="brand-title">{m.brand_title()} <em>2</em></span>
-				<span class="brand-sub">{m.brand_sub()}</span>
+			<span class="brand-text flex flex-col leading-none">
+				<span class="brand-title font-display text-[1.05rem] font-semibold tracking-[0.01em] text-gold">{m.brand_title()} <span class="not-italic">2</span></span>
+				<span class="brand-sub mt-1.25 font-mono text-[0.53rem] tracking-[0.16em] uppercase text-link">{m.brand_sub()}</span>
 			</span>
 		</a>
 
-		<nav class="desktop-nav" aria-label={m.nav_main()}>
+		<nav class="desktop-nav flex items-center gap-1 ml-auto max-[980px]:hidden" aria-label={m.nav_main()}>
 			{#each links as link (link.href)}
-				<a class="nav-link" href={link.href} aria-current={active(link.href) ? 'page' : undefined}>
+				<a class="nav-link no-underline hover:no-underline px-3.5 py-1.5 border-2 border-transparent border-b-0 rounded-t-md font-display text-[0.92rem] font-bold text-ink-dim [text-shadow:2px_1px_0_rgba(0,0,0,0.45)] transition-colors duration-180 hover:bg-[color-mix(in_srgb,var(--surface)_40%,transparent)] hover:text-ink [aria-current='page']:border-tooltip-border [aria-current='page']:bg-surface [aria-current='page']:text-ink" href={link.href} aria-current={active(link.href) ? 'page' : undefined}>
 					{link.label}
 				</a>
 			{/each}
 		</nav>
 
 		<a
-			class="wiki-link"
+			class="wiki-link no-underline hover:no-underline inline-flex items-center gap-1.25 px-2.5 py-1.25 border border-line rounded-sm bg-surface-2 text-[0.72rem] text-link whitespace-nowrap transition-colors duration-180 hover:text-ink hover:border-accent max-[980px]:hidden"
 			href="https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:Main"
 			target="_blank"
 			rel="noreferrer"
@@ -60,9 +60,10 @@
 			<span aria-hidden="true">↗</span>
 		</a>
 
-		<div class="locale-switch" role="group" aria-label={m.language()}>
+		<div class="locale-switch inline-flex flex-none overflow-hidden rounded-sm border border-tooltip-border bg-surface-2 max-[980px]:ml-auto">
 			<button
 				type="button"
+				class="min-h-7 px-2.25 font-display text-[0.78rem] font-bold text-ink-dim bg-transparent transition-colors duration-160 hover:bg-[color-mix(in_srgb,var(--surface)_45%,transparent)] hover:text-ink [aria-pressed='true']:bg-accent [aria-pressed='true']:text-[oklch(0_0_0)]"
 				aria-pressed={locale === 'eng'}
 				aria-label={m.language_en()}
 				onclick={() => changeLocale('eng')}
@@ -71,275 +72,41 @@
 			</button>
 			<button
 				type="button"
-				class="locale-zh"
+				class="locale-zh min-h-7 px-2.25 font-display text-[0.78rem] font-bold text-ink-dim bg-transparent border-l border-tooltip-border transition-colors duration-160 hover:bg-[color-mix(in_srgb,var(--surface)_45%,transparent)] hover:text-ink [aria-pressed='true']:bg-accent [aria-pressed='true']:text-[oklch(0_0_0)]"
 				aria-pressed={locale === 'zhs'}
 				aria-label={m.language_zh()}
 				onclick={() => changeLocale('zhs')}
+				style="font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif"
 			>
 				中文
 			</button>
 		</div>
 
 		<button
-			class="menu-toggle"
+			class="menu-toggle w-10 h-9 grid place-items-center content-center gap-1.25 border border-tooltip-border rounded-sm font-style-normal ml-auto max-[980px]:grid max-[980px]:ml-0"
 			aria-expanded={open}
 			aria-controls="mobile-menu"
 			aria-label={open ? m.nav_close() : m.nav_open()}
 			onclick={() => (open = !open)}
 		>
-			<span class={{ open }}></span>
-			<span class={{ open }}></span>
+			<span class={'block h-px w-4 bg-ink-dim transition-transform duration-220 ease-brand ' + (open ? 'translate-y-0.75 rotate-45' : '')}></span>
+			<span class={'block h-px w-4 bg-ink-dim transition-transform duration-220 ease-brand ' + (open ? '-translate-y-0.75 -rotate-45' : '')}></span>
 		</button>
 	</div>
 
 	{#if open}
-		<nav id="mobile-menu" class="mobile-nav" aria-label={m.nav_mobile()}>
+		<nav id="mobile-menu" class="mobile-nav hidden max-[980px]:grid max-[980px]:p-[6px_clamp(20px,4vw,44px)_16px] max-[980px]:border-t-2 max-[980px]:border-tooltip-border max-[980px]:[background:color-mix(in_srgb,var(--tooltip-bg)_96%,transparent)]" aria-label={m.nav_mobile()}>
 			{#each links as link (link.href)}
 				<a
+					class="flex items-center justify-between px-2 py-2.75 border-b border-line font-display text-[0.98rem] font-bold text-ink-dim no-underline hover:no-underline [aria-current='page']:text-gold [aria-current='page']:bg-[color-mix(in_srgb,var(--surface)_40%,transparent)]"
 					href={link.href}
 					aria-current={active(link.href) ? 'page' : undefined}
 					onclick={() => (open = false)}
 				>
 					{link.label}
-					<span aria-hidden="true">→</span>
+					<span aria-hidden="true" class="font-sans text-[0.8rem] text-muted">→</span>
 				</a>
 			{/each}
 		</nav>
 	{/if}
 </header>
-
-<style>
-	.site-header {
-		position: sticky;
-		top: 0;
-		z-index: 60;
-		background: color-mix(in srgb, var(--tooltip-bg) 88%, transparent);
-		backdrop-filter: blur(12px);
-		border-bottom: 2px solid var(--tooltip-border);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-	}
-
-	.header-inner {
-		height: var(--header-height);
-		display: flex;
-		align-items: center;
-		gap: 28px;
-	}
-
-	.brand {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		flex: none;
-		color: var(--gold);
-	}
-
-	.brand-mark {
-		width: 31px;
-		height: 31px;
-		color: var(--gold);
-		filter: drop-shadow(0 0 10px rgba(242, 219, 116, 0.15));
-	}
-
-	.brand-text {
-		display: flex;
-		flex-direction: column;
-		line-height: 1;
-	}
-
-	.brand-title {
-		font-family: var(--font-display);
-		font-size: 1.05rem;
-		font-weight: 600;
-		letter-spacing: 0.01em;
-		color: var(--gold);
-	}
-
-	.brand-title em {
-		font-style: normal;
-		color: var(--gold);
-	}
-
-	.brand-sub {
-		margin-top: 5px;
-		font-family: var(--font-mono);
-		font-size: 0.53rem;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		color: var(--link);
-	}
-
-	.desktop-nav {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		margin-left: auto;
-	}
-
-	.nav-link {
-		padding: 6px 14px;
-		border: 2px solid transparent;
-		border-bottom: 0;
-		border-radius: 6px 6px 0 0;
-		font-family: var(--font-display);
-		font-size: 0.92rem;
-		font-weight: 700;
-		color: var(--text-dim);
-		text-shadow: 2px 1px 0 rgba(0, 0, 0, 0.45);
-		transition:
-			background 0.18s ease,
-			border-color 0.18s ease,
-			color 0.18s ease;
-	}
-
-	.nav-link:hover {
-		background: color-mix(in srgb, var(--surface) 40%, transparent);
-		color: var(--text);
-	}
-
-	.nav-link[aria-current='page'] {
-		border-color: var(--tooltip-border);
-		background: var(--surface);
-		color: var(--text);
-	}
-
-	.wiki-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 5px;
-		padding: 5px 10px;
-		border: 1px solid var(--line);
-		border-radius: 4px;
-		background: var(--surface-secondary);
-		font-size: 0.72rem;
-		color: var(--link);
-		white-space: nowrap;
-		transition: color 0.18s ease, border-color 0.18s ease;
-	}
-
-	.wiki-link:hover {
-		color: var(--text);
-		border-color: var(--accent);
-	}
-
-	.locale-switch {
-		display: inline-flex;
-		flex: none;
-		border: 1px solid var(--tooltip-border);
-		border-radius: 4px;
-		overflow: hidden;
-		background: var(--surface-secondary);
-	}
-
-	.locale-switch button {
-		min-height: 28px;
-		padding: 0 9px;
-		font-family: var(--font-display);
-		font-size: 0.78rem;
-		font-weight: 700;
-		color: var(--text-dim);
-		background: transparent;
-		transition:
-			background 0.16s ease,
-			color 0.16s ease;
-	}
-
-	.locale-switch button + button {
-		border-left: 1px solid var(--tooltip-border);
-	}
-
-	/* 英文页只有这两个中文字，用系统字体即可，避免为它拉取整套中文字体 */
-	.locale-switch button.locale-zh {
-		font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui,
-			sans-serif;
-	}
-
-	.locale-switch button:hover {
-		background: color-mix(in srgb, var(--surface) 45%, transparent);
-		color: var(--text);
-	}
-
-	.locale-switch button[aria-pressed='true'] {
-		background: var(--accent);
-		color: oklch(0 0 0);
-	}
-
-	.menu-toggle {
-		display: none;
-		width: 40px;
-		height: 36px;
-		place-items: center;
-		align-content: center;
-		gap: 5px;
-		border: 1px solid var(--tooltip-border);
-		border-radius: 4px;
-		font-style: normal;
-		margin-left: auto;
-	}
-
-	.menu-toggle span {
-		display: block;
-		width: 16px;
-		height: 1px;
-		background: var(--text-dim);
-		transition: transform 0.22s var(--ease);
-	}
-
-	.menu-toggle span.open:first-child {
-		transform: translateY(3px) rotate(45deg);
-	}
-
-	.menu-toggle span.open:last-child {
-		transform: translateY(-3px) rotate(-45deg);
-	}
-
-	.mobile-nav {
-		display: none;
-	}
-
-	@media (max-width: 980px) {
-		.desktop-nav,
-		.wiki-link {
-			display: none;
-		}
-
-		.locale-switch {
-			margin-left: auto;
-		}
-
-		.menu-toggle {
-			display: grid;
-			margin-left: 0;
-		}
-
-		.mobile-nav {
-			display: grid;
-			padding: 6px clamp(20px, 4vw, 44px) 16px;
-			border-top: 2px solid var(--tooltip-border);
-			background: color-mix(in srgb, var(--tooltip-bg) 96%, transparent);
-		}
-
-		.mobile-nav a {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding: 11px 8px;
-			border-bottom: 1px solid var(--line);
-			font-family: var(--font-display);
-			font-size: 0.98rem;
-			font-weight: 700;
-			color: var(--text-dim);
-		}
-
-		.mobile-nav a[aria-current='page'] {
-			color: var(--gold);
-			background: color-mix(in srgb, var(--surface) 40%, transparent);
-		}
-
-		.mobile-nav a span {
-			font-family: var(--font-sans);
-			font-size: 0.8rem;
-			color: var(--muted);
-		}
-	}
-</style>

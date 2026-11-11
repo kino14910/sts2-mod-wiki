@@ -9,6 +9,7 @@
 	import WikiNavbox from '#lib/components/WikiNavbox.svelte'
 	import WikiTable from '#lib/components/WikiTable.svelte'
 	import WikiToc from '#lib/components/WikiToc.svelte'
+	import CommentList from '#lib/components/wiki/comments/CommentList.svelte'
 	import { cardHref, isUpgradable, resolveCard } from '#lib/data/cards'
 	import { ENTRY_BY_ID, entryHref } from '#lib/data/glossary'
 	import {
@@ -70,7 +71,8 @@
 		{ id: 'Synergies', number: '2.1', label: m.card_synergies(), indent: true },
 		{ id: 'Notes', number: '3', label: m.card_notes(), indent: false },
 		{ id: 'Names_in_Other_Languages', number: '4', label: m.power_other_names(), indent: false },
-		{ id: 'Update_History', number: '5', label: m.card_update_history(), indent: false }
+		{ id: 'Update_History', number: '5', label: m.card_update_history(), indent: false },
+		{ id: 'Comments', number: '6', label: m.comments_title(), indent: false }
 	])
 
 	let metaText = $derived(cardTextToPlain(card.text, { variables: card.variables }))
@@ -190,6 +192,8 @@
 						]}
 						trailing={{ label: m.nav_cards(), href: resolve('/cards') }}
 					/>
+
+					<CommentList targetId={data.card.id} />
 				</article>
 
 			<InfoBox

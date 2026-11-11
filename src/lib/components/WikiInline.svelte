@@ -1,5 +1,6 @@
 <script lang="ts">
 	import HoverTooltip from '#lib/components/HoverTooltip.svelte'
+	import WikiText from '#lib/components/WikiText.svelte'
 	import { relicImage, type RelicWikiPage } from '#lib/data/relic-wiki'
 
 	let { text, page }: { text: string; page: RelicWikiPage } = $props()
@@ -95,25 +96,25 @@
 	{#if node.kind === 'token'}
 		{#if node.href}
 			<a
-				class="wiki-inline-link"
+				class="wiki-inline-link text-[#85d2e4] whitespace-nowrap hover:underline [text-underline-thickness:1px] underline-offset-2"
 				href={node.href}
 				onmouseenter={(event) => enter(event, node.key, node.tooltip)}
 				onmousemove={move}
 				onmouseleave={leave}
-				>{#if node.icon}<img class="wiki-inline-icon" src={node.icon} alt="" />{/if}{node.label}</a
+				>{#if node.icon}<img class="wiki-inline-icon inline h-[1.35em] w-auto mx-[0.08em] align-[-0.32em] filter-[drop-shadow(0_0_1px_black)]" src={node.icon} alt="" />{/if}{node.label}</a
 			>
 		{:else}
 			<span
-				class="wiki-inline-link wiki-inline-link--plain"
+				class="wiki-inline-link wiki-inline-link--plain text-[#85d2e4] whitespace-nowrap font-semibold hover:underline [text-underline-thickness:1px] underline-offset-2"
 				role="note"
 				onmouseenter={(event) => enter(event, node.key, node.tooltip)}
 				onmousemove={move}
 				onmouseleave={leave}
-				>{#if node.icon}<img class="wiki-inline-icon" src={node.icon} alt="" />{/if}{node.label}</span
+				>{#if node.icon}<img class="wiki-inline-icon inline h-[1.35em] w-auto mx-[0.08em] align-[-0.32em] filter-[drop-shadow(0_0_1px_black)]" src={node.icon} alt="" />{/if}{node.label}</span
 			>
 		{/if}
-	{:else if node.kind === 'bold'}<strong>{node.value}</strong
-	>{:else if node.kind === 'break'}<br />{:else}{node.value}{/if}
+{:else if node.kind === 'bold'}<strong>{node.value}</strong
+>{:else if node.kind === 'break'}<br />{:else if node.kind === 'text'}<WikiText text={node.value} />{/if}
 {/each}
 
 <HoverTooltip
@@ -123,30 +124,3 @@
 	y={tipY}
 	{registerTip}
 />
-
-<style>
-	.wiki-inline-link {
-		color: #85d2e4;
-		white-space: nowrap;
-	}
-
-	a.wiki-inline-link:hover {
-		color: #fff3bd;
-		text-decoration: underline;
-		text-decoration-thickness: 1px;
-		text-underline-offset: 2px;
-	}
-
-	.wiki-inline-link--plain {
-		font-weight: 600;
-	}
-
-	.wiki-inline-icon {
-		display: inline;
-		width: auto;
-		height: 1.35em;
-		margin: 0 0.08em;
-		vertical-align: -0.32em;
-		filter: drop-shadow(0 0 1px black);
-	}
-</style>

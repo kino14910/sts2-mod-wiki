@@ -6,6 +6,7 @@
 	import WikiGameTabs from '#lib/components/WikiGameTabs.svelte'
 	import WikiHeading from '#lib/components/WikiHeading.svelte'
 	import WikiInline from '#lib/components/WikiInline.svelte'
+	import WikiIntro from '#lib/components/WikiIntro.svelte'
 	import WikiNavbox from '#lib/components/WikiNavbox.svelte'
 	import WikiTable from '#lib/components/WikiTable.svelte'
 	import WikiToc from '#lib/components/WikiToc.svelte'
@@ -64,11 +65,13 @@
 					<DetailTitle name={entry.name} />
 					<WikiGameTabs tabs={wiki.gameTabs} />
 
+					{#snippet introParagraph(text: string)}
+						<WikiInline text={text} page={wiki} />
+					{/snippet}
+
 					<div class="relic-body">
 						<div class="relic-main">
-							{#each wiki.intro as paragraph (paragraph)}
-								<p class="wiki-intro"><WikiInline text={paragraph} page={wiki} /></p>
-							{/each}
+							<WikiIntro intro={wiki.intro} paragraph={introParagraph} />
 
 							<div class="wiki-toc-wrap"><WikiToc items={toc} collapsible /></div>
 							<div class="wiki-clear-left"></div>
@@ -116,7 +119,7 @@
 				<div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
 					<article class="min-w-0">
 						<DetailTitle name={entry.name} />
-						<section class="mt-4 rounded-md border-2 border-line bg-(--table) p-4">
+						<section class="mt-4 rounded-md border-2 border-line bg-table p-4">
 							<h2 class="font-display text-[1.1rem] font-semibold text-gold">
 								{m.power_effect()}
 							</h2>
@@ -124,7 +127,7 @@
 						</section>
 				</article>
 
-					<aside class="rounded-md border-2 border-line bg-(--table) p-3" aria-label={entry.name}>
+					<aside class="rounded-md border-2 border-line bg-table p-3" aria-label={entry.name}>
 						<div class="flex items-center gap-2.5 border-b border-line pb-2.5">
 							<span class="grid size-10.5 shrink-0 place-items-center rounded-sm border border-line-strong bg-black/35 p-1">
 								{#if entry.image}
@@ -212,13 +215,6 @@
 		flex-direction: column;
 		gap: 1em;
 		min-width: 0;
-	}
-
-	.wiki-intro {
-		margin: 0 0 12px;
-		font-size: 0.95rem;
-		line-height: 1.6;
-		text-wrap: pretty;
 	}
 
 	.wiki-toc-wrap {

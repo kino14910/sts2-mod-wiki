@@ -21,10 +21,11 @@
 	} from '#lib/data/localize';
 	import { collectionCharacterOptions } from '#lib/data/characters';
 	import { m } from '#lib/paraglide/messages';
+	import GameText from '#lib/components/GameText.svelte';
+	import type { GameTextOptions } from '#lib/text/game-text';
 	import {
 		ENERGY_ICON,
 		NECRO_ENERGY_ICON,
-		collectionTextToHtml,
 		collectionTextToPlain
 	} from '#lib/text/collection-text';
 
@@ -115,10 +116,11 @@
 		mod = 'all';
 	}
 
-	function descriptionHtml(entry: CollectionEntry) {
-		return collectionTextToHtml(entry.text, {
-			energyIcon: entry.character === 'necrobinder' ? NECRO_ENERGY_ICON : ENERGY_ICON
-		});
+	function descriptionOptions(entry: CollectionEntry): GameTextOptions {
+		return {
+			mode: 'collection',
+			energyIconSrc: entry.character === 'necrobinder' ? NECRO_ENERGY_ICON : ENERGY_ICON
+		};
 	}
 
 	function meta(entry: CollectionEntry) {
@@ -202,7 +204,7 @@
 							<p
 								class="collection-desc mt-1 max-w-[82ch] text-[0.86rem] leading-[1.45] text-pretty text-ink-dim"
 							>
-								{@html descriptionHtml(entry)}
+								<GameText text={entry.text} options={descriptionOptions(entry)} />
 							</p>
 
 							{#if kind === 'relic'}
@@ -237,7 +239,8 @@
 />
 
 <style>
-	.collection-desc :global(.sts-collection-icon) {
+	.collection-desc :global(.sts-collection-icon),
+	.collection-desc :global(.sts-energy-icon) {
 		display: inline-block;
 		height: 1.05em;
 		width: auto;
@@ -245,7 +248,8 @@
 		vertical-align: -0.14em;
 	}
 
-	.collection-row :global(.sts-collection-icon) {
+	.collection-row :global(.sts-collection-icon),
+	.collection-row :global(.sts-energy-icon) {
 		filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
 	}
 </style>

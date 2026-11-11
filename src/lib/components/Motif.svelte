@@ -5,7 +5,7 @@
 </script>
 
 <svg
-	class={className}
+	class="{className} block"
 	viewBox="0 0 120 120"
 	fill="none"
 	stroke="currentColor"
@@ -100,9 +100,3 @@
 		<path d="M60 48 L66 60 L60 72 L54 60 Z" fill="currentColor" fill-opacity="0.2" />
 	{/if}
 </svg>
-
-<style>
-	svg {
-		display: block;
-	}
-</style>

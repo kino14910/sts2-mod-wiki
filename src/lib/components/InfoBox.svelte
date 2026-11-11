@@ -20,48 +20,20 @@
 		class?: string
 		element?: 'aside' | 'div'
 	} = $props()
+
+	let toneClass = $derived(
+		tone === 'card'
+			? 'border-2 border-tooltip-border rounded-[10px] bg-surface p-2.5'
+			: 'float-right clear-right w-[min(22em,100%)] mb-1 ml-1.5 p-2.5 border-4 border-[oklch(0.51_0.03_223)] rounded-[8px] bg-[oklch(0.49_0.04_188)] box-border text-[oklch(0.95_0_0)] [text-shadow:2px_1px_2px_oklch(0.29_0.03_188)] max-[820px]:float-none max-[820px]:m-0 max-[820px]:mb-1'
+	)
 </script>
 
 <svelte:element
 	this={element}
-	class={`infobox infobox--${tone} ${className}`}
+	class={`infobox font-display ${toneClass} ${className}`}
 	aria-label={ariaLabel}
 	{id}
 >
 	{#if title}{@render title()}{/if}
 	{@render children()}
 </svelte:element>
-
-<style>
-	.infobox {
-		font-family: var(--font-display);
-	}
-
-	.infobox--card {
-		border: 2px solid var(--tooltip-border);
-		border-radius: 10px;
-		background: var(--surface);
-		padding: 0.625rem;
-	}
-
-	.infobox--druid {
-		float: right;
-		clear: right;
-		width: min(22em, 100%);
-		margin: 0 0 1em 1.5em;
-		padding: 10px;
-		border: 4px solid oklch(0.51 0.03 223);
-		border-radius: 8px;
-		background: oklch(0.49 0.04 188);
-		box-sizing: border-box;
-		color: oklch(0.95 0 0);
-		text-shadow: 2px 1px 2px oklch(0.29 0.03 188);
-	}
-
-	@media (max-width: 820px) {
-		.infobox--druid {
-			float: none;
-			margin: 0 0 1em;
-		}
-	}
-</style>

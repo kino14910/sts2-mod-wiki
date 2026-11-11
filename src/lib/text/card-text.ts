@@ -1,10 +1,8 @@
 import type { CardVariables } from '#lib/data/cards';
 import { bbcodeToHtml, stripBBCode } from './bbcode';
+import { ENERGY_ICON_SRC, STAR_ICON_SRC } from '#lib/data/icon-assets';
 
-/** 未指定角色时的默认能量图标（无色） */
-export const ENERGY_ICON_SRC = '/mods/sts2/images/colorless_energy_icon.png';
-/** 未指定角色时的默认第二费用（星）图标 */
-export const STAR_ICON_SRC = '/mods/sts2/images/star_icon.png';
+export { ENERGY_ICON_SRC, STAR_ICON_SRC };
 
 export interface CardTextOptions {
 	upgraded?: boolean;
@@ -256,11 +254,16 @@ function resolveCardText(
 	});
 }
 
-export function cardTextToHtml(text: string, options: CardTextOptions = {}) {
-	const src = resolveCardText(text, options, {
+/** 变量层求值，输出仍是 BBCode 文本，供统一 AST 解析器继续解析 */
+export function resolveCardTextToBBCode(text: string, options: CardTextOptions = {}): string {
+	return resolveCardText(text, options, {
 		energy: (count) => `[energy_icons=${Math.max(0, count)}]`,
 		star: (count) => `[star_icons=${Math.max(0, count)}]`
-	});
+	})
+}
+
+export function cardTextToHtml(text: string, options: CardTextOptions = {}) {
+	const src = resolveCardTextToBBCode(text, options);
 	const iconSrc = options.energyIconSrc ?? ENERGY_ICON_SRC;
 	const starSrc = options.secondEnergyIconSrc ?? STAR_ICON_SRC;
 

@@ -34,7 +34,7 @@
 </script>
 
 <article
-	class="card-row card-box"
+	class="card-row card-box relative grid grid-cols-[150px_minmax(0,1fr)] items-center gap-3 border border-gray rounded-md bg-list-cell px-6 py-5 max-[640px]:grid-cols-[110px_minmax(0,1fr)] max-[420px]:grid-cols-[84px_minmax(0,1fr)] max-[420px]:gap-2.5 max-[420px]:p-2.5"
 	style:--accent={accent}
 	data-name={localized.name}
 	data-rarity={rarityLabel}
@@ -46,14 +46,14 @@
 	data-multiplayer="false"
 	data-tags={card.keywords.join(' ')}
 >
-	<a class="thumb-link card-image-wrap" href={cardHref(card)} aria-label={m.card_open({ name: localized.name })}>
+	<a class="thumb-link card-image-wrap flex-none w-37.5 rounded-sm max-[640px]:w-27.5 max-[420px]:w-21" href={cardHref(card)} aria-label={m.card_open({ name: localized.name })}>
 		<CardThumb card={display} upgraded={upgradedView} {priority} />
 	</a>
 
-	<div class="row-content">
-		<div class="row-head">
-			<a class="card-title" href={cardHref(card)}>{display.name}</a>
-			<span class="card-meta">
+	<div class="row-content flex min-w-0 flex-col items-start justify-start gap-1.75 py-[0.4em] pl-[0.7em] pr-0">
+		<div class="row-head flex min-w-0 flex-col gap-0.75">
+			<a class="card-title font-display text-[1.5rem] font-semibold leading-[1.1] text-balance [text-shadow:2px_1px_2px_rgba(0,0,0,0.36)] transition-colors duration-160 hover:underline [text-underline-thickness:1px] underline-offset-[3px] max-[640px]:text-[1.25rem] max-[420px]:text-[1.1rem]" href={cardHref(card)}>{display.name}</a>
+			<span class="card-meta flex items-center gap-1.5 mb-1 text-[0.9rem] text-link max-[420px]:text-[0.72rem] max-[420px]:flex-wrap">
 				<a href="{resolve('/cards')}?rarity={card.rarity}">{rarityLabel}</a>
 				<span aria-hidden="true">-</span>
 				<a href="{resolve('/cards')}?color={card.color}">{colorLabel}</a>
@@ -65,10 +65,10 @@
 		<CardDescription card={display} upgraded={upgradedView} />
 
 		{#if showActions}
-			<div class="row-actions">
+			<div class="row-actions flex flex-wrap items-center gap-2.5 mt-auto pt-1">
 				{#if canUpgrade}
 					<button
-						class="upgrade-button"
+						class="upgrade-button inline-flex items-center justify-center px-2 py-1.25 border border-line-strong rounded-sm bg-transparent text-ink text-[0.95rem] whitespace-nowrap transition-colors duration-160 aria-pressed:border-[mediumseagreen] aria-pressed:bg-[mediumseagreen] aria-pressed:text-[oklch(0_0_0)]"
 						type="button"
 						aria-pressed={upgraded}
 						title={m.card_toggle_upgraded()}
@@ -77,173 +77,11 @@
 						{m.card_tab_upgraded()}
 					</button>
 				{:else}
-					<span class="upgrade-disabled">{m.card_cannot_upgrade()}</span>
+					<span class="upgrade-disabled inline-flex items-center px-2 py-1 border-2 border-gray rounded-md text-[0.9rem] italic font-semibold text-gray whitespace-nowrap">{m.card_cannot_upgrade()}</span>
 				{/if}
-				<span class="upgrade-disabled">{m.card_no_beta_art()}</span>
-				<span class="mod-name">{modName(card.mod)}</span>
+				<span class="upgrade-disabled inline-flex items-center px-2 py-1 border-2 border-gray rounded-md text-[0.9rem] italic font-semibold text-gray whitespace-nowrap">{m.card_no_beta_art()}</span>
+				<span class="mod-name ml-auto pl-1.5 font-mono text-[0.55rem] tracking-wider uppercase text-muted overflow-hidden text-ellipsis whitespace-nowrap max-[640px]:hidden">{modName(card.mod)}</span>
 			</div>
 		{/if}
 	</div>
 </article>
-
-<style>
-	.card-row {
-		position: relative;
-		display: grid;
-		grid-template-columns: 150px minmax(0, 1fr);
-		align-items: center;
-		gap: 12px;
-		padding: 12px;
-		border: 0;
-		border-radius: 6px;
-		background: var(--list-cell);
-	}
-
-	.thumb-link {
-		flex: none;
-		width: 150px;
-		border-radius: 4px;
-	}
-
-	.row-content {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 7px;
-		min-width: 0;
-		align-self: stretch;
-		justify-content: flex-start;
-		padding: 0.4em 0.7em 0.4em 0;
-	}
-
-	.row-head {
-		display: flex;
-		flex-direction: column;
-		gap: 3px;
-		min-width: 0;
-	}
-
-	.card-title {
-		font-family: var(--font-display);
-		font-size: 1.5rem;
-		font-weight: 400;
-		line-height: 1.1;
-		color: var(--gold);
-		text-wrap: balance;
-		text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.36);
-		transition: color 0.16s ease;
-	}
-
-	.card-title:hover {
-		color: #fff3bd;
-		text-decoration: underline;
-		text-decoration-thickness: 1px;
-		text-underline-offset: 3px;
-	}
-
-	.card-meta {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		margin-bottom: 4px;
-		font-size: 0.9rem;
-		color: var(--link);
-	}
-
-	.row-actions {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		flex-wrap: wrap;
-		margin-top: auto;
-		padding-top: 4px;
-	}
-
-	.upgrade-button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 5px 8px;
-		border: 1px solid var(--line-strong);
-		border-radius: 4px;
-		background: transparent;
-		color: var(--text);
-		font-size: 0.95rem;
-		white-space: nowrap;
-		transition:
-			background 0.16s ease,
-			border-color 0.16s ease,
-			color 0.16s ease;
-	}
-
-	.upgrade-button[aria-pressed='true'] {
-		border-color: mediumseagreen;
-		background: mediumseagreen;
-		color: oklch(0 0 0);
-	}
-
-	.upgrade-disabled {
-		display: inline-flex;
-		align-items: center;
-		padding: 4px 8px;
-		border: 2px solid gray;
-		border-radius: 6px;
-		font-size: 0.9rem;
-		font-style: italic;
-		font-weight: 600;
-		color: gray;
-		white-space: nowrap;
-	}
-
-	.mod-name {
-		margin-left: auto;
-		padding-left: 6px;
-		font-family: var(--font-mono);
-		font-size: 0.55rem;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		color: var(--muted);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	@media (max-width: 640px) {
-		.card-row {
-			grid-template-columns: 110px minmax(0, 1fr);
-		}
-
-		.thumb-link {
-			width: 110px;
-		}
-
-		.card-title {
-			font-size: 1.25rem;
-		}
-
-		.mod-name {
-			display: none;
-		}
-	}
-
-	@media (max-width: 420px) {
-		.card-row {
-			grid-template-columns: 84px minmax(0, 1fr);
-			gap: 10px;
-			padding: 10px;
-		}
-
-		.thumb-link {
-			width: 84px;
-		}
-
-		.card-title {
-			font-size: 1.1rem;
-		}
-
-		.card-meta {
-			font-size: 0.72rem;
-			flex-wrap: wrap;
-		}
-	}
-</style>

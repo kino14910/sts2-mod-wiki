@@ -1,18 +1,54 @@
 import { POWERS } from '#lib/data/glossary'
-import { CARDS, RELICS } from '#lib/data/mods'
+import { CARDS, POTIONS, RELICS } from '#lib/data/mods'
 import type { Card, ColorId, CardType } from '#lib/data/cards'
 
 const POWER_BY_NAME = new Map<string, (typeof POWERS)[number]>()
 for (const entry of POWERS) POWER_BY_NAME.set(entry.name.trim().toLowerCase(), entry)
 
+const POWER_BY_ID = new Map<string, (typeof POWERS)[number]>()
+for (const entry of POWERS) POWER_BY_ID.set(entry.id, entry)
+
 const RELIC_BY_NAME = new Map<string, (typeof RELICS)[number]>()
 for (const relic of RELICS) RELIC_BY_NAME.set(relic.name.trim().toLowerCase(), relic)
 
+const RELIC_BY_ID = new Map<string, (typeof RELICS)[number]>()
+for (const relic of RELICS) RELIC_BY_ID.set(relic.id, relic)
+
+const POTION_BY_NAME = new Map<string, (typeof POTIONS)[number]>()
+for (const potion of POTIONS) POTION_BY_NAME.set(potion.name.trim().toLowerCase(), potion)
+
+const POTION_BY_ID = new Map<string, (typeof POTIONS)[number]>()
+for (const potion of POTIONS) POTION_BY_ID.set(potion.id, potion)
+
 const CARD_BY_NAME = new Map<string, Card>()
-for (const card of CARDS) CARD_BY_NAME.set(card.name.trim().toLowerCase(), card)
+const CARD_BY_ID = new Map<string, Card>()
+for (const card of CARDS) {
+	CARD_BY_NAME.set(card.name.trim().toLowerCase(), card)
+	CARD_BY_ID.set(card.id, card)
+}
 
 export function powerIconByName(name: string): string | null {
 	return POWER_BY_NAME.get(name.trim().toLowerCase())?.icon ?? null
+}
+
+export function powerIconById(id: string): string | null {
+	return POWER_BY_ID.get(id)?.icon ?? null
+}
+
+export function relicImageByName(name: string): string | null {
+	return RELIC_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
+}
+
+export function relicImageById(id: string): string | null {
+	return RELIC_BY_ID.get(id)?.image ?? null
+}
+
+export function potionImageByName(name: string): string | null {
+	return POTION_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
+}
+
+export function potionImageById(id: string): string | null {
+	return POTION_BY_ID.get(id)?.image ?? null
 }
 
 export function powerHrefByName(name: string): string | null {
@@ -25,12 +61,12 @@ export function relicHrefByName(name: string): string | null {
 	return relic ? `/relic/${encodeURIComponent(relic.id)}` : null
 }
 
-export function relicImageByName(name: string): string | null {
-	return RELIC_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
-}
-
 export function cardByName(name: string): Card | undefined {
 	return CARD_BY_NAME.get(name.trim().toLowerCase())
+}
+
+export function cardById(id: string): Card | undefined {
+	return CARD_BY_ID.get(id)
 }
 
 export function cardHrefByName(name: string): string | null {

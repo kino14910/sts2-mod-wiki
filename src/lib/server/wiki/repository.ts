@@ -1,5 +1,9 @@
+import type { CommentTargetType } from '#lib/comments'
 import type { EntityRef, PageType, RevisionSourceType } from '#lib/entities'
 import type {
+	CommentInsert,
+	CommentRow,
+	CommentStore,
 	ContentType,
 	SourceStatus,
 	SourceUpdateStatus,
@@ -19,6 +23,8 @@ const SOURCE_COLUMNS =
 	'id, section_id, source_type, source_path, source_hash, source_content, source_mod_version, source_status, last_synced_at, created_at, updated_at'
 const UPDATE_COLUMNS =
 	'id, source_id, section_id, base_content, current_content, incoming_content, base_hash, incoming_hash, status, reviewed_by, review_note, created_at, reviewed_at, published_revision_id'
+const COMMENT_COLUMNS =
+	'id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content, status, created_at, updated_at'
 
 export interface PageInsert {
 	id: string
@@ -380,4 +386,117 @@ export async function insertAuditLog(
 			JSON.stringify(input.metadata ?? {})
 		)
 		.run()
+}
+
+async function countRows(db: D1Database, sql: string, ...params: unknown[]): Promise<number> {
+	const row = await db
+		.prepare(sql)
+		.bind(...params)
+		.first<{ value: number }>()
+	return Number(row?.value ?? 0)
+}
+
+export function createCommentStore(db: D1Database): CommentStore {
+	return {
+		async listTopLevel({ targetType, targetId, limit, offset }): Promise<CommentRow[]> {
+			const { results } = await db
+				.prepare(
+					`SELECT ${COMMENT_COLUMNS} FROM comments
+					WHERE target_type = ? AND target_id = ? AND parent_id IS NULL
+					ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`
+				)
+				.bind(targetType, targetId, limit, offset)
+				.all<CommentRow>()
+			return results
+		},
+
+		async listReplies(parentIds: string[]): Promise<CommentRow[]> {
+			if (parentIds.length === 0) return []
+			const placeholders = parentIds.map(() => '?').join(', ')
+			const { results } = await db
+				.prepare(
+					`SELECT ${COMMENT_COLUMNS} FROM comments WHERE parent_id IN (${placeholders}) ORDER BY created_at, id`
+				)
+				.bind(...parentIds)
+				.all<CommentRow>()
+			return results
+		},
+
+		countTopLevel(targetType: CommentTargetType, targetId: string): Promise<number> {
+			return countRows(
+				db,
+				'SELECT COUNT(*) AS value FROM comments WHERE target_type = ? AND target_id = ? AND parent_id IS NULL',
+				targetType,
+				targetId
+			)
+		},
+
+		async findComment(id: string): Promise<CommentRow | null> {
+			return db
+				.prepare(`SELECT ${COMMENT_COLUMNS} FROM comments WHERE id = ? LIMIT 1`)
+				.bind(id)
+				.first<CommentRow>()
+		},
+
+		countRecentByToken(tokenHash: string, since: string): Promise<number> {
+			return countRows(
+				db,
+				'SELECT COUNT(*) AS value FROM comments WHERE author_token_hash = ? AND created_at >= ?',
+				tokenHash,
+				since
+			)
+		},
+
+		countRecentByIp(ipHash: string, since: string): Promise<number> {
+			return countRows(
+				db,
+				'SELECT COUNT(*) AS value FROM comments WHERE author_ip_hash = ? AND created_at >= ?',
+				ipHash,
+				since
+			)
+		},
+
+		async insertComment(input: CommentInsert): Promise<void> {
+			await db
+				.prepare(
+					'INSERT INTO comments (id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+				)
+				.bind(
+					input.id,
+					input.targetType,
+					input.targetId,
+					input.parentId,
+					input.authorName,
+					input.authorTokenHash,
+					input.authorIpHash,
+					input.content
+				)
+				.run()
+		},
+
+		async updateContent(id: string, tokenHash: string, content: string): Promise<number> {
+			const result = await db
+				.prepare(
+					`UPDATE comments SET content = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+					WHERE id = ? AND author_token_hash = ? AND status = 'visible'`
+				)
+				.bind(content, id, tokenHash)
+				.run()
+			return Number(result.meta?.changes ?? 0)
+		},
+
+		async softDelete(id: string, tokenHash: string): Promise<number> {
+			const result = await db
+				.prepare(
+					"UPDATE comments SET status = 'deleted' WHERE id = ? AND author_token_hash = ? AND status = 'visible'"
+				)
+				.bind(id, tokenHash)
+				.run()
+			return Number(result.meta?.changes ?? 0)
+		},
+
+		async insertAuditLog(input): Promise<void> {
+			await insertAuditLog(db, input)
+		}
+	}
 }

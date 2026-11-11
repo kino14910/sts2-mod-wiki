@@ -40,7 +40,7 @@
 <div class="grid grid-cols-3 gap-4 max-[980px]:grid-cols-1">
 	{#each tools as tool (tool.href)}
 		<a
-			class="tool-card group flex min-h-57.5 flex-col gap-3 rounded-md border border-line-strong p-[26px_24px] transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-[0_24px_50px_-30px_rgba(0,0,0,0.8)] max-[980px]:min-h-0"
+			class="tool-card group flex min-h-57.5 flex-col gap-3 rounded-md border border-line-strong p-[26px_24px] text-current no-underline hover:no-underline transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-[0_24px_50px_-30px_rgba(0,0,0,0.8)] max-[980px]:min-h-0"
 			href={tool.href}
 		>
 			<span class="font-mono text-[0.66rem] uppercase tracking-[0.2em] text-gold">

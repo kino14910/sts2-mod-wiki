@@ -2,8 +2,10 @@ import { error } from '@sveltejs/kit'
 import { POWERS, escapeRegExp, type GlossaryEntry } from '#lib/data/glossary'
 import type { ContentKind } from '#lib/data/mod-dependency'
 import { CARDS, MOD_BY_ID, POTIONS, RELICS, modContentText } from '#lib/data/mods'
-import { powerWikiIntro } from '#lib/data/power-wiki'
+import { powerReferenceDetails } from '#lib/data/power-references'
+import { localizePowerWiki, powerWikiIntro } from '#lib/data/power-wiki'
 import { GLOSSARY_ZH } from '#lib/data/zh'
+import { getLocale } from '#lib/paraglide/runtime'
 import { m } from '#lib/paraglide/messages'
 import { stripBBCode } from '#lib/text/bbcode'
 import { cardTextToPlain } from '#lib/text/card-text'
@@ -90,10 +92,20 @@ export const load: PageLoad = ({ params, data }) => {
 			})).filter((item) => item.name)
 		: []
 
+	const references = powerReferenceDetails(
+		params.id,
+		getLocale() === 'zhs' ? 'zhs' : 'eng'
+	)
+
+	const wiki = data.wiki ? localizePowerWiki(data.wiki, params.id, getLocale()) : data.wiki
+
 	return {
 		...data,
+		wiki,
 		entry,
 		intro: powerWikiIntro(params.id),
+		sources: references.sources,
+		interactions: references.interactions,
 		names,
 		cards,
 		relics,

@@ -21,7 +21,7 @@
 		</nav>
 
 		<div
-			class="mx-auto max-w-160 rounded-[10px] border-2 border-(--tooltip-border) bg-(--tooltip-bg) p-[clamp(28px,5vw,48px)] text-center shadow-[0_12px_30px_-20px_rgba(0,0,0,0.8)]"
+			class="mx-auto max-w-160 rounded-[10px] border-2 border-tooltip-border bg-tooltip-bg p-[clamp(28px,5vw,48px)] text-center shadow-[0_12px_30px_-20px_rgba(0,0,0,0.8)]"
 		>
 			<p class="display text-[clamp(2.6rem,7vw,4.6rem)] leading-none tracking-[0.06em] text-gold">
 				{page.status}

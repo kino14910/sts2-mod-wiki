@@ -3,8 +3,8 @@
 	import { keywordPlacement, typeName } from '#lib/data/localize';
 	import { CHARACTER_ASSETS } from '#lib/data/mods';
 	import { frameTintFilterId } from '#lib/frame-tint';
-	import { bbcodeToHtml } from '#lib/text/bbcode';
-	import { cardTextToHtml } from '#lib/text/card-text';
+	import GameText from '#lib/components/GameText.svelte';
+	import type { GameTextOptions } from '#lib/text/game-text';
 	import { cardUiImage } from '#lib/data/card-images'
 
 	const FRAMES: Record<'attack' | 'skill' | 'power' | 'quest', string> = {
@@ -105,22 +105,24 @@
 	);
 	let accent = $derived(characterAssets?.accent ?? color.accent);
 	let energyOutline = $derived(characterAssets?.energyOutline ?? color.accent);
-	let description = $derived(
-		cardTextToHtml(card.text ?? '', {
-			upgraded,
-			variables: card.variables,
-			baseVariables: card.baseVariables,
-			sizeUnit: 'cqw',
-			energyIconSrc: characterAssets?.textEnergy,
-			secondEnergyIconSrc: characterAssets?.secondTextEnergy,
-			inCombat
-		})
-	);
+	let textOptions = $derived.by<GameTextOptions>(() => ({
+		upgraded,
+		variables: card.variables,
+		baseVariables: card.baseVariables,
+		sizeUnit: 'cqw',
+		energyIconSrc: characterAssets?.textEnergy,
+		secondEnergyIconSrc: characterAssets?.secondTextEnergy,
+		inCombat,
+		// 缩略图整体位于 <a> 内，内部不能再嵌实体链接
+		matchEntities: false
+	}));
 	let keywordLines = $derived(keywordPlacement(card.keywords));
+
+	const keywordOptions: GameTextOptions = { sizeUnit: 'cqw', matchEntities: false };
 </script>
 
 {#snippet keywordLine(line: string)}
-	<p class="desc-keyword">{@html bbcodeToHtml(line, { sizeUnit: 'cqw' })}</p>
+	<p class="desc-keyword"><GameText text={line} options={keywordOptions} /></p>
 {/snippet}
 
 {#snippet uiImage(src: string, className: string, filter?: string)}
@@ -177,7 +179,7 @@
 				{#each keywordLines.before as line (line)}
 					{@render keywordLine(line)}
 				{/each}
-				<p class="desc-body">{@html description}</p>
+				<p class="desc-body"><GameText text={card.text ?? ''} options={textOptions} /></p>
 				{#each keywordLines.after as line (line)}
 					{@render keywordLine(line)}
 				{/each}

@@ -4,4 +4,5 @@ declare module 'virtual:mods' {
 	export const localizationFiles: Record<string, unknown>;
 	export const cardImageFiles: Record<string, Record<string, string>>;
 	export const cardThumbFiles: Record<string, Record<string, string>>;
+	export const iconFiles: Record<string, Record<string, string>>;
 }

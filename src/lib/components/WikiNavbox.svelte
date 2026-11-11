@@ -85,7 +85,7 @@
 {/snippet}
 
 <nav
-	class="clear-both mt-6 rounded-lg border border-line bg-(--table) text-[0.8rem]"
+	class="clear-both mt-6 rounded-lg border border-line bg-table text-[0.8rem]"
 	aria-label={ariaLabel}
 >
 	{#if collapsed}
