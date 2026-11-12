@@ -18,6 +18,8 @@ export { matchTextEntities } from './entity-matcher'
 export function parseGameText(text: string, options: GameTextOptions = {}): GameTextNode[] {
 	const context: EntityMatchContext = {
 		locale: options.locale,
+		scope: 'game',
+		strategy: 'game',
 		prefer: options.prefer,
 		current: options.current
 	}

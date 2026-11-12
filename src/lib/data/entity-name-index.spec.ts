@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { entityKey } from '#lib/entities'
 import {
+	GAME_ENTITY_PREFERENCE,
+	WIKI_ENTITY_PREFERENCE,
 	findEntityByName,
 	findEntityCandidates,
 	getEntityNameIndex,
 	matchEntityNames,
-	resolveEntityName
+	resolveEntityName,
+	resolveEntityNameDetailed,
+	scanEntityNames
 } from './entity-name-index'
 import { findGameEntity } from './entities'
 
@@ -131,6 +135,58 @@ describe('multilingual entity name index', () => {
 
 	it('leaves plain text without entity names untouched', () => {
 		expect(matchEntityNames('@@@', { locale: 'zhs' })).toEqual([])
+	})
+
+	it('索引保留全部同名候选，冲突仅作诊断', () => {
+		const index = getEntityNameIndex('eng')
+		for (const conflict of index.conflicts) {
+			const candidates = index.candidates.get(conflict.name.trim().toLowerCase())
+			expect(candidates?.length).toBe(conflict.candidates.length)
+			expect(new Set(candidates?.map((entry) => entityKey(entry.ref))).size).toBe(
+				conflict.candidates.length
+			)
+		}
+	})
+
+	it('跨语言标题与实体 id 只进入 wiki 可见范围', () => {
+		const index = getEntityNameIndex('eng')
+		expect(index.wikiTerms.length).toBeGreaterThan(index.terms.length)
+		expect(index.wikiPattern.flags).toContain('g')
+		expect(index.wikiPattern.flags).toContain('i')
+
+		expect(findEntityCandidates('PoisonPower', 'eng').some((entry) => entry.scope === 'wiki')).toBe(true)
+		expect(resolveEntityName('PoisonPower', { locale: 'eng', scope: 'game' })).toBeNull()
+		expect(
+			resolveEntityNameDetailed('PoisonPower', { locale: 'eng', scope: 'wiki', strategy: 'wiki' })
+				.status
+		).toBe('resolved')
+		expect(findEntityByName('中毒', 'eng')).toBeNull()
+	})
+
+	it('GameText 与 WikiText 采用不同消歧策略且优先级显式传入', () => {
+		expect(GAME_ENTITY_PREFERENCE[0]).toBe('power')
+		expect(WIKI_ENTITY_PREFERENCE[0]).toBe('card')
+		expect(resolveEntityName('Accelerant', { locale: 'eng', strategy: 'game' })?.ref.type).toBe(
+			'power'
+		)
+		expect(
+			resolveEntityNameDetailed('Accelerant', { locale: 'eng', strategy: 'wiki' }).status
+		).toBe('ambiguous')
+		expect(
+			resolveEntityName('Accelerant', {
+				locale: 'eng',
+				strategy: 'wiki',
+				prefer: WIKI_ENTITY_PREFERENCE
+			})?.ref.type
+		).toBe('card')
+	})
+
+	it('扫描器保留歧义候选，匹配入口只返回可唯一确定的实体', () => {
+		const scanned = scanEntityNames('Strike and Accelerant', { locale: 'eng', strategy: 'game' })
+		expect(scanned.map((match) => match.status)).toEqual(['ambiguous', 'resolved'])
+		expect(scanned[0].candidates.length).toBeGreaterThan(1)
+		expect(scanned[0].entry).toBeNull()
+		expect(matchEntityNames('Strike and Accelerant', { locale: 'eng' })).toHaveLength(1)
 	})
 
 	it('exposes longest-first terms and a reusable global pattern', () => {

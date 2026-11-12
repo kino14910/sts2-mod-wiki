@@ -1,5 +1,6 @@
-import type { EntityRef } from '#lib/entities'
+import { entityKey, type EntityRef } from '#lib/entities'
 import { iconFiles } from 'virtual:mods'
+import { findEntityCandidates } from './entity-name-index'
 import {
 	cardById,
 	cardByName,
@@ -14,6 +15,7 @@ import {
 import {
 	BASE_MOD_ID,
 	NAMED_ICONS,
+	iconPathKey,
 	modAsset,
 	normalizeIconKey
 } from './icon-assets'
@@ -24,6 +26,7 @@ export {
 	ENERGY_ICON,
 	STAR_ICON,
 	NECRO_ENERGY_ICON,
+	iconPathKey,
 	normalizeIconKey
 } from './icon-assets'
 
@@ -31,8 +34,10 @@ export type IconVariant = 'card' | 'collection'
 
 export type IconRef =
 	| { kind: 'energy' | 'star'; modId?: string; variant?: IconVariant; color?: string }
+	/** 实体图标：复用 EntityRef，仍可带 name 作为兼容回退 */
 	| { kind: 'entity'; ref: EntityRef; name?: string }
-	| { kind: 'asset'; modId?: string; name: string }
+	/** 普通图标 / 显式资源引用：path 为 Mod 内相对路径，省略时按 name 归一化查询 */
+	| { kind: 'asset'; modId?: string; name: string; path?: string }
 
 export interface IconResolutionOptions {
 	energyIconSrc?: string
@@ -58,14 +63,28 @@ function entityIcon(ref: EntityRef, name: string): string | null {
 
 type AssetIcon = { src: string | null; diagnostic: string | null }
 
+/** 带路径或扩展名的显式引用，按 Mod ID + 相对路径精确定位 */
+function explicitPath(ref: Extract<IconRef, { kind: 'asset' }>): string | null {
+	const value = (ref.path ?? ref.name).trim()
+	if (!/\.(png|webp)$/i.test(value) && !value.includes('/') && !value.includes('\\')) return null
+	return iconPathKey(value)
+}
+
 function assetIcon(ref: Extract<IconRef, { kind: 'asset' }>): AssetIcon {
 	const modId = ref.modId ?? BASE_MOD_ID
 	const files = iconFiles[modId]
 	if (files) {
+		const exact = explicitPath(ref)
+		if (exact && files[exact]) return { src: files[exact], diagnostic: null }
 		for (const candidate of [ref.name, ref.name.replace(/_.*$/, ''), ref.name.replace(/^icon/i, '')]) {
 			const key = normalizeIconKey(candidate)
 			if (key && files[key]) return { src: files[key], diagnostic: null }
 		}
+	}
+
+	// 显式 Mod 资源查找失败：不得回退到 Vanilla 同名实体，更不得串用其他 Mod 资源。
+	if (ref.modId && ref.modId !== BASE_MOD_ID) {
+		return { src: null, diagnostic: `missing asset icon ${modId}:${ref.name}` }
 	}
 
 	const candidates = new Set<string>()
@@ -112,4 +131,17 @@ export function iconDiagnostic(ref: IconRef): string | null {
 	if (resolveIconSrc(ref)) return null
 	if (ref.kind === 'entity') return `missing entity icon ${ref.ref.type}:${ref.ref.id}`
 	return `missing ${ref.kind} icon`
+}
+
+/**
+ * 显式图标名唯一指向某个游戏实体时改走 EntityRef 分支；
+ * 普通图标 / 歧义名 / 带 Mod 命名空间的资源仍是独立 asset 引用。
+ */
+export function classifyIconRef(ref: IconRef, locale?: string): IconRef {
+	if (ref.kind !== 'asset' || ref.modId || ref.path) return ref
+	const candidates = findEntityCandidates(ref.name, locale).filter(
+		(entry) => entry.scope === 'game'
+	)
+	if (new Set(candidates.map((entry) => entityKey(entry.ref))).size !== 1) return ref
+	return { kind: 'entity', ref: candidates[0].ref, name: ref.name }
 }
