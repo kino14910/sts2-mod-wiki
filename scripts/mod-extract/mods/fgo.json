@@ -1,0 +1,68 @@
+{
+  "id": "fgo",
+  "source": "D:/projects/fgo",
+  "target": "static/mods/fgo",
+  "mod_json": "Fgo.json",
+  "namespace": "Fgo.Scripts",
+  "dependency": { "type": "ritsulib", "modid": "FGO" },
+  "languages": ["eng", "zhs", "jpn"],
+  "base_language": "eng",
+  "paths": {
+    "scripts": "Scripts",
+    "localization": "Fgo/localization",
+    "images": "Fgo/images"
+  },
+  "categories": {
+    "cards": { "dir": "Scripts/Cards", "table": "cards", "data": "cards.json" },
+    "powers": { "dir": "Scripts/Powers", "table": "powers", "data": "powers.json" },
+    "relics": { "dir": "Scripts/Relics", "table": "relics", "data": "relics.json" },
+    "potions": { "dir": "Scripts/Potions", "table": "potions", "data": "potions.json" }
+  },
+  "assets": {
+    "cards": "images/cards",
+    "powers": "images/powers",
+    "relics": "images/relics",
+    "potions": "images/potions",
+    "card_frames": "images/card_frames"
+  },
+  "localization_tables": [
+    "cards",
+    "card_keywords",
+    "characters",
+    "powers",
+    "relics",
+    "potions",
+    "events",
+    "ancients",
+    "monsters",
+    "static_hover_tips",
+    "gameplay_ui",
+    "settings_ui",
+    "ftues",
+    "tutorials",
+    "orbs"
+  ],
+  "card_pool": "fgo",
+  "thumb_width": 250,
+  "enums": {
+    "card_type": ["attack", "skill", "power", "status", "curse", "quest"],
+    "card_rarity": ["basic", "common", "uncommon", "rare", "ancient", "event", "token", "curse", "status", "quest"],
+    "card_keywords": ["Ethereal", "Sly", "Retain", "Innate", "Unplayable", "Exhaust", "Eternal"],
+    "relic_rarity": ["starter", "common", "uncommon", "rare", "shop", "event", "ancient", "special"],
+    "potion_rarity": ["common", "uncommon", "rare", "special"],
+    "power_stack": ["Intensity", "Duration", "Counter", "Passive", "NoStack", "IntensityDuration", "IntensityCounter", "CounterDuration", "DurationStacks"]
+  },
+  "card_rarities": {
+    "NoblePhantasm": {
+      "name": "Noble Phantasm",
+      "nameZh": "宝具",
+      "color": "#ffd700",
+      "base": "ancient"
+    }
+  },
+  "fallbacks": {
+    "cards": { "type": "skill", "rarity": "ancient", "cost": null },
+    "relics": { "rarity": "common" },
+    "potions": { "rarity": "common" }
+  }
+}

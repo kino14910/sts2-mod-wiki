@@ -313,6 +313,7 @@ for path in files:
         card["pool"] = prev["pool"]
     card["type"] = ctype
     card["rarity"] = rarity
+    card["fullArt"] = bool(prev.get("fullArt", rarity == "ancient"))
     card["cost"] = cost
     if star is not None:
         card["secondEnergy"] = star

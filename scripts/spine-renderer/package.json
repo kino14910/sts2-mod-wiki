@@ -1,0 +1,17 @@
+{
+  "name": "spine-renderer",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "dependencies": {
+    "@esotericsoftware/spine-canvas": "^4.2.106",
+    "@esotericsoftware/spine-webgl": "^4.2.107",
+    "canvas": "^3.2.3",
+    "gif-encoder-2": "^1.0.5",
+    "playwright": "^1.64.1",
+    "puppeteer": "^25.16.0",
+    "sharp": "^0.35.5"
+  }
+}
