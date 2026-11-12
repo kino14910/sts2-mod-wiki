@@ -147,6 +147,77 @@ describe('game text AST', () => {
 		)
 	})
 
+	it('gold 只由命名标签 [gold] 触发，自定义同色不算实体高亮', () => {
+		expect(text(parseGameText('[gold]Poison[/gold]', { locale: 'eng' }), 'entity')).toHaveLength(1)
+		expect(
+			text(parseGameText('[color=#EFC851]Poison[/color]', { locale: 'eng' }), 'entity')
+		).toEqual([])
+		expect(text(parseGameText('[color=#efc851]Poison[/color]', { locale: 'eng' }), 'entity')).toEqual([])
+	})
+
+	it('gold 样式继承与非 gold 子范围分段正确', () => {
+		const nested = parseGameText('[gold]Poison [blue]Poison[/blue] Poison[/gold]', {
+			locale: 'eng'
+		})
+		expect(text(nested, 'entity').map((node) => node.value)).toEqual(['Poison', 'Poison'])
+		expect(text(nested, 'tag').map((tag) => tag.name)).toEqual(['gold', 'blue'])
+
+		const inherited = parseGameText('[gold][b]Poison[/b]Poison[/gold]', { locale: 'eng' })
+		expect(text(inherited, 'entity')).toHaveLength(2)
+
+		const mismatch = parseGameText('[gold][b]Poison[/gold]Poison', { locale: 'eng' })
+		expect(text(mismatch, 'entity').map((node) => node.value)).toEqual(['Poison'])
+	})
+
+	it('非 gold 范围与变量内部都不匹配实体', () => {
+		for (const source of [
+			'Poison',
+			'[blue]Poison[/blue]',
+			'[red]Poison[/red]',
+			'[b]Poison[/b]',
+			'[i]Poison[/i]',
+			'[u]Poison[/u]',
+			'[gold]{Poison}[/gold]'
+		]) {
+			expect(text(parseGameText(source, { locale: 'eng' }), 'entity'), source).toEqual([])
+		}
+	})
+
+	it('保留现有全部变量与特殊语法', () => {
+		const options = {
+			locale: 'eng',
+			upgraded: true,
+			inCombat: true,
+			variables: { Damage: 5, Energy: 2, Amount: 2, Count: 1, Mode: 'A' },
+			baseVariables: { Damage: 3 }
+		}
+		const cases = [
+			'{Damage}',
+			'{Damage:diff()}',
+			'{Damage:inverseDiff()}',
+			'{Damage:abs()}',
+			'{Energy:energyIcons()}',
+			'{Energy:starIcons()}',
+			'{Damage:percentMore()}',
+			'{Damage:percentLess()}',
+			'{IfUpgraded:升级|未升级}',
+			'{InCombat:战斗|平时}',
+			'{IfUpgraded:show:升级|未升级}',
+			'{Mode:choose(A|B):甲|乙|丙}',
+			'{Damage:cond:>3?多|少}',
+			'{Count:plural:time|times}'
+		]
+		for (const source of cases) {
+			expect(text(parseGameText(source, options), 'variable'), source).toHaveLength(1)
+		}
+		expect(
+			text(parseGameText('{Amount:plural:time|times}', options), 'variable')[0].value
+		).toBe('times')
+		expect(
+			text(parseGameText('{Energy:energyIcons()}', options), 'icon')[0].kind
+		).toBe('energy')
+	})
+
 	it('keeps styles but skips entities when matchEntities is off', () => {
 		const nodes = parseGameText('[gold]中毒[/gold]{Amount}', {
 			locale: 'zhs',

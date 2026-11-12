@@ -1,221 +1,197 @@
-# 现状梳理：游戏文本处理与实体数据
+# STS2 Wiki 文本处理与实体数据架构
 
-> 重构第 1-6 步交付。全部结论来自当前本地工作区源码，未参考远端版本。
+> 与当前工作区源码一致。历史实现中的 `GOLD_SPAN`、从 HTML 反向解析金色段、
+> 组件层 `{@html}` + 正则切段等描述均已删除，那些路径已不存在。
 
-## 1. 数据链路
+## 1. 职责边界
 
-```
-static/mods/{modid}/manifest.json + *.json + localization/{eng,zhs}/*.json
-static/localization/{eng,zhs}/{card_keywords,mods}.json
-  │ vite.config.ts modDataPlugin() → virtual:mods
-  │   manifestFiles / dataFiles / localizationFiles / cardImageFiles / cardThumbFiles
-  ▼
-data/mods.ts 唯一加载层
-  ├ MODS / MOD_BY_ID / CARDS / MOD_POWERS / RELICS / POTIONS
-  ├ MOD_CONTENT_LOCALES[locale][modid][`{ENTRY_ID}.title|.description`]
-  │   Key 由 mod-dependency.ts entryIdFor() 生成，读取入口 modContentText()
-  └ KEYWORD_LOCALES[locale][`EXHAUST.title`]
-  ▼
-  ├ data/glossary.ts POWERS/KEYWORDS → ALL_ENTRIES → GLOSSARY_LINKS / TERM_PATTERN / TERM_INDEX
-  ├ data/localize.ts getLocale() → localizedCard/localizedCollection/localizedEntry
-  │                             → termIndex()/termPattern()（英文用 TERM_*，中文懒建 buildZhLinks()）
-  ├ data/power-wiki.ts → WIKI_ENTRIES / WIKI_TERMS / GAME_REFS / WIKI_ENTITY_ALIASES / wikiEntryFor()
-  └ data/entities.ts → INDEX: entityKey → GameEntity → findGameEntity()
-        （仅经 server/wiki/page-service.ts 进入 SSR，组件层未直接使用）
-```
-
-- `src/lib/entities.ts`：`EntityRef` / `entityKey` / `entityHref`，6 类（含 `character`）。
-- `src/lib/data/entities.ts`：`GameEntity` 判别联合，只注册 5 类（不含 `character`）。
-- Keyword 无结构数据，`KEYWORDS` 硬编码于 `glossary.ts`，名称来自全局 `card_keywords.json`。
-- 只使用 `.title` / `.description`；`smartDescription` 不进索引。
-
-## 2. 文本链路
-
-```
-text/bbcode.ts（叶子，零内部依赖）
-  stripBBCode / bbcodeToHtml → 输出 HTML 字符串
-  中间态为扁平 Token[] + Frame[] 样式栈，不对外暴露、不是 AST
-     ▲                            ▲
-text/card-text.ts            text/collection-text.ts
- {Var:diff()} / energyIcons()  plural / energyIcons() / starIcons / show: / cond:
- / IfUpgraded / InCombat …     resolveCollectionText() 需调用方显式先执行
-     ▲                            ▲
-data/localize.ts、data/mods.ts、data/power-references.ts 反向 import text 层
-```
-
-`text → data` 全是 `import type`，运行时无循环；`data → text` 是实调用。
-
-## 3. 组件调用关系
-
-| 组件 | 输入 | 渲染 | 名称匹配来源 |
-| --- | --- | --- | --- |
-| `CardDescription.svelte` | `cardTextToHtml()` | `{@html}` 分段 + `WikiEntity` | `GOLD_SPAN` 正则反解 HTML 后查 5 个表 |
-| `CardThumb.svelte` | `cardTextToHtml()` | `{@html}` | 无（卡面不链接） |
-| `CollectionView.svelte` | `collectionTextToHtml()` | `{@html}` | 无 |
-| `RichText.svelte` | 纯文本 | `<a>` / `<span>` | `termPattern()` + `termIndex()` + `matchAll` |
-| `WikiText.svelte` | Wiki markdown | `WikiEntity` | 自建 `WIKI_TERM_NAMES` 正则 + 图标语法 |
-| `WikiInline.svelte` | 遗物 Wiki 文本 | `HoverTooltip` | 自建 token 解析 |
-| `WikiEntity.svelte` | `WikiEntry` 对象 | 跳转 / Tooltip / 图标 | 无 |
-
-调用入口：`cards/+page.svelte` → `CardRow` → `CardThumb` + `CardDescription`；
-`power/[id]/+page.svelte` → `RichText` + `WikiText` + `WikiSources`；
-`relic/[id]/+page.svelte` → `WikiInline` + `RelicInfobox`；
-`routes/power/[id]/+page.ts` 用 `stripBBCode` / `cardTextToPlain` / `collectionTextToPlain` 做名称反查与 meta。
-
-## 4. 与重构目标的差距
-
-1. BBCode 产物是 HTML 字符串，靠 `{@html}` 渲染，无法保留可组合的样式上下文。
-2. `CardDescription.svelte:23` 用 `GOLD_SPAN` 从 HTML 反解金色段再查实体，属于「先转 HTML 再查实体」。
-3. 名称匹配分散在 `glossary.ts` / `localize.ts` / `power-wiki.ts` / `RichText.svelte` / `WikiText.svelte` / `CardDescription.svelte` / `routes/power/[id]/+page.ts` 共 7 处。
-4. `TERM_PATTERN` 用 `\b(...)\b`，中文无词边界，中文匹配不可靠。
-5. 并行存在 6 套引用类型：`EntityRef` / `GameEntity` / `PowerEntityRef`+`WikiEntry` / `GlossaryLink` / `WikiTerm` / `InlineIcon`。
-6. `termSegment()` 串联 `WIKI_ENTRIES`、`wikiTerm()`、`termIndex()`、`GLOSSARY_BY_NAME`、`cardWikiHref()` 五套查表。
-7. Paraglide 为 cookie + `setLocale()` 整页 reload，locale 不进 props；`getLocale()` 只在 `localize.ts` 等少数模块内部调用。索引必须按 locale 缓存且默认参数取 `getLocale()`。
-
-## 5. 复用 / 重构 / 新增清单
-
-### 直接复用（保持不动）
-
-| 模块 | 复用内容 |
-| --- | --- |
-| `src/lib/entities.ts` | `EntityRef` / `entityKey` / `entityHref` 作为唯一引用类型 |
-| `src/lib/data/entities.ts` | `GameEntity` / `findGameEntity()` / `listEntityRefs()` 作为唯一实体数据源 |
-| `src/lib/data/mods.ts` | `modContentText()` / `MOD_CONTENT_LOCALES` / `KEYWORD_LOCALES` / `MOD_BY_ID` 作为唯一 `.title` 来源 |
-| `src/lib/data/mod-dependency.ts` | `localizationKeyFor()` / `resolveContentText()` / `entryIdFor()` |
-| `src/lib/data/glossary.ts` | `GlossaryEntry.aliases` / `escapeRegExp()` / `ALL_ENTRIES` |
-| `src/lib/data/zh.ts` | `GLOSSARY_ZH` 中文别名 |
-| `vite.config.ts` | `modDataPlugin()` / `virtual:mods` / `static/mods/{modid}` 目录 |
-| `text/card-text.ts` | 全部变量语法（`diff()` / `energyIcons()` / `IfUpgraded` / `plural()` …） |
-| `text/bbcode.ts` | 命名色 / `[color=...]` / `[font=...]` / `renderTag` 图标能力 |
-| `WikiEntity.svelte` | 跳转 / Tooltip / 图标 / 当前页禁用 |
-| Paraglide | `getLocale()` / `setLocale()` |
-
-### 后续步骤（4-7）需重构
-
-| 模块 | 动作 |
-| --- | --- |
-| `text/bbcode.ts` | HTML 字符串 → AST，保留标签表与 `renderTag` 语义，未知标签回退文本 |
-| `text/card-text.ts` / `collection-text.ts` | 输出改为可复用 token/AST，保留全部变量语法与调用方 |
-| `CardDescription.svelte` | 删除 `GOLD_SPAN` 反解，改走 GameText |
-| `CardThumb.svelte` / `CollectionView.svelte` / `RichText.svelte` | 迁移到 GameText |
-| `WikiText.svelte` / `WikiInline.svelte` | 迁移游戏文本部分，保留 `[[...]]`、图标标记等 Wiki 专用语法 |
-| `data/localize.ts` 的 `termIndex()/termPattern()`、`power-wiki.ts` 的 `GAME_REFS/WIKI_TERM_NAMES` | 转发到统一索引（保留签名，避免破坏调用方） |
-| 6 套引用类型 | 统一到 `EntityRef`；`WikiEntity.svelte` props 改为 `ref` |
-
-### 新增 / 修改文件（第 1-6 步累计）
-
-| 文件 | 作用 |
-| --- | --- |
-| `src/lib/data/entity-name-index.ts` | 多语言实体名称候选索引 + 匹配阶段消解 |
-| `src/lib/data/wiki-aliases.ts` | 从 `power-wiki.ts` 抽出的中文别名表，两处共用 |
-| `src/lib/data/entity-name-index.spec.ts` | 17 项索引测试 |
-| `src/lib/text/game-text/*.ts` | 统一 AST：types / tokenizer / parser / entity-matcher / inline / index |
-| `src/lib/text/game-text/game-text.spec.ts` | 11 项 AST / 变量测试 |
-| `src/lib/components/GameText.svelte` | 统一游戏富文本渲染（递归 snippet） |
-| `src/lib/components/WikiVariable.svelte` | 变量节点渲染 |
-| `src/lib/components/GameText.svelte.spec.ts` | 6 项浏览器组件测试 |
-| `docs/analysis-text-entity-pipeline.md` | 本文档 |
-
-修改：`power-wiki.ts`（共享别名表）、`bbcode.ts`（导出标签表 / helper，HTML 输出不变）、
-`card-text.ts`（抽出 `resolveCardTextToBBCode()`，`cardTextToHtml` 复用）、
-`WikiEntity.svelte`（新增 `ref?: EntityRef`，`entry` 兼容保留；压缩模板空白）。
-
-## 6. 索引设计（决策 1 后）
-
-- 结构：`getEntityNameIndex(locale = getLocale())` 返回 `{ locale, candidates, conflicts, terms, pattern }`。
-- `candidates`：`归一化名称 → EntityNameEntry[]`，**保留全部候选实体**，每项
-  `{ name, ref: EntityRef, entity: GameEntity, source, enemyOnly }`，实现「名称 → EntityRef → GameEntity」。
-  构建期不做优先级消解；`conflicts` 只记录同名多候选（`cross-type` / `same-type`）供诊断。
-- 名称来源：card/power/relic/potion 用 `modContentText(..., 'title', locale)`；keyword 用
-  `KEYWORD_LOCALES[locale][`${id}.title`]`。缺当前语言时回退 `eng`。
-- 别名来源：`GlossaryEntry.aliases`、`GLOSSARY_ZH[id].aliases`、`wiki-aliases.ts`
-  （借 `eng` 的 `.title` 反查，保留全部候选）。同名同 ref 时 `.title` 覆盖 `alias`。
-- **匹配阶段消解**：`resolveEntityName(name, context)` / `matchEntityNames(text, context)`。
-  `EntityMatchContext = { locale, prefer, current }`。
-  规则：单候选直接返回；多候选先按 `current` 排除自链接候选，再按 `prefer`
-  （默认 `power > keyword > relic > potion > card`）取第一个有候选的类型，
-  该类型内 `.title` 优先；若仍剩多个不同 ref 则返回 `null`，**不生成链接**。
-  `prefer` 可由调用方覆盖，例如 Wiki 散文改用 `card` 优先。每个 match 同时带全部 `candidates`。
-  真实数据：eng/zhs 各 149 组跨类型重名、3-4 组同类型歧义。
-- 匹配：`terms` 按长度降序生成一个已转义的全局正则（懒构建、按 locale 缓存，
-  渲染时不重建）；`matchEntityNames()` 同步遍历并重置共享正则的 `lastIndex`。
-- 边界：仅当命中词首尾为 ASCII 单词字符时检查相邻字符，中文不依赖 `\b`。
-- 变量保护：跳过 `{...}` 占位符区间。
-- 语言切换：`getLocale()` 为默认参数，缓存按 locale 隔离；`setLocale()` 整页 reload 后自然失效。
-
-## 7. 统一 AST / 变量 / 渲染（步骤 4-6）
-
-```
-parseGameText(text, options)
-  ├ tokenizer.ts  BBCode → Token[]（复用 bbcode.ts 的 KNOWN_TAGS / parseArg）
-  ├ parser.ts     Token[] → AST（tag 带 GameTextStyle，复用 NAMED_COLORS / sizeToUnit）
-  └ inline.ts     文本节点 → 变量求值 + 实体匹配（仅 gold）
-       ├ 变量：resolveCardTextToBBCode()（card）/ resolveCollectionText()（collection）
-       │        求值结果递归解析成 children，图标标签转 icon 节点
-       └ 实体：entity-matcher.ts → matchEntityNames(text, context)
-```
-
-- AST 节点：`text` / `tag` / `entity` / `variable` / `icon` / `break`；`tag` 自带样式并嵌套 children。
-- 变量语法完整复用 `card-text.ts`，未重写；`cardTextToHtml()` 改为复用
-  `resolveCardTextToBBCode()`，现有调用方与 HTML 输出不变。
-- **只在金色节点内匹配实体**（决策 2）：`gold` 上下文沿 tag 链传递；带颜色的 tag 用
-  `colorName === 'gold' || color === '#EFC851'` 判定，无颜色的 tag（`[b]` / `[i]` 等）继承父级。
-  `[blue]{Amount}[/blue]` 产出 `tag > variable`，不产生实体；普通文本中的实体名不链接。
-- 未知标签回退为文本；`[br]` → break；`[energy_icons=N]` / `[star_icons=N]` /
-  `[energy]` / `[star]` → icon 节点。
-- `GameText.svelte` 用递归 `{#snippet renderNode()}` 渲染，样式走 `style:` 指令，
-  文本走 Svelte 插值，**无 `{@html}`**；entity 节点把 `EntityRef` 直接传给
-  `WikiEntity.svelte`（新增 `ref` prop，`entry` 兼容保留）。
-  模板标记必须紧贴，否则空白会进入 `textContent`。
-- `GameTextOptions extends CardTextOptions`，新增 `locale` / `mode` /
-  `collectionVariables` / `current` / `prefer` / `matchEntities` / `interactive`。
-
-## 8. 两项设计决策的落地
-
-1. **保留全部候选 + 匹配阶段消解**：见第 6 节。原「构建期按全局优先级丢弃候选」已移除；
-   `conflicts` 从「判定结果」降级为诊断信息。跨类型优先级与 Wiki 散文 card 优先的差异，
-   改由 `EntityMatchContext.prefer` 在调用时决定，不再二选一。
-2. **只在金色节点内匹配**：见第 7 节。短英文名误匹配问题随普通文本不再匹配而消失。
-
-## 9. 组件迁移（步骤 7）
-
-已迁移到 `GameText`（生产代码中不再有 `{@html}` + 正则反解的组合）：
-
-| 组件 | 迁移前 | 迁移后 |
+| | GameText | WikiText |
 | --- | --- | --- |
-| `CardDescription.svelte` | `cardTextToHtml()` → `GOLD_SPAN` 正则切段 → 逐段查 4 张表 | `<GameText>`，一整条 AST；`interactive={variant === 'article'}` |
-| `CardThumb.svelte` | `cardTextToHtml()` → `{@html}`，本就无实体链接 | `<GameText>`，`sizeUnit: 'cqw'` + `inCombat` + `matchEntities: false` |
-| `CollectionView.svelte` | `collectionTextToHtml()` → `{@html}` | `<GameText options={{ mode: 'collection', energyIconSrc }}>` |
+| 输入 | 游戏本地化原始文本（卡牌 / 遗物 / 药水 / 能力描述、卡面） | Wiki 页面正文、内容编辑、来源列表 |
+| 匹配范围 | **仅 `[gold]` 范围内的可见文本** | **所有可见文本**，与颜色 / 字重无关 |
+| 匹配依据 | 游戏用金色高亮标记实体名，样式状态直接来自 `[gold]` 标签 | 正文里出现实体名就应可链接 |
+| parser | `src/lib/text/game-text/`（独立） | `src/lib/text/wiki-text.ts`（独立） |
+| 共享 | `EntityRef` / `GameEntity` / `EntityNameIndex` 扫描器、`bbcode.ts` 标签表、显式图标语法、`WikiEntity.svelte` | 同左 |
+| 歧义 | 不生成链接，保留为普通文本 | 生成 `ambiguous` AST 节点，保留全部候选，不出确定链接 |
 
-- `CardDescription` 删除了 `GOLD_SPAN`、`segments`、`termSegment()`、`escapeText()` /
-  `decodeText()`，以及 `WIKI_ENTRIES` / `termIndex()` / `bbcodeToHtml` / `cardTextToHtml`
-  四个依赖。关键词行改为 `<GameText options={{ matchEntities: false }}>`，保持原来「纯金色、不链接」。
-- `CardThumb` 整体位于 `<a>` 内，必须 `matchEntities: false`，否则会产出嵌套链接。
-- `CollectionView` 的图标类名由 `sts-collection-icon` 变为统一的 `sts-energy-icon`，
-  样式选择器已同步；`collectionTextToHtml()` 因此不再被生产组件引用。
-- 新增 `GameTextOptions.interactive`（保留实体节点、不出 `<a>`）与
-  `GameTextOptions.matchEntities`（完全跳过实体匹配）。
-- 新增 `CardDescription.svelte.spec.ts`（4 例）：金色实体链接、变量求值、face 变体不可点、
-  关键词行不链接、未知标签与 `<` 不破坏输出。
+两套 parser 不合并：GameText 需要变量求值、gold 上下文与卡面样式；WikiText 需要
+`[[type:id|label]]`、Wiki 图标语法、升级值 `(n)` 与 tooltip 词条。
 
-**保留不动**（Wiki 专用语义，强行合并会改变现有行为）：
+## 2. 数据层（唯一来源）
 
-- `WikiText.svelte` / `WikiInline.svelte`：Wiki Markdown 的 `StS2 Icon X.png`、`§ICON_X§`、
-  `(10)` 升级数语法，与游戏 BBCode 是两套记号。
-- `RichText.svelte`：`termIndex()/termPattern()` 是**精选词条**（`GLOSSARY_LINKS` 的名词 + 别名，
-  剔除 `enemyOnly`），用于 Wiki 摘要的「全量高亮 + 虚线下划线 + 数字加粗」，
-  与「只匹配金色节点」的游戏文本语义不同，数据源也不同。
-- `cardTextToHtml()` / `collectionTextToHtml()` 保留为纯字符串 API（`*ToPlain()` 仍在用）。
+```
+static/mods/{modId}/manifest.json + *.json + localization/{eng,zhs}/*.json
+static/localization/{eng,zhs}/card_keywords.json
+  │ vite.config.ts modDataPlugin() → virtual:mods
+  ▼
+data/mods.ts（CARDS / RELICS / POTIONS / MOD_POWERS / KEYWORD_LOCALES / modContentText）
+  ├ data/entities.ts  GameEntity 判别联合（card/relic/potion/power/keyword）
+  │                    INDEX: entityKey → GameEntity；listEntityRefs() / findGameEntity()
+  └ src/lib/entities.ts  EntityRef / entityKey / entityHref（唯一引用类型）
+  ▼
+data/entity-name-index.ts  名称候选索引（唯一名称来源）
+  ▼
+GameText / WikiText
+```
 
-**顺带修复**：`entities.ts` 中药水实体的 href 由 `/relics#potion-<id>` 改为
-`/potions#potion-<id>`（列表页按 `kind` 生成锚点，原写法指向了不存在的 id，
-迁移后更多实体变成链接才在预渲染时暴露）。
+- `GlossaryEntry.aliases`、`GLOSSARY_ZH`、`wiki-aliases.ts`、跨语言 `.title`、实体 `id`
+  都作为**同一张候选表**的输入，不在两套文本系统里各自建表。
+- `power-wiki.ts` 的 `WIKI_TERMS` / `WIKI_TERM_NAMES` 只保留两个非匹配用途：
+  无对应 GameEntity 的 tooltip 词条、显式图标后的标签合并。实体名称匹配不再读它。
 
-## 10. 验证与剩余工作
+## 3. EntityNameIndex 与消歧策略
 
-- `pnpm exec vitest run`：23 文件 / 156 测试全过（含 client chromium 组件测试）。
-- `pnpm check`：0 errors / 0 warnings；`CardDescription` / `CardThumb` / `GameText`
-  经 svelte-autofixer 无建议。
-- `pnpm build` 通过（预渲染正常，仅 7 个缺失图片资源 404，与本次重构无关）。
-- `enemyOnly` 全部启用，不参与匹配过滤（`EntityNameEntry.enemyOnly` 仅作数据标记）。
+`getEntityNameIndex(locale)` 缓存返回 `{ locale, candidates, conflicts, terms, wikiTerms, pattern, wikiPattern }`。
 
+- `candidates`：`归一化名称 → EntityNameEntry[]`，**保留全部同名候选**，构建期不消解、不丢弃。
+  `EntityNameEntry = { name, ref, entity, source, scope, enemyOnly }`。
+- `source`：`title`（当前语言标题）/ `alias`（别名、跨语言标题）/ `id`（结构 id）。
+- `scope`：`game`（游戏文本可见，同时也对 Wiki 可见）/ `wiki`（跨语言标题与 id，仅 Wiki 可见）。
+  `terms` / `pattern` 只含 game 范围，`wikiTerms` / `wikiPattern` 含全部。
+  GameText 用 `pattern`，因此新增的 Wiki 名称**不会扩大 GameText 的匹配范围**。
+- `conflicts` 仅作诊断（`cross-type` / `same-type`），不决定结果。
+
+匹配阶段由 `EntityMatchContext` 显式控制：
+
+| 字段 | 含义 |
+| --- | --- |
+| `locale` | 索引语言，默认 `getLocale()`，按 locale 缓存 |
+| `scope` | `game`（默认）/ `wiki` |
+| `strategy` | `game`（默认，歧义不链接）/ `wiki`（歧义保留） |
+| `prefer` | 调用方显式传入的类型顺序 |
+| `current` | 当前实体，用于排除自链接候选 |
+
+- `GAME_ENTITY_PREFERENCE = power > keyword > relic > potion > card`：游戏金色高亮的默认行为，
+  由 `parseGameText()` 显式以 `strategy: 'game'` 使用；`options.prefer` 可覆盖。
+- `WIKI_ENTITY_PREFERENCE = card > relic > potion > power > keyword`：由 `WikiText` 显式传入，
+  **不复用 GameText 优先级**。`strategy: 'wiki'` 且不传 `prefer` 时完全不按类型优先。
+- 单一扫描器 `scanEntityNames(text, context)` 是 GameText / WikiText 共用的唯一匹配逻辑；
+  `matchEntityNames()` 只返回已唯一确定的实体，`resolveEntityNameDetailed()` 返回
+  `none / resolved / ambiguous` 与全部候选。
+- 变量 `{...}` 区间、ASCII 词边界、共享正则的 `lastIndex` 复位都在扫描器内统一处理。
+- ASCII 专有名词的大小写策展（小写 `inferno` 不链接）只在 WikiText 层做，索引仍大小写不敏感。
+
+## 4. GameText 流程
+
+```
+Localization (含 [gold] / [blue] / [red] / [b] / {Var:...})
+  → tokenizeGameText()   BBCode hits + findExplicitIcons() hits（重叠区过滤）
+  → parseGameTextNodes()  AST：tag(text/style/children) / text / icon / break
+  → resolveInline()      变量求值 + gold 上下文传递 + 分段实体匹配
+        ├ 变量：resolveCardTextToBBCode() / resolveCollectionText()，结果递归解析
+        │       变量子节点始终 gold=false，内部不做实体匹配
+        └ 实体：matchTextEntities() → matchEntityNames()（scope/strategy = game）
+  → GameText.svelte      递归 snippet；无 {@html}
+        tag → <span style:...>   entity → WikiEntity(ref)
+        variable → WikiVariable  icon → <img> / 诊断占位
+```
+
+- **gold 来源**：本地化文件里共 1994 处 `[gold]`；`bbcode.ts` 的 `NAMED_COLORS.gold = '#EFC851'`，
+  `styleOf()` 把命名标签记成 `colorName: 'gold'`，`isGoldStyle()` 只认这个状态。
+  数据里没有 `[color=...]`；`[color=#EFC851]` 即使同色也**不是** gold，不触发实体匹配。
+- 样式继承：带颜色的 tag 重新判定 gold；`[b]` / `[i]` / `[u]` / `[font]` 等无颜色 tag 继承父级。
+  闭合外层 tag 时同时丢弃仍打开的内层 tag，避免后续文本被错误继承。
+- 只有 gold 范围内文本参与匹配；普通文本、blue / red / bold 等不参与。
+- 变量语法完整保留：`{Variable}`、`diff()`、`inverseDiff()`、`abs()`、`energyIcons()`、
+  `starIcons()`、`percentMore()`、`percentLess()`、`IfUpgraded`、`InCombat`、`show:`、
+  `choose()`、`cond:`、`plural()`。
+- `GameTextOptions`：除 `CardTextOptions` 外还有 `locale` / `mode` / `collectionVariables` /
+  `current` / `prefer` / `matchEntities` / `interactive` / `modId`。
+- 卡面缩略图位于 `<a>` 内，用 `matchEntities: false`；大图描述用 `interactive: false`。
+
+## 5. WikiText 流程
+
+```
+Wiki Content（可含 BBCode、[[type:id|label]]、StS2 ...png / §ICON_X§、(n)）
+  → tokenizeSegments()   先记录显式引用 / 显式图标区间，再解析 BBCode 标签
+  → 可见 text runs       标签名、标签参数、不可见标记都不进入文本
+  → tokenizeInline()     显式引用 / 显式图标（含标签合并）/ 升级值先解析
+  → matchVisibleText()   scanEntityNames(scope:'wiki', strategy:'wiki', prefer: WIKI_ENTITY_PREFERENCE)
+        ├ resolved   → entity 节点（EntityRef → 已本地化 WikiEntry：href / tooltip / 图标）
+        ├ ambiguous  → ambiguous 节点（保留全部候选 ref）
+        └ 剩余片段   → splitTooltipTerms()：仅无 GameEntity 的 tooltip 词条
+  → WikiNode AST → WikiText.svelte 递归 snippet
+```
+
+- 匹配只发生在**可见文本节点**，不是对原始 Wiki 文本做全局正则替换。
+- gold / blue / red / b / i / u 以及多层嵌套 BBCode 中的可见文本都会匹配；
+  相邻样式节点各自独立，不跨语义节点合并。
+- 显式引用 `[[type:id|label]]`、显式图标、升级值语法都先被解析，其占用的区间不再进入实体匹配，
+  因此不会产生重复或重叠链接。
+- 消歧失败时渲染 `<span class="wiki-ambiguous" data-entity-candidates="[...]">`，
+  不带 `<a>`、不带多个重叠链接、候选信息不丢失。
+- 保留原有：升级值绿色高亮、实体链接、tooltip、图标、自链接禁用（`WikiEntity.svelte`）。
+- `WikiText.svelte` 新增可选 `locale` / `current` props，默认仍按 `getLocale()`。
+
+## 6. AST 与渲染
+
+| GameTextNode | WikiNode |
+| --- | --- |
+| `text` | `text` |
+| `tag`（带 `GameTextStyle` 与 children） | `tag`（带 `WikiStyle` 与 children） |
+| `entity`（`EntityRef` + candidates） | `entity`（`EntityRef` + WikiEntry + icon） |
+| — | `ambiguous`（`refs` + candidates） |
+| `variable`（name/raw/value/children） | — |
+| `icon`（energy/star/asset + IconRef） | 显式图标走 `entity` + inline icon |
+| `break` | `break` / `upgraded` |
+
+`WikiEntity.svelte` 同时支持 `entry`（Wiki 旧调用方）与 `ref`（统一引用），
+负责跳转、tooltip、图标与当前页禁用。`GameText.svelte` / `WikiText.svelte` 模板标记紧贴，
+避免空白进入 `textContent`。
+
+## 7. 显式图标与资源解析
+
+- `src/lib/text/game-text/icon-syntax.ts` 的 `ICON_PATTERN` =
+  `EXPLICIT_ICON_PATTERN`（`StS2 ...png` / `§ICON_X§`）+ `UPGRADED_PATTERN`（`(n)`，非图标）。
+  Vanilla 与 Mod 共用 `findExplicitIcons()` / `iconToken()`，Mod 只多带一个 `modId`，无第二套 parser。
+- 显式图标节点不进入普通实体名称匹配；`GameText` 由 tokenizer 过滤重叠 hits，
+  `WikiText` 由 `tokenizeInline()` 先消费整段。
+- `IconRef` 判别联合：
+  - `energy` / `star`：普通图标（变量求值产生的图标标签）。
+  - `entity`：实体图标，直接复用 `EntityRef`。
+  - `asset`：普通 / 显式资源引用，可带 `path`（Mod 内相对路径）。
+- `classifyIconRef()`：显式资源名在 game 范围内唯一指向某实体时升级为 `entity` 引用；
+  歧义名、普通图标、带 Mod 命名空间的资源保持 `asset`。
+- `resolveIconSrc()` 顺序：
+  1. 显式路径 `iconPathKey(modId 内相对路径)` 精确命中；
+  2. 兼容 basename 键（`normalizeIconKey`）；
+  3. **仅 Vanilla**（无显式 modId 或 `sts2`）才回退 `wiki-links.ts` 的实体图标索引。
+  显式非 Vanilla Mod 资源查找失败直接返回诊断，不回退 Vanilla 同名实体，也不串用其他 Mod 资源。
+- `iconDiagnostic()` 对缺失 / 歧义资源输出可诊断信息，组件渲染占位而非静默丢图。
+
+## 8. Mod 图标命名空间与冲突
+
+`vite.config.ts` 调用 `scripts/mod-icons.ts` 的 `collectModIcons()`，产物注入 `virtual:mods`：
+`iconFiles`（`modId → key → url`）与 `iconConflicts`（诊断数组）。目录结构未迁移。
+
+- **唯一标识**：`Mod ID + iconPathKey(相对路径)`（保留扩展名、大小写归一、正斜杠）。
+  例：`powers/vulnerable_power.png` 与 `ui/...` 不再互相覆盖。
+- **兼容键**：`normalizeIconKey(basename)` 仍存在，供不带路径的旧语法查询。
+- **冲突规则**：不静默忽略。`indexIconFiles()` 分组记录 `basename` / `path-case` 冲突及全部路径，
+  确定性选优（非 `/beta/` > 路径更短 > 字典序），构建期输出 `[mods] ... 图标资源键冲突 N 项` 诊断，
+  并把完整列表写入 `iconConflicts`。
+- 当前真实数据在 `sts2` 下有 40 组 basename 冲突（主要是 `relics/` 与 `relics/beta/`），
+  按上述规则选优并输出诊断；不同 Mod 的资源表按 `modId` 天然隔离。
+- 能量 / 星等命名图标仍走 `icon-assets.ts` 的 `NAMED_ICONS` 路径，与资源索引互不干扰。
+
+## 9. 验证与剩余事项
+
+- `pnpm check`：0 errors / 0 warnings。
+- `pnpm exec vitest run`：29 文件 / 240 测试全过（含 client chromium 组件测试）。
+- `pnpm build`：通过；预渲染只剩 7 个既有缺失图片 404，与文本链路无关。
+- 顺带修复 `card-text.spec.ts` 里硬编码的 `D:/projects/...` 数据路径，改为工作区相对路径。
+- 三条命令建议逐条执行：连续串在同一 shell 时，`svelte-kit sync` 与 paraglide 消息目录生成偶发竞态
+  （曾瞬时报 30+ 个 `m.*` 消息键缺失）；逐条执行时 check 连续 3 次均为 0 errors。
+  `vite.config.ts` 的构建期工具已改为 `load()` 内按需动态导入，减少配置加载阶段的额外模块初始化。
+
+已知限制 / 兼容性风险：
+
+1. `ambiguous` 节点目前只做可见标记 + `data-entity-candidates`，没有交互式候选选择器；
+   候选信息完整保留，但用户需要显式 `[[type:id|label]]` 才能指定实体。
+2. WikiText 对 ASCII 专有名词仍要求大小写一致（保留原有策展行为）；
+   小写普通词不会自动链接，跨语言标题与 id 只在 `scope: 'wiki'` 生效。
+3. `wikiTerms / wikiPattern` 包含跨语言标题与 id，正则规模大于 `terms`；
+   目前构建与测试耗时正常，若后续新增大量 Mod 需关注匹配耗时。
+4. `cardTextToHtml()` / `collectionTextToHtml()` 保留为纯字符串 API（`*ToPlain()` 仍在使用），
+   生产组件已全部走 GameText / WikiText。
+5. 图标 basename 兼容键在冲突时只能选一个资源；需要精确资源时必须使用带相对路径的显式引用。

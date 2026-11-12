@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { resolveCard } from '../data/cards';
 import { keywordPlacement, localizedKeywordLine } from '../data/localize';
@@ -107,7 +108,10 @@ describe('全量卡牌描述', () => {
 		for (const locale of ['eng', 'zhs']) {
 			const data = JSON.parse(
 				fs.readFileSync(
-					`D:/projects/sts2-mod-wiki/static/mods/sts2/localization/${locale}/cards.json`,
+					path.resolve(
+						process.cwd(),
+						`static/mods/sts2/localization/${locale}/cards.json`
+					),
 					'utf8'
 				)
 			) as Record<string, string>;

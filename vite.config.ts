@@ -58,38 +58,6 @@ function collectCardArt(modsDir: string) {
 	return { images, thumbs };
 }
 
-function collectModIcons(modsDir: string) {
-	const icons: Record<string, Record<string, string>> = {}
-	if (!fs.existsSync(modsDir)) return icons
-
-	for (const entry of fs.readdirSync(modsDir, { withFileTypes: true })) {
-		if (!entry.isDirectory()) continue
-		const imagesDir = path.join(modsDir, entry.name, 'images')
-		if (!fs.existsSync(imagesDir)) continue
-
-		const map: Record<string, string> = {}
-		const walk = (dir: string) => {
-			for (const file of fs.readdirSync(dir, { withFileTypes: true })) {
-				const full = path.join(dir, file.name)
-				if (file.isDirectory()) {
-					if (file.name !== 'cards') walk(full)
-					continue
-				}
-				const ext = path.extname(file.name).toLowerCase()
-				if (ext !== '.png' && ext !== '.webp') continue
-				const key = path.parse(file.name).name.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]/g, '')
-				if (!key || map[key]) continue
-				const rel = path.relative(imagesDir, full).split(path.sep).join('/')
-				map[key] = `/mods/${entry.name}/images/${rel}`
-			}
-		}
-		walk(imagesDir)
-		icons[entry.name] = map
-	}
-
-	return icons
-}
-
 /**
  * static/mods 是纯数据层，属于 public 目录，不能被 JS 直接 import；
  * 这里在开发与构建时读取清单及其声明的 JSON，注入 virtual:mods 供统一加载层使用。
@@ -114,14 +82,16 @@ function modDataPlugin(): Plugin {
 			if (id === 'virtual:mods') return '\0virtual:mods';
 			return null;
 		},
-		load(id) {
+		async load(id) {
 			if (id !== '\0virtual:mods') return null;
 
+			// 按需加载，避免 svelte-kit sync 阶段为构建期工具额外初始化 TS 模块图。
+			const { collectModIcons } = await import('./scripts/mod-icons.ts');
 			const manifestFiles: Record<string, unknown> = {};
 			const dataFiles: Record<string, unknown> = {};
 			const localizationFiles: Record<string, unknown> = {};
 			const { images: cardImageFiles, thumbs: cardThumbFiles } = collectCardArt(modsDir);
-			const iconFiles = collectModIcons(modsDir);
+			const { icons: iconFiles, conflicts: iconConflicts } = collectModIcons(modsDir);
 
 			if (fs.existsSync(localeDir)) {
 				for (const entry of fs.readdirSync(localeDir, { withFileTypes: true })) {
@@ -187,7 +157,8 @@ function modDataPlugin(): Plugin {
 				`export const localizationFiles = ${JSON.stringify(localizationFiles)};`,
 				`export const cardImageFiles = ${JSON.stringify(cardImageFiles)};`,
 				`export const cardThumbFiles = ${JSON.stringify(cardThumbFiles)};`,
-				`export const iconFiles = ${JSON.stringify(iconFiles)};`
+				`export const iconFiles = ${JSON.stringify(iconFiles)};`,
+				`export const iconConflicts = ${JSON.stringify(iconConflicts)};`
 			].join('\n');
 		},
 		configureServer(server) {

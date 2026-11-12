@@ -65,6 +65,49 @@ describe('WikiText.svelte', () => {
 		expect(container.textContent).toBe('cast inferno on the enemy')
 	})
 
+	it('links entities inside every BBCode style, including nested ones', () => {
+		const { container } = render(WikiText, {
+			locale: 'eng',
+			text: '[gold]Vulnerable[/gold] [blue]Poison[/blue] [red]Strength[/red] [b]Weak[/b] [i]Frail[/i] [u]Exhaust[/u] [b][gold]Poison[/gold][/b]'
+		})
+		expect(container.querySelectorAll('.wiki-card-link').length).toBe(7)
+		expect(container.querySelectorAll('span[style]').length).toBeGreaterThanOrEqual(7)
+		expect(container.textContent).not.toContain('[gold]')
+	})
+
+	it('does not match tag names or attributes', () => {
+		const { container } = render(WikiText, {
+			locale: 'eng',
+			text: '[color=Poison]plain words[/color] [font=Vulnerable]text[/font]'
+		})
+		expect(container.querySelector('.wiki-card-link')).toBeNull()
+		expect(container.textContent).toBe('plain words text')
+	})
+
+	it('renders ambiguous names without a definite or overlapping link', () => {
+		const { container } = render(WikiText, { locale: 'eng', text: 'Strike' })
+		expect(container.querySelector('.wiki-card-link')).toBeNull()
+		const markers = container.querySelectorAll('.wiki-ambiguous')
+		expect(markers).toHaveLength(1)
+		expect(markers[0].getAttribute('data-entity-candidates')).toContain('card:StrikeIronclad')
+		expect(markers[0].querySelector('a')).toBeNull()
+	})
+
+	it('does not duplicate links for explicit icons inside BBCode', () => {
+		const { container } = render(WikiText, {
+			locale: 'eng',
+			text: '[b]StS2 Icon Vulnerable.png Vulnerable[/b]'
+		})
+		expect(container.querySelectorAll('.wiki-card-link').length).toBe(1)
+		expect(container.querySelectorAll('.wiki-icon-img').length).toBeGreaterThan(0)
+	})
+
+	it('keeps non-entity tooltip terms linked', () => {
+		const { container } = render(WikiText, { locale: 'eng', text: 'Gain Block.' })
+		const links = [...container.querySelectorAll('.wiki-card-link')]
+		expect(links.some((link) => link.textContent?.includes('Block'))).toBe(true)
+	})
+
 	it('resolves explicit refs to the declared entity type', () => {
 		const { container } = render(WikiText, {
 			text: '既有卡牌[[card:Colossus]]这样的防御选项，也有[[card:Colossus|巨像]]。'

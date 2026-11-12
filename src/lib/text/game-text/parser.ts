@@ -1,12 +1,14 @@
 import { ALIGN_TAGS, EFFECT_TAGS, NAMED_COLORS, sizeToUnit } from '../bbcode'
-import { iconDiagnostic, resolveIconSrc, type IconRef } from '#lib/data/icon-registry'
+import { classifyIconRef, iconDiagnostic, resolveIconSrc, type IconRef } from '#lib/data/icon-registry'
 import type { GameTextNode, GameTextOptions, GameTextStyle, GameTextTagNode } from './types'
 import { tokenizeGameText, type GameTextToken } from './tokenizer'
 
-const GOLD = '#EFC851'
-
+/**
+ * gold 状态只由本地化文件里的命名标签 [gold] 产生。
+ * [color=#EFC851] 即使视觉上同色也不是游戏实体高亮，不触发实体匹配。
+ */
 export function isGoldStyle(style: GameTextStyle): boolean {
-	return style.colorName === 'gold' || (style.color ?? '').toUpperCase() === GOLD
+	return style.colorName === 'gold'
 }
 
 type OpenToken = Extract<GameTextToken, { type: 'open' }>
@@ -14,7 +16,7 @@ type OpenToken = Extract<GameTextToken, { type: 'open' }>
 function styleOf(token: OpenToken, options: GameTextOptions): GameTextStyle {
 	const { name, arg } = token
 	if (name === 'color' && arg) {
-		return { color: arg, colorName: arg.toUpperCase() === GOLD ? 'gold' : null }
+		return { color: arg, colorName: null }
 	}
 	if (NAMED_COLORS[name]) return { color: NAMED_COLORS[name], colorName: name }
 	if (name === 'font' && arg) return { font: arg }
@@ -47,15 +49,19 @@ function iconNode(token: OpenToken, options: GameTextOptions): GameTextNode | nu
 	return { type: 'icon', kind, count, src, ref }
 }
 
-function explicitIconNode(token: Extract<GameTextToken, { type: 'iconRef' }>): GameTextNode {
-	const src = resolveIconSrc(token.ref) ?? ''
-	const diagnostic = iconDiagnostic(token.ref) ?? undefined
+function explicitIconNode(
+	token: Extract<GameTextToken, { type: 'iconRef' }>,
+	options: GameTextOptions
+): GameTextNode {
+	const ref = classifyIconRef(token.ref, options.locale)
+	const src = resolveIconSrc(ref) ?? ''
+	const diagnostic = iconDiagnostic(ref) ?? undefined
 	return {
 		type: 'icon',
 		kind: 'asset',
 		count: 1,
 		src,
-		ref: token.ref,
+		ref,
 		raw: token.raw,
 		...(diagnostic ? { diagnostic } : {})
 	}
@@ -78,7 +84,7 @@ export function parseGameTextNodes(src: string, options: GameTextOptions = {}): 
 				current().push({ type: 'break' })
 				break
 			case 'iconRef':
-				current().push(explicitIconNode(token))
+				current().push(explicitIconNode(token, options))
 				break
 			case 'close': {
 				let index = -1
@@ -88,7 +94,8 @@ export function parseGameTextNodes(src: string, options: GameTextOptions = {}): 
 						break
 					}
 				}
-				if (index >= 0) stack.splice(index, 1)
+				// 闭合外层标签时同时丢弃仍打开的内层标签，避免后续文本被错误继承。
+				if (index >= 0) stack.splice(index)
 				break
 			}
 			case 'open': {
