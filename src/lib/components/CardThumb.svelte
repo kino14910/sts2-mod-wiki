@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { COLORS, type CardType, type CardView, type Rarity } from '#lib/data/cards';
+	import { colorInfo, rarityInfo, type CardType, type CardView } from '#lib/data/cards';
 	import { keywordPlacement, typeName } from '#lib/data/localize';
 	import { CHARACTER_ASSETS } from '#lib/data/mods';
 	import { frameTintFilterId } from '#lib/frame-tint';
@@ -32,32 +32,14 @@
 		curse: 'skill'
 	};
 
-	const BANNER_RARITY: Record<Rarity, string> = {
-		basic: 'common',
-		common: 'common',
-		uncommon: 'uncommon',
-		rare: 'rare',
-		ancient: 'ancient',
-		event: 'event',
-		token: 'common',
-		curse: 'curse',
-		status: 'status',
-		quest: 'quest'
-	};
-
-	// 原版 GetTitleLabelOutlineColor()：按稀有度取标题描边色
-	const TITLE_OUTLINE: Record<Rarity, string> = {
-		basic: '#4d4b40',
-		common: '#4d4b40',
-		token: '#4d4b40',
-		ancient: '#4d4b40',
-		uncommon: '#005c75',
-		rare: '#6b4b00',
-		event: '#1b6131',
-		curse: '#550b9e',
-		status: '#4f522f',
-		quest: '#7e3e15'
-	};
+	const ANCIENT_TEXT_BG: Record<CardType, 'Attack' | 'Skill' | 'Power'> = {
+	attack: 'Attack',
+	skill: 'Skill',
+	power: 'Power',
+	quest: 'Skill',
+	status: 'Skill',
+	curse: 'Skill'
+};
 
 	// 原版把诅咒 / 状态 / 任务当作独立稀有度，这里按卡牌类型补上
 	const TYPE_TITLE_OUTLINE: Partial<Record<CardType, string>> = {
@@ -84,20 +66,27 @@
 		useThumb?: boolean
 	} = $props()
 
-	let color = $derived(COLORS[card.color]);
+	let color = $derived(colorInfo(card.color));
 	let typeLabel = $derived(typeName(card.type));
 	let cost = $derived(card.cost === null ? '—' : card.cost);
-	let bannerRarity = $derived(BANNER_RARITY[card.rarity]);
+	let bannerRarity = $derived(rarityInfo(card.rarity).banner);
+	let fullArt = $derived(card.fullArt ?? rarityInfo(card.rarity).fullArt);
 	let bannerSrc = $derived(`/images/card_banners/${bannerRarity}.png`);
+	let ancientTextBgSrc = $derived(
+		`/images/card_frames/ancientTextBg${ANCIENT_TEXT_BG[card.type]}.png`
+	);
 	let plaqueSrc = $derived(`/images/card_plaques/${bannerRarity}.png`);
 	let portraitBorderSrc = $derived(
 		`/images/card_portrait_borders/${PORTRAIT_BORDER_TYPE[card.type]}-${bannerRarity}.png`
 	);
-	let titleOutline = $derived(TYPE_TITLE_OUTLINE[card.type] ?? TITLE_OUTLINE[card.rarity]);
+	let titleOutline = $derived(TYPE_TITLE_OUTLINE[card.type] ?? rarityInfo(card.rarity).outline);
 	let characterAssets = $derived(CHARACTER_ASSETS[card.color]);
-	let frameSrc = $derived(
-		characterAssets?.cardFrame?.[FRAME_TYPE[card.type]] ?? FRAMES[FRAME_TYPE[card.type]]
-	);
+let frameSrc = $derived.by<string | null>(() => {
+	const cf = characterAssets?.cardFrame;
+	if (cf === undefined) return FRAMES[FRAME_TYPE[card.type]];
+	if (Object.keys(cf).length === 0) return null;
+	return cf[FRAME_TYPE[card.type]] ?? FRAMES[FRAME_TYPE[card.type]];
+});
 	let frameFilter = $derived(
 		characterAssets?.shader
 			? `url(#${frameTintFilterId(card.color)}) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5))`
@@ -135,7 +124,7 @@
 {/snippet}
 
 <div
-	class={['card-thumb', className]}
+	class={['card-thumb', className, { 'is-full-art': fullArt }]}
 	style:--accent={accent}
 	style:--title-outline={titleOutline}
 	style:--energy-outline={energyOutline}
@@ -146,7 +135,7 @@
 		? `url('${characterAssets.secondCardEnergy}')`
 		: null}
 >
-	<div class="art-window">
+	<div class={['art-window', { 'is-full-art': fullArt }]}>
 		{#if card.image}
 			<picture>
 				{#if useThumb && card.thumb}
@@ -164,9 +153,15 @@
 		{/if}
 	</div>
 
-	{@render uiImage(frameSrc, 'card-frame', frameFilter)}
-	{#if card.rarity !== 'ancient'}
+	{#if frameSrc && !fullArt}
+		{@render uiImage(frameSrc, 'card-frame', frameFilter)}
+	{/if}
+	{#if !fullArt}
 		{@render uiImage(portraitBorderSrc, 'portrait-border')}
+	{/if}
+	{#if fullArt}
+		{@render uiImage('/images/card_frames/ancientBorder.png', 'ancient-border')}
+		{@render uiImage(ancientTextBgSrc, 'ancient-text-bg')}
 	{/if}
 	{@render uiImage(bannerSrc, 'title-banner')}
 	{#if showText}
@@ -230,6 +225,19 @@
 			linear-gradient(160deg, #263238 0%, #12191b 60%, #0b0f10 100%);
 	}
 
+	.art-window.is-full-art {
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		background: #0b0f13;
+		-webkit-mask-image: url('/images/card_frames/ancientGlass.png');
+		mask-image: url('/images/card_frames/ancientGlass.png');
+		-webkit-mask-size: 100% 100%;
+		mask-size: 100% 100%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+	}
+
 	.art-image {
 		display: block;
 		width: 100%;
@@ -258,6 +266,31 @@
 		height: 49.763%;
 		object-fit: fill;
 		pointer-events: none;
+	}
+
+	/* 原版 AncientBorder (-154,-223)-(152,217) / AncientTextBg (-132,-20)-(132,183) @ 300x422 */
+	.ancient-border,
+	.ancient-text-bg {
+		position: absolute;
+		display: block;
+		object-fit: fill;
+		pointer-events: none;
+	}
+
+	.ancient-border {
+		left: -1.333%;
+		top: -2.843%;
+		z-index: 2;
+		width: 102%;
+		height: 104.265%;
+	}
+
+	.ancient-text-bg {
+		left: 6%;
+		top: 45.261%;
+		z-index: 3;
+		width: 88%;
+		height: 48.104%;
 	}
 
 	.title-banner {

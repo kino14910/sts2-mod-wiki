@@ -2,7 +2,9 @@
 	import type { Snippet } from "svelte";
 	import { page } from "$app/state";
 	import { entityHref, type EntityRef } from "#lib/entities";
+	import { findGameEntity } from "#lib/data/entities";
 	import HoverTooltip from "#lib/components/HoverTooltip.svelte";
+	import EntityTooltip from "#lib/components/EntityTooltip.svelte";
 	import WikiIcon from "#lib/components/WikiIcon.svelte";
 	import { cardWikiHref, type WikiEntry } from "#lib/data/power-wiki";
 	import { isSelfLink } from "#lib/data/wiki-links";
@@ -58,6 +60,23 @@
 					(resolved?.kind === "card" ? cardWikiHref(label) : null)),
 	);
 	let tip = $derived(tooltip ?? resolved?.tooltip);
+
+	let entityRef = $derived.by<EntityRef | null>(() => {
+		if (ref) return ref;
+		if (
+			resolved &&
+			(resolved.kind === "card" || resolved.kind === "relic" || resolved.kind === "potion") &&
+			resolved.id
+		) {
+			return { type: resolved.kind, id: resolved.id };
+		}
+		return null;
+	});
+	let entity = $derived(entityRef ? findGameEntity(entityRef) : null);
+	let isEntityKind = $derived(
+		!!entity && (entity.kind === "card" || entity.kind === "relic" || entity.kind === "potion")
+	);
+	let useEntityTip = $derived(isEntityKind);
 
 	let hovered = $state(false);
 	let tipX = $state(0);
@@ -155,10 +174,11 @@
 		onmouseenter={enter}
 		onmousemove={move}
 		onmouseleave={leave}>{@render content()}</span
-	>{/if}<HoverTooltip
-	show={hovered && !!tip}
-	html={tip}
+	>{/if}{#snippet entityTip()}{#if entity}<EntityTooltip {entity} />{/if}{/snippet}<HoverTooltip
+	show={hovered && (useEntityTip || !!tip)}
+	html={useEntityTip ? "" : tip}
 	x={tipX}
 	y={tipY}
 	{registerTip}
+	content={useEntityTip ? entityTip : undefined}
 />

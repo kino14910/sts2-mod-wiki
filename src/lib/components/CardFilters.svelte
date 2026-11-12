@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { rarityName, typeName } from '#lib/data/localize';
-	import { CARD_TYPES, RARITIES, type CardType, type Rarity } from '#lib/data/cards';
+	import { CARD_TYPES, rarityIds, type CardType } from '#lib/data/cards';
 	import { cardCharacterOptions } from '#lib/data/characters';
 	import { m } from '#lib/paraglide/messages';
 	import Filter from './Filter.svelte';
@@ -48,7 +48,7 @@
 		label: typeName(id)
 	}));
 
-	const rarityOptions = (Object.keys(RARITIES) as Rarity[]).map((id) => ({
+	const rarityOptions = rarityIds().map((id) => ({
 		id,
 		label: rarityName(id)
 	}));
@@ -80,7 +80,7 @@
 		onchange();
 	}
 
-	function setRarity(id: Rarity) {
+	function setRarity(id: string) {
 		rarity = rarity === id ? 'all' : id;
 		onchange();
 	}

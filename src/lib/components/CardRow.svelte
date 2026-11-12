@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
-	import { COLORS, RARITIES, cardHref, isUpgradable, resolveCard, type Card } from '#lib/data/cards'
+	import { cardHref, colorInfo, isUpgradable, resolveCard, type Card } from '#lib/data/cards'
 	import { colorName, localizedCard, modName, rarityName, typeName } from '#lib/data/localize'
 	import { CHARACTER_ASSETS } from '#lib/data/mods'
 	import { m } from '#lib/paraglide/messages'
@@ -22,9 +22,8 @@
 	} = $props()
 
 	let localized = $derived(localizedCard(card))
-	let color = $derived(COLORS[card.color])
+	let color = $derived(colorInfo(card.color))
 	let accent = $derived(CHARACTER_ASSETS[card.color]?.accent ?? color.accent)
-	let rarity = $derived(RARITIES[card.rarity])
 	let canUpgrade = $derived(isUpgradable(card))
 	let upgradedView = $derived(upgraded && canUpgrade)
 	let type = $derived(typeName(card.type))

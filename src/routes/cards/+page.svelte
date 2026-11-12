@@ -6,15 +6,13 @@
 	import CardRow from '#lib/components/CardRow.svelte'
 	import {
 		CARD_TYPES,
-		COLORS,
-		RARITIES,
+		rarityMatches,
+		rarityRank,
 		resolveCard,
 		type Card,
-		type CardType,
-		type ColorId,
-		type Rarity
+		type CardType
 	} from '#lib/data/cards'
-	import { CARDS } from '#lib/data/mods'
+	import { CARDS, CHARACTER_ICONS } from '#lib/data/mods'
 	import {
 		colorName,
 		localizedCards,
@@ -52,19 +50,7 @@
 	let listWidth = $state(0)
 	let listFontSize = $state(16)
 
-	const colorOrder = Object.keys(COLORS) as ColorId[]
-	const rarityOrder: Record<Rarity, number> = {
-		basic: 0,
-		common: 1,
-		uncommon: 2,
-		rare: 3,
-		ancient: 4,
-		event: 5,
-		token: 6,
-		curse: 7,
-		status: 8,
-		quest: 9
-	}
+	const colorOrder = Object.keys(CHARACTER_ICONS)
 	const typeOrder = Object.keys(CARD_TYPES) as CardType[]
 
 	function costRank(card: Card) {
@@ -80,7 +66,7 @@
 		const result = cards.filter((card) => {
 			if (color !== 'all' && card.color !== color) return false
 			if (type !== 'all' && card.type !== type) return false
-			if (rarity !== 'all' && card.rarity !== rarity) return false
+			if (!rarityMatches(rarity, card.rarity)) return false
 			if (mod !== 'all' && card.mod !== mod) return false
 			if (cost !== 'all') {
 				if (cost === 'unplayable' && card.cost !== null) return false
@@ -124,7 +110,7 @@
 				case 'name':
 					return a.name.localeCompare(b.name) * direction
 				case 'rarity':
-					return (rarityOrder[a.rarity] - rarityOrder[b.rarity]) * direction
+					return (rarityRank(a.rarity) - rarityRank(b.rarity)) * direction
 				case 'type':
 					return (typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type)) * direction
 				case 'cost':
@@ -134,7 +120,7 @@
 				default:
 					return (
 						colorOrder.indexOf(a.color) - colorOrder.indexOf(b.color) ||
-						rarityOrder[a.rarity] - rarityOrder[b.rarity] ||
+						rarityRank(a.rarity) - rarityRank(b.rarity) ||
 						a.name.localeCompare(b.name)
 					)
 			}
