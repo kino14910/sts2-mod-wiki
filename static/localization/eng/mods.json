@@ -2,5 +2,9 @@
 	"sts2": {
 		"name": "Slay the Spire 2",
 		"blurb": "A wandering blade and a quiet knife, rewriting the road one fight at a time."
+	},
+	"fgo": {
+		"name": "Fgo",
+		"blurb": "Adds the Fate/Grand Order Master to Slay the Spire 2."
 	}
 }

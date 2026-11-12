@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { isUpgradable, resolveCard, type Card } from './cards';
+import {
+	isBuiltinRarity,
+	isUpgradable,
+	isValidRarityId,
+	rarityIds,
+	rarityInfo,
+	rarityMatches,
+	rarityRank,
+	registerCardRarities,
+	resolveCard,
+	type Card
+} from './cards';
+import { rarityName } from './localize';
 import { CARDS, CHARACTER_ASSETS, MOD_BY_ID, MODS } from './mods';
 
 const baseCard: Card = {
@@ -131,4 +143,71 @@ describe('mod data loading', () => {
 			expect(resolveCard(card, false).thumb).toBe(card.thumb);
 		}
 	});
+});
+
+describe('mod 自定义稀有度', () => {
+	it('稀有度为自定义值的卡牌正常加载，并进入筛选项', () => {
+		const npCards = CARDS.filter((card) => card.rarity === 'NoblePhantasm')
+		expect(npCards.length).toBeGreaterThan(0)
+		expect(npCards.every((card) => card.mod === 'fgo')).toBe(true)
+		expect(rarityIds()).toContain('NoblePhantasm')
+		expect(['Noble Phantasm', '宝具']).toContain(rarityName('NoblePhantasm'))
+	})
+
+	it('manifest 声明的元数据与 base 继承生效', () => {
+		const info = rarityInfo('NoblePhantasm')
+		expect(info.name).toBe('Noble Phantasm')
+		expect(info.labels.zhs).toBe('宝具')
+		expect(info.color).toBe('#ffd700')
+		expect(info.base).toBe('ancient')
+		expect(info.banner).toBe(rarityInfo('ancient').banner)
+		expect(info.outline).toBe(rarityInfo('ancient').outline)
+		expect(info.fullArt).toBe(true)
+		expect(rarityInfo('ancient').fullArt).toBe(true)
+		expect(rarityInfo('rare').fullArt).toBe(false)
+		expect(rarityInfo('token').banner).toBe('common')
+	})
+
+	it('自定义值参与筛选匹配与排序，内置筛选按 base 一并命中', () => {
+		const np = CARDS.filter((card) => rarityMatches('NoblePhantasm', card.rarity))
+		expect(np.length).toBeGreaterThan(0)
+		expect(np.every((card) => card.rarity === 'NoblePhantasm')).toBe(true)
+
+		const ancient = CARDS.filter((card) => rarityMatches('ancient', card.rarity))
+		expect(ancient.some((card) => card.rarity === 'NoblePhantasm')).toBe(true)
+		expect(rarityMatches('rare', 'NoblePhantasm')).toBe(false)
+
+		expect(rarityMatches('all', 'NoblePhantasm')).toBe(true)
+		expect(rarityMatches('common', 'common')).toBe(true)
+		expect(rarityMatches('ancient', 'common')).toBe(false)
+		expect(rarityRank('common')).toBeLessThan(rarityRank('rare'))
+		expect(rarityRank('NoblePhantasm')).toBeGreaterThan(rarityRank('ancient'))
+		expect(rarityRank('NoblePhantasm')).toBeLessThan(rarityRank('event'))
+	})
+
+	it('未声明的其他自定义值自动可用，无需按具体 id 硬编码', () => {
+		expect(isValidRarityId('NoblePhantasm')).toBe(true)
+		expect(isValidRarityId('has space')).toBe(false)
+		expect(isValidRarityId('_leading')).toBe(false)
+		expect(isValidRarityId('')).toBe(false)
+		expect(isBuiltinRarity('rare')).toBe(true)
+		expect(isBuiltinRarity('NoblePhantasm')).toBe(false)
+
+		registerCardRarities({
+			DivineRelic: { nameZh: '神器', base: 'rare' },
+			EventOnly: {}
+		})
+
+		expect(rarityIds()).toEqual(expect.arrayContaining(['DivineRelic', 'EventOnly']))
+		expect(rarityInfo('DivineRelic').name).toBe('Divine Relic')
+		expect(rarityInfo('DivineRelic').labels.zhs).toBe('神器')
+		expect(rarityInfo('DivineRelic').color).toBe(rarityInfo('rare').color)
+		expect(rarityMatches('rare', 'DivineRelic')).toBe(true)
+		expect(rarityMatches('rare', 'EventOnly')).toBe(false)
+		expect(rarityInfo('EventOnly').name).toBe('Event Only')
+		expect(rarityInfo('EventOnly').banner).toBe(rarityInfo('rare').banner)
+		expect(rarityRank('EventOnly')).toBeGreaterThan(rarityRank('quest'))
+		expect(rarityInfo('NeverSeen').name).toBe('Never Seen')
+		expect(rarityInfo('NeverSeen').color).toBe(rarityInfo('rare').color)
+	})
 });

@@ -108,7 +108,7 @@ function capitalize(value: string): string {
 }
 
 export function cardIcon(card: Card): string | null {
-	const color = COLOR_PREFIX[card.color]
+	const color = COLOR_PREFIX[card.color as ColorId]
 	const type = TYPE_PREFIX[card.type]
 	if (!color || !type) return null
 	const wanted = capitalize(card.rarity)

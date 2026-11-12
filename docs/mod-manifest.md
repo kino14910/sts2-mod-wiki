@@ -102,6 +102,42 @@ static/mods/{modid}/localization/{locale}/*.json
 
 `pool` 是卡的权威归属字段，可包含多个标签（模组标签如 `fgo` 与角色色如 `silent` 并存）；展示用 `color` 由加载层从 `pool` 中首个合法角色色派生，无需手写。
 
+### 自定义卡牌稀有度（cardRarities）
+
+`cards.json` 的 `rarity` 不再限于内置枚举：模组可注入任意自定义 id（字母或数字开头，仅含字母、数字、`_`、`.`、`-`），例如 FGO 的 `"rarity": "NoblePhantasm"`。加载层会**自动发现**所有未被声明的自定义值并注册成独立筛选项（显示名由驼峰 id 拆分，如 `NoblePhantasm` → `Noble Phantasm`），使其参与稀有度筛选、排序与搜索；无需针对具体值改代码。
+
+如需定制显示与卡面，在 manifest 中声明元数据：
+
+```json
+{
+	"id": "fgo",
+	"cardRarities": {
+		"NoblePhantasm": {
+			"name": "Noble Phantasm",
+			"nameZh": "宝具",
+			"color": "#ffd700",
+			"base": "ancient"
+		}
+	}
+}
+```
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | 默认显示名；省略时由 id 拆分生成 |
+| `nameZh` | 中文显示名，写入 `labels.zhs` |
+| `labelKey` | 本地化键，默认 `RARITY_<id>.title`；各 locale 从 `localization/{locale}/*.json` 读取，优先级高于 name / nameZh |
+| `color` | 列表标签与悬浮提示的稀有度色 |
+| `banner` / `outline` / `fullArt` | 卡面横幅对应的内置稀有度、标题描边色、是否全幅；省略时继承 `base`，再回退默认值 |
+| `base` | 继承的内置稀有度（如 `ancient`）：提供默认卡面资源与排序位置，并让筛选该内置稀有度时也匹配这些卡 |
+
+行为约定：
+
+- 筛选 `?rarity=NoblePhantasm` 只显示该自定义稀有度的卡；声明了 `base` 时，筛选 `?rarity=ancient` 也会包含它们。
+- 排序：内置按 `RARITIES` 顺序；带 `base` 的自定义值紧跟其 base，其余按注册顺序排在内置之后。
+- 同名自定义 id 以先加载的模组为准；内置 id 不可被覆盖。
+- 提取配置 `scripts/mod-extract/mods/fgo.json` 用 `card_rarities` 保存同一份定义，`pnpm mod:extract` 会写回 manifest 并保留 `cards.json` 中的原始自定义值；新增自定义稀有度时两边同步即可。
+
 ### 卡牌升级（upgrade）
 
 升级后的变化统一写在 `upgrade` 对象里，只声明发生变化的属性；未声明的属性继承基础值。数值仅为示例：

@@ -1,6 +1,6 @@
-import type { ColorId } from './data/cards';
-
 /**
+
+
  * 卡框 HSV 着色：复刻 tools/card-frame-preview 的 res://shaders/hsv.gdshader。
  * 原着色器在 YIQ 空间做 色相旋转 + 饱和度缩放 + 明度缩放，再转回 RGB。
  * 整条链路都是 3x3 线性变换的组合，因此可等价为单个 RGB 3x3 矩阵，
@@ -71,6 +71,6 @@ export function frameTintMatrix({ h, s, v }: FrameShader): number[] {
 	];
 }
 
-export function frameTintFilterId(color: ColorId): string {
+export function frameTintFilterId(color: string): string {
 	return `frame-tint-${color}`;
 }

@@ -10,12 +10,13 @@ import {
 	CARD_KEYWORDS_BEFORE,
 	CARD_TYPES,
 	COLORS,
+	isBuiltinRarity,
+	rarityInfo,
 	RARITIES,
 	type Card,
 	type CardKeyword,
 	type CardType,
-	type ColorId,
-	type Rarity
+	type ColorId
 } from './cards';
 import { KEYWORD_LOCALES, MOD_BY_ID, MOD_LOCALES, modContentText } from './mods';
 import {
@@ -134,16 +135,20 @@ export function ancientName(ancient: string) {
 	return isZh() ? (ANCIENTS_ZH[ancient] ?? ancient) : ancient;
 }
 
-export function colorName(id: ColorId) {
-	return isZh() ? COLOR_ZH[id] : COLORS[id].name;
+export function colorName(id: string) {
+	if (isZh()) return COLOR_ZH[id as ColorId] ?? id.charAt(0).toUpperCase() + id.slice(1);
+	const info = (COLORS as Record<string, (typeof COLORS)[ColorId] | undefined>)[id];
+	return info?.name ?? id.charAt(0).toUpperCase() + id.slice(1);
 }
 
 export function typeName(type: CardType) {
 	return isZh() ? CARD_TYPE_ZH[type].name : CARD_TYPES[type].name;
 }
 
-export function rarityName(rarity: Rarity) {
-	return isZh() ? RARITY_ZH[rarity] : RARITIES[rarity].name;
+export function rarityName(rarity: string) {
+	if (isBuiltinRarity(rarity)) return isZh() ? RARITY_ZH[rarity] : RARITIES[rarity].name;
+	const info = rarityInfo(rarity);
+	return info.labels[getLocale()] ?? info.labels.eng ?? info.name;
 }
 
 export function modName(id: string) {

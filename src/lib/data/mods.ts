@@ -3,14 +3,16 @@ import {
 	ALL_CARD_KEYWORDS,
 	CARD_TYPES,
 	COLORS,
-	RARITIES,
+	isBuiltinRarity,
+	isValidRarityId,
+	registerCardRarities,
 	type Card,
 	type CardAttributes,
+	type CardRarityDefinition,
+	type CardRarityManifest,
 	type CardType,
 	type CardVariables,
-	type ColorId,
-	type MotifName,
-	type Rarity
+	type MotifName
 } from './cards';
 import {
 	isCollectionCharacter,
@@ -57,7 +59,7 @@ export interface CharacterAssets {
 	accent?: string;
 	/** 角色能量描边色（费用数字描边） */
 	energyOutline?: string;
-	/** 卡框图片：卡牌类型 -> 图片路径（已按 /mods/{id}/... 解析） */
+	/** 卡框图片：卡牌类型 -> 图片路径（已按 /mods/{id}/... 解析）。空对象 {} 表示不使用任何卡框 */
 	cardFrame?: Partial<Record<CardType, string>>;
 	/** 卡框 HSV 着色（对应 tools/card-frame-preview 的 HSV 渲染法），可省略表示不染色 */
 	shader?: { h: number; s: number; v: number };
@@ -81,6 +83,8 @@ export interface ModManifest {
 	potions?: string;
 	/** 颜色 id -> 角色资源 */
 	cardPool?: Record<string, CharacterAssets>;
+	/** 自定义卡牌稀有度 id -> 展示元数据；未声明但出现在 cards 中的值也会自动注册 */
+	cardRarities?: Record<string, CardRarityManifest>;
 }
 
 export interface LocalizedModText {
@@ -104,11 +108,12 @@ export interface ModPowerData {
 /** 卡牌结构数据，名称与文本由本地化文件提供；pool 为权威卡池字段，color 由 pool 派生 */
 type CardData = CardAttributes & {
 	id: string;
-	color?: ColorId;
+	color?: string;
 	pool?: string | string[];
 	type: CardType;
-	rarity: Rarity;
+	rarity: string;
 	image?: string;
+	fullArt?: boolean;
 	upgrade?: Partial<CardAttributes>;
 };
 
@@ -163,6 +168,21 @@ function isCharacterAssets(value: unknown): value is CharacterAssets {
 	);
 }
 
+function isCardRarityManifest(value: unknown): value is CardRarityManifest {
+	if (!isRecord(value)) return false;
+	const optionalText = (entry: unknown) => entry === undefined || isString(entry);
+	return (
+		optionalText(value.name) &&
+		optionalText(value.nameZh) &&
+		optionalText(value.labelKey) &&
+		optionalText(value.color) &&
+		optionalText(value.banner) &&
+		optionalText(value.outline) &&
+		optionalText(value.base) &&
+		(value.fullArt === undefined || typeof value.fullArt === 'boolean')
+	);
+}
+
 function isManifest(value: unknown): value is ModManifest {
 	if (!isRecord(value)) return false;
 
@@ -184,7 +204,10 @@ function isManifest(value: unknown): value is ModManifest {
 		(value.relics === undefined || isString(value.relics)) &&
 		(value.potions === undefined || isString(value.potions)) &&
 		(value.cardPool === undefined ||
-			(isRecord(value.cardPool) && Object.values(value.cardPool).every(isCharacterAssets)))
+			(isRecord(value.cardPool) && Object.values(value.cardPool).every(isCharacterAssets))) &&
+		(value.cardRarities === undefined ||
+			(isRecord(value.cardRarities) &&
+				Object.values(value.cardRarities).every(isCardRarityManifest)))
 	);
 }
 
@@ -239,14 +262,15 @@ function poolOf(value: unknown): string[] {
 	return [];
 }
 
-function cardColorOf(value: unknown): ColorId {
+function cardColorOf(value: unknown, manifest: ModManifest): string {
 	if (!isRecord(value)) return 'colorless';
+	const poolColors = manifest.cardPool ?? {};
 	const c = value.color;
-	if (isString(c) && c in COLORS) return c as ColorId;
+	if (isString(c) && (c in COLORS || c in poolColors)) return c;
 	const tokens = poolTokens(value);
 	if (tokens) {
 		for (const t of tokens) {
-			if (t in COLORS) return t as ColorId;
+			if (t in COLORS || t in poolColors) return t;
 		}
 	}
 	return 'colorless';
@@ -254,7 +278,7 @@ function cardColorOf(value: unknown): ColorId {
 
 function isCardData(value: unknown): value is CardData {
 	if (!isRecord(value)) return false;
-	const { type, rarity, image, upgrade } = value;
+	const { type, rarity, image, fullArt, upgrade } = value;
 	const hasPool = poolTokens(value) !== undefined;
 	const hasColor = isString(value.color) && value.color in COLORS;
 	return (
@@ -263,9 +287,9 @@ function isCardData(value: unknown): value is CardData {
 		(hasPool || hasColor) &&
 		isString(type) &&
 		type in CARD_TYPES &&
-		isString(rarity) &&
-		rarity in RARITIES &&
+		isValidRarityId(rarity) &&
 		(image === undefined || isString(image)) &&
+		(fullArt === undefined || typeof fullArt === 'boolean') &&
 		Object.entries(CARD_ATTRIBUTE_VALIDATORS).every(([key, validate]) => validate(value[key])) &&
 		(upgrade === undefined || isCardUpgrade(upgrade))
 	);
@@ -394,7 +418,7 @@ function loadCards(dir: string, manifest: ModManifest): Card[] {
 		}
 
 		const pool = poolOf(value);
-		const color = cardColorOf(value);
+		const color = cardColorOf(value, manifest);
 		const name = modContentText(manifest, 'card', value.id, 'title');
 		const text = modContentText(manifest, 'card', value.id, 'description');
 		if (name === undefined || text === undefined) {
@@ -582,6 +606,33 @@ export const CARDS: Card[] = loaded.flatMap((entry) => entry.cards);
 export const MOD_POWERS: GlossaryEntry[] = loaded.flatMap((entry) => entry.powers);
 export const RELICS: CollectionEntry[] = loaded.flatMap((entry) => entry.relics);
 export const POTIONS: CollectionEntry[] = loaded.flatMap((entry) => entry.potions);
+
+function rarityLabels(modId: string, id: string, def: CardRarityManifest): Record<string, string> {
+	const key = def.labelKey ?? `RARITY_${id}.title`
+	const labels: Record<string, string> = {}
+	for (const [locale, texts] of Object.entries(MOD_CONTENT_LOCALES)) {
+		const text = texts[modId]?.[key]
+		if (text) labels[locale] = text
+	}
+	return labels
+}
+
+function registerModRarities() {
+	const definitions: Record<string, CardRarityDefinition> = Object.create(null)
+	for (const entry of loaded) {
+		for (const [id, def] of Object.entries(entry.manifest.cardRarities ?? {})) {
+			if (id in definitions) continue
+			definitions[id] = { ...def, labels: rarityLabels(entry.manifest.id, id, def) }
+		}
+	}
+	for (const card of CARDS) {
+		if (isBuiltinRarity(card.rarity) || card.rarity in definitions) continue
+		definitions[card.rarity] = { labels: rarityLabels(card.mod, card.rarity, {}) }
+	}
+	registerCardRarities(definitions)
+}
+
+registerModRarities()
 
 /** 颜色 id -> 角色资源；基础游戏优先，其余模组只补充缺失颜色 */
 export const CHARACTER_ASSETS: Record<string, CharacterAssets> = {};
