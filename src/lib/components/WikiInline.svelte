@@ -3,7 +3,10 @@
 	import WikiText from '#lib/components/WikiText.svelte'
 	import { relicImage, type RelicWikiPage } from '#lib/data/relic-wiki'
 
-	let { text, page }: { text: string; page: RelicWikiPage } = $props()
+	let {
+		text,
+		page
+	}: { text: string; page: Pick<RelicWikiPage, 'tokens' | 'tooltips'> } = $props()
 
 	type Node =
 		| { kind: 'text'; value: string }

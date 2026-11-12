@@ -7,7 +7,7 @@
 		sort = $bindable('default'),
 		onchange = () => {}
 	}: {
-		key: 'rarity' | 'type' | 'cost';
+		key: 'rarity' | 'type' | 'cost' | 'color';
 		label: string;
 		sort?: string;
 		onchange?: () => void;
@@ -35,7 +35,10 @@
 	onclick={cycleSort}
 >
 	<img
-		class="w-4.5 h-auto drop-shadow-[0_0_4px_rgba(242,219,116,0.2)]"
+		class={[
+			'w-4.5 h-auto drop-shadow-[0_0_4px_rgba(242,219,116,0.2)]',
+			{ 'transform-[scaleY(-1)]': sort === `${key}-desc` }
+		]}
 		src="/icons/sort-button.webp"
 		alt=""
 	/>

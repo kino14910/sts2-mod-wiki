@@ -54,6 +54,7 @@ export interface RelicWikiSection {
 
 export interface RelicWikiCell {
 	text?: string
+	subtext?: string
 	lines?: string[]
 	href?: string
 }

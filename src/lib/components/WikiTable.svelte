@@ -24,6 +24,9 @@
 								<a class="text-link hover:text-gold" href={cell.href}>{cell.text}</a>
 							{:else}{cell.text}{/if}
 						{/if}
+						{#if cell.subtext}
+							<div class="text-[0.78rem] italic text-muted">{cell.subtext}</div>
+						{/if}
 						{#if cell.lines}
 							<ul class="ml-4 list-disc">
 								{#each cell.lines as line (line)}<li>{line}</li>{/each}

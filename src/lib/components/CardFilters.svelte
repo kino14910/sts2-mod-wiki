@@ -154,7 +154,7 @@
 		oninput={onchange}
 	/>
 
-	<CharacterFilter options={cardCharacterOptions()} bind:value={color} {onchange} />
+	<CharacterFilter options={cardCharacterOptions()} bind:value={color} bind:sort {onchange} />
 
 	{@render optionPanel(m.filter_rarity(), 'rarity', rarityOptions, rarity, setRarity)}
 	{@render optionPanel(m.filter_type(), 'type', typeOptions, type, setType)}

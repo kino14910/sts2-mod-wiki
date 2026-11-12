@@ -12,7 +12,7 @@
 		type Card,
 		type CardType
 	} from '#lib/data/cards'
-	import { CARDS, CHARACTER_ICONS } from '#lib/data/mods'
+	import { CARDS } from '#lib/data/mods'
 	import {
 		colorName,
 		localizedCards,
@@ -21,10 +21,10 @@
 		rarityName,
 		typeName
 	} from '#lib/data/localize'
+	import { characterSortRank } from '#lib/data/characters'
 	import { m } from '#lib/paraglide/messages'
 	import { cardTextToPlain } from '#lib/text/card-text'
 	import { WindowVirtualizer } from 'virtua/svelte'
-	import type { WindowVirtualizerHandle } from 'virtua/svelte'
 
 	const params = browser ? page.url.searchParams : new URLSearchParams()
 
@@ -46,11 +46,9 @@
 	// 卡片行高约 236px + 1em 行间距，作为未测量项的尺寸提示以减少滚动跳动
 	const ROW_SIZE_HINT = 252
 
-	let list = $state<WindowVirtualizerHandle | undefined>()
 	let listWidth = $state(0)
 	let listFontSize = $state(16)
 
-	const colorOrder = Object.keys(CHARACTER_ICONS)
 	const typeOrder = Object.keys(CARD_TYPES) as CardType[]
 
 	function costRank(card: Card) {
@@ -115,14 +113,14 @@
 					return (typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type)) * direction
 				case 'cost':
 					return (costRank(a) - costRank(b)) * direction
-				case 'color':
-					return colorOrder.indexOf(a.color) - colorOrder.indexOf(b.color)
-				default:
-					return (
-						colorOrder.indexOf(a.color) - colorOrder.indexOf(b.color) ||
-						rarityRank(a.rarity) - rarityRank(b.rarity) ||
-						a.name.localeCompare(b.name)
-					)
+			case 'color':
+				return characterSortRank(a.color) - characterSortRank(b.color)
+			default:
+				return (
+					characterSortRank(a.color) - characterSortRank(b.color) ||
+					rarityRank(a.rarity) - rarityRank(b.rarity) ||
+					a.name.localeCompare(b.name)
+				)
 			}
 		})
 
@@ -162,7 +160,7 @@
 	}
 
 	function resetScroll() {
-		list?.scrollToIndex(0)
+		window.scrollTo({ top: 0, behavior: 'instant' })
 	}
 
 	let modCount = $derived(new Set(filtered.map((card) => card.mod)).size)
@@ -310,7 +308,6 @@
 			{#if filtered.length}
 				<div {@attach measureList}>
 					<WindowVirtualizer
-						bind:this={list}
 						data={groups}
 						getKey={groupKey}
 						bufferSize={400}

@@ -438,4 +438,14 @@ svg {
 		text-decoration-thickness: 1px;
 		text-underline-offset: 3px;
 	}
+	
+	input[type='checkbox']:focus,
+	input[type='radio']:focus {
+		outline: none;
+		outline-offset: 0;
+		box-shadow: none;
+		--tw-ring-offset-shadow: 0 0 #0000;
+		--tw-ring-shadow: 0 0 #0000;
+		--tw-ring-shadow: 0 0 #0000;
+	}
 }

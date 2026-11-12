@@ -19,6 +19,20 @@ const CHARACTER_ORDER: string[] = [
 	)
 ];
 
+// 展示层：colorless 固定最前，其余保持传入顺序（即按钮顺序），与数据排序逻辑互不干扰
+export function displayCharacterOrder<T extends { id: string }>(options: T[]): T[] {
+	const colorless = options.filter((o) => o.id === 'colorless');
+	const rest = options.filter((o) => o.id !== 'colorless');
+	return [...colorless, ...rest];
+}
+
+// 数据排序层：默认排序 colorless 置最后，其余严格按按钮顺序（CHARACTER_ORDER）排列
+export function characterSortRank(id: string): number {
+	if (id === 'colorless') return Number.MAX_SAFE_INTEGER;
+	const index = CHARACTER_ORDER.indexOf(id);
+	return index === -1 ? Number.MAX_SAFE_INTEGER - 1 : index;
+}
+
 function mainOptions(nameOf: (id: string) => string): CharacterFilterOption[] {
 	return CHARACTER_ORDER.filter((id) => id in CHARACTER_ICONS).map((id) => ({
 		id,

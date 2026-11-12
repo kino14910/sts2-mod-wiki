@@ -6,6 +6,7 @@
 		number: string
 		label: string
 		indent?: boolean
+		depth?: number
 	}
 
 	let { items, collapsible = false }: { items: WikiTocItem[]; collapsible?: boolean } = $props()
@@ -36,7 +37,10 @@
 	{#if open}
 		<ul class="rounded-md bg-surface-2 px-2 py-1.25 font-display">
 			{#each items as item (item.id)}
-				<li class={['py-px', item.indent && 'pl-4']}>
+				<li
+					class={['py-px', item.indent && 'pl-4']}
+					style:padding-left={item.depth ? `${item.depth}rem` : undefined}
+				>
 					<a class="text-link hover:text-gold" href={`#${item.id}`}>
 						<span class="mr-1 text-ink-dim">{item.number}</span>{item.label}
 					</a>

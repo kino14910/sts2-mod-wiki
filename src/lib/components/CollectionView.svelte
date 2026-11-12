@@ -132,7 +132,7 @@
 </script>
 
 {#snippet filtersBlock()}
-	<CharacterFilter options={collectionCharacterOptions()} bind:value={character} />
+	<CharacterFilter options={collectionCharacterOptions()} bind:value={character} sortable={false} />
 
 	<FilterPanel title={m.filter_rarity()}>
 		{#snippet header()}
