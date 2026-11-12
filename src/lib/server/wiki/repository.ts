@@ -349,6 +349,37 @@ export async function insertSourceUpdate(
 		.run()
 }
 
+export async function findSourceUpdateById(
+	db: D1Database,
+	id: string
+): Promise<WikiSourceUpdateRow | null> {
+	return db
+		.prepare(`SELECT ${UPDATE_COLUMNS} FROM wiki_source_updates WHERE id = ? LIMIT 1`)
+		.bind(id)
+		.first<WikiSourceUpdateRow>()
+}
+
+export async function setSourceUpdateReview(
+	db: D1Database,
+	id: string,
+	input: {
+		status: SourceUpdateStatus
+		reviewedBy: string
+		reviewNote: string | null
+		publishedRevisionId: string | null
+	}
+): Promise<number> {
+	const result = await db
+		.prepare(
+			`UPDATE wiki_source_updates
+			SET status = ?, reviewed_by = ?, review_note = ?, reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), published_revision_id = ?
+			WHERE id = ? AND status IN ('pending', 'conflict')`
+		)
+		.bind(input.status, input.reviewedBy, input.reviewNote, input.publishedRevisionId, id)
+		.run()
+	return Number(result.meta?.changes ?? 0)
+}
+
 export async function listSourceUpdates(
 	db: D1Database,
 	limit = 50
@@ -436,6 +467,15 @@ export function createCommentStore(db: D1Database): CommentStore {
 				.prepare(`SELECT ${COMMENT_COLUMNS} FROM comments WHERE id = ? LIMIT 1`)
 				.bind(id)
 				.first<CommentRow>()
+		},
+
+		async targetExists(targetType: CommentTargetType, targetId: string): Promise<boolean> {
+			if (targetType === 'card') return true
+			const row = await db
+				.prepare('SELECT 1 AS present FROM wiki_sections WHERE id = ? LIMIT 1')
+				.bind(targetId)
+				.first<{ present: number }>()
+			return row !== null
 		},
 
 		countRecentByToken(tokenHash: string, since: string): Promise<number> {

@@ -1,16 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { commentRequestHeaders, getCommentName, setCommentName } from '#lib/comment-identity'
-	import { MAX_COMMENT_LENGTH, type CommentView } from '#lib/comments'
+	import {
+		MAX_COMMENT_LENGTH,
+		type CommentTargetType,
+		type CommentView
+	} from '#lib/comments'
 	import { m } from '#lib/paraglide/messages'
 
 	let {
+		targetType = 'card',
 		targetId,
 		parentId = null,
 		compact = false,
 		onPosted,
 		onCancel
 	}: {
+		targetType?: CommentTargetType
 		targetId: string
 		parentId?: string | null
 		compact?: boolean
@@ -37,7 +43,7 @@
 				method: 'POST',
 				headers: { 'content-type': 'application/json', ...commentRequestHeaders() },
 				body: JSON.stringify({
-					targetType: 'card',
+					targetType,
 					targetId,
 					parentId,
 					content,

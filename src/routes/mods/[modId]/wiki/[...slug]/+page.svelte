@@ -1,10 +1,13 @@
 <script lang="ts">
-	import ModWikiContent from '#lib/components/ModWikiContent.svelte'
+	import { invalidateAll } from '$app/navigation'
+	import WikiModerationPanel from '#lib/components/wiki/WikiModerationPanel.svelte'
+	import WikiSectionPanel from '#lib/components/wiki/WikiSectionPanel.svelte'
 	import type { PageProps } from './$types'
 
 	let { data }: PageProps = $props()
 
 	let title = $derived(data.wikiMeta.slug.split('/').join(' / '))
+	const refresh = () => void invalidateAll()
 </script>
 
 <svelte:head>
@@ -33,13 +36,9 @@
 					v{section.version} · {section.sourceType ?? 'unknown'}
 				</span>
 			</header>
-			{#if section.contentType === 'markdown'}
-				<ModWikiContent content={section.content} />
-			{:else}
-				<p class="text-[0.86rem] opacity-70">
-					{section.contentType} content is not rendered by the first markdown-only release.
-				</p>
-			{/if}
+			<WikiSectionPanel {section} viewer={data.viewer} onChanged={refresh} />
 		</section>
 	{/each}
+
+	<WikiModerationPanel viewer={data.viewer} onChanged={refresh} />
 </div>

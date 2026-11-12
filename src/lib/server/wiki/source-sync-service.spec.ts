@@ -84,4 +84,26 @@ describe('mod upstream sync decisions', () => {
 			expect(actionForSyncCase(syncCase).publishRevision).toBe(false)
 		}
 	})
+
+	it('treats a reappearing deleted file with identical content as a restore, not a conflict', () => {
+		const result = classifySourceState(
+			{ ...base, sourceStatus: 'deleted' },
+			incoming('upstream v1', 'hash-v1')
+		)
+		expect(result).toBe('B')
+		expect(actionForSyncCase(result).createConflict).toBe(false)
+	})
+
+	it('keeps repeated unresolved upstream versions as separate conflict candidates', () => {
+		const community = { ...base, currentContent: 'community edit' }
+		expect(classifySourceState(community, incoming('upstream v2', 'hash-v2'))).toBe('C')
+		expect(classifySourceState(community, incoming('upstream v3', 'hash-v3'))).toBe('C')
+	})
+
+	it('does not auto publish when a source file is moved or renamed but its content changed', () => {
+		// Identity comes from (mod, page slug, section key), not the file path; a rename with
+		// unchanged community content follows the safe case A path.
+		expect(classifySourceState(base, incoming('upstream v2', 'hash-v2'))).toBe('A')
+		expect(actionForSyncCase('A').refreshSourceSnapshot).toBe(true)
+	})
 })

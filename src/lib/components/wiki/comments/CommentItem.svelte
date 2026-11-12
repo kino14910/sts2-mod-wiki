@@ -147,6 +147,7 @@
 
 	{#if replying}
 		<CommentForm
+			targetType={comment.targetType}
 			targetId={comment.targetId}
 			parentId={comment.id}
 			compact

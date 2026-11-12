@@ -87,7 +87,10 @@ export function classifySourceState(
 ): SyncCase {
 	if (!state.exists) return incoming ? 'NEW' : 'NONE'
 	if (!incoming) return 'E'
-	if (incoming.hash === state.baseHash && state.sourceStatus === 'active') return 'B'
+	// A deleted source reappearing with the same content is a restore, not a conflict:
+	// the sync script reactivates it in case B. Checking the status here used to misclassify
+	// it as case C and create a bogus conflict record.
+	if (incoming.hash === state.baseHash) return 'B'
 	if (state.currentContent === state.baseContent && incoming.content !== state.baseContent) return 'A'
 	if (state.currentContent !== state.baseContent && incoming.content === state.currentContent)
 		return 'D'

@@ -1,3 +1,5 @@
+import { readSessionCookie, verifySession } from './cookie-session'
+import { findUserBySubject } from './users'
 import type { Role, UserStatus } from './permissions'
 
 export interface AuthSession {
@@ -12,9 +14,29 @@ export interface AuthProvider {
 	resolve(request: Request, env: Env | undefined): Promise<AuthSession | null>
 }
 
-let provider: AuthProvider | null = null
+/**
+ * Default provider: a signed cookie identifies the subject, while the role/status always come
+ * from the server-side users table. Without WIKI_SESSION_SECRET no session is trusted at all.
+ */
+const d1AuthProvider: AuthProvider = {
+	async resolve(request, env) {
+		const secret = env?.WIKI_SESSION_SECRET
+		const db = env?.DB
+		if (!secret || !db) return null
+		const payload = await verifySession(readSessionCookie(request), secret)
+		if (!payload) return null
+		try {
+			return await findUserBySubject(db, payload.sub)
+		} catch (error) {
+			console.warn('[auth] user lookup failed', error)
+			return null
+		}
+	}
+}
 
-// No provider is registered by default: unauthenticated requests stay unauthenticated.
+let provider: AuthProvider | null = d1AuthProvider
+
+// Tests (or a future identity provider) can replace the resolver.
 export function setAuthProvider(next: AuthProvider | null): void {
 	provider = next
 }

@@ -1,5 +1,6 @@
 import type { CommentStatus, CommentTargetType } from '#lib/comments'
 import type { GameEntity } from '#lib/data/entities'
+import type { SourceUpdateStatus } from '#lib/wiki-collaboration'
 import type { WikiDocument } from '#lib/wiki-document'
 import type {
 	EntityRef,
@@ -11,7 +12,7 @@ import type {
 export type ContentType = 'markdown' | 'table' | 'structured'
 export type WikiSource = 'd1' | 'unavailable' | 'none'
 export type SourceStatus = 'active' | 'deleted'
-export type SourceUpdateStatus = 'pending' | 'approved' | 'rejected' | 'conflict' | 'withdrawn'
+export type { SourceUpdateStatus }
 
 export interface WikiPageRow {
 	id: string
@@ -123,6 +124,8 @@ export interface CommentStore {
 	listReplies(parentIds: string[]): Promise<CommentRow[]>
 	countTopLevel(targetType: CommentTargetType, targetId: string): Promise<number>
 	findComment(id: string): Promise<CommentRow | null>
+	/** Optional server-side existence check for non-entity targets such as wiki_section. */
+	targetExists?(targetType: CommentTargetType, targetId: string): Promise<boolean>
 	countRecentByToken(tokenHash: string, since: string): Promise<number>
 	countRecentByIp(ipHash: string, since: string): Promise<number>
 	insertComment(input: CommentInsert): Promise<void>

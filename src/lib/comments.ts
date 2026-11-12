@@ -1,6 +1,7 @@
 // Shared between server validation and client components; keep this module free of server imports.
 
-export type CommentTargetType = 'card'
+/** 'card' = anonymous card tips; 'wiki_section' = discussion attached to one wiki block. */
+export type CommentTargetType = 'card' | 'wiki_section'
 export type CommentStatus = 'visible' | 'deleted'
 
 export const MAX_COMMENT_LENGTH = 2000

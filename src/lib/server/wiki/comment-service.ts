@@ -15,7 +15,7 @@ export const COMMENT_RATE_LIMIT_WINDOW_MS = 60_000
 export const COMMENT_RATE_LIMIT_PER_TOKEN = 5
 export const COMMENT_RATE_LIMIT_PER_IP = 20
 
-const TARGET_TYPE: CommentTargetType = 'card'
+const TARGET_TYPES: readonly CommentTargetType[] = ['card', 'wiki_section']
 const TOKEN_PATTERN = /^[A-Za-z0-9_-]{16,128}$/
 const FORBIDDEN_MARKUP = /<\s*\/?\s*(script|style|iframe|object|embed|link|meta)\b|javascript:/i
 const CONTROL_CHARS = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/
@@ -33,10 +33,11 @@ export function normalizeCommentTarget(
 	targetType: unknown,
 	targetId: unknown
 ): { targetType: CommentTargetType; targetId: string } {
-	if (targetType !== TARGET_TYPE) throw new CommentError(400, 'unsupported comment target type')
+	if (!TARGET_TYPES.includes(targetType as CommentTargetType))
+		throw new CommentError(400, 'unsupported comment target type')
 	if (typeof targetId !== 'string' || !isValidEntityId(targetId))
 		throw new CommentError(400, 'invalid comment target id')
-	return { targetType: TARGET_TYPE, targetId }
+	return { targetType: targetType as CommentTargetType, targetId }
 }
 
 export function normalizeCommentContent(value: unknown): string {
@@ -180,6 +181,11 @@ export async function createComment(
 	input: CreateCommentInput
 ): Promise<CommentView> {
 	const target = normalizeCommentTarget(input.targetType, input.targetId)
+	// A wiki block comment must point at a real section; card tips keep their entity-id check.
+	if (target.targetType === 'wiki_section' && store.targetExists) {
+		if (!(await store.targetExists(target.targetType, target.targetId)))
+			throw new CommentError(404, 'wiki section not found')
+	}
 	const content = normalizeCommentContent(input.content)
 	const authorName = normalizeCommentAuthorName(input.authorName)
 	const tokenHash = await hashCommentToken(normalizeCommentToken(input.token))

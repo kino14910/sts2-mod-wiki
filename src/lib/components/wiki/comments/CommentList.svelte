@@ -3,10 +3,13 @@
 	import CommentForm from './CommentForm.svelte'
 	import CommentItem from './CommentItem.svelte'
 	import { commentRequestHeaders } from '#lib/comment-identity'
-	import type { CommentPage, CommentView } from '#lib/comments'
+	import type { CommentPage, CommentTargetType, CommentView } from '#lib/comments'
 	import { m } from '#lib/paraglide/messages'
 
-	let { targetId }: { targetId: string } = $props()
+	let {
+		targetType = 'card',
+		targetId
+	}: { targetType?: CommentTargetType; targetId: string } = $props()
 
 	let items = $state<CommentView[]>([])
 	let page = $state(1)
@@ -21,7 +24,7 @@
 
 	async function requestPage(target: string, pageNumber: number): Promise<CommentPage> {
 		const params = new URLSearchParams({
-			targetType: 'card',
+			targetType,
 			targetId: target,
 			page: String(pageNumber)
 		})
@@ -112,6 +115,7 @@
 
 	$effect(() => {
 		const target = targetId
+		void targetType
 		if (!target) return
 		untrack(() => {
 			items = []
@@ -132,7 +136,7 @@
 		{/if}
 	</div>
 
-	<CommentForm targetId={targetId} onPosted={handlePosted} />
+	<CommentForm {targetType} targetId={targetId} onPosted={handlePosted} />
 
 	{#if loading && !loaded}
 		<p class="mt-4 text-[0.83rem] opacity-60">{m.comments_loading()}</p>
