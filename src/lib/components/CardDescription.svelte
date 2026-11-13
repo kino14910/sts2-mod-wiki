@@ -18,7 +18,6 @@
 	} = $props()
 
 	let assets = $derived(CHARACTER_ASSETS[card.color])
-	let interactive = $derived(variant === 'article')
 	let keywordLines = $derived(keywordPlacement(card.keywords))
 
 	let textOptions = $derived<GameTextOptions>({
@@ -27,8 +26,7 @@
 		baseVariables: card.baseVariables,
 		sizeUnit: 'px',
 		energyIconSrc: assets?.textEnergy,
-		secondEnergyIconSrc: assets?.secondTextEnergy,
-		interactive
+		secondEnergyIconSrc: assets?.secondTextEnergy
 	})
 
 	const keywordOptions: GameTextOptions = { sizeUnit: 'px', matchEntities: false }
@@ -58,6 +56,19 @@
 		width: auto;
 		margin: 0 0.03em;
 		vertical-align: -0.15em;
+	}
+
+	.card-desc-face :global(.wiki-icon-link) {
+		display: none;
+	}
+
+	.card-desc-face :global(a.wiki-card-link) {
+		color: inherit;
+	}
+
+	.card-desc :global(.custom-tooltip) {
+		width: max-content;
+		max-width: 16dvw;
 	}
 
 	@media (max-width: 640px) {

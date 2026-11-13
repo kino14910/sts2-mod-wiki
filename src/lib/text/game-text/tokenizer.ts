@@ -1,6 +1,7 @@
 import { KNOWN_TAGS, parseArg } from '../bbcode'
 import type { IconRef } from '#lib/data/icon-registry'
 import { findExplicitIcons } from './icon-syntax'
+import { parseGameTemplate } from '../game-template'
 
 export type GameTextToken =
 	| { type: 'text'; value: string }
@@ -17,9 +18,15 @@ type Hit = { start: number; end: number; token: GameTextToken }
 
 export function tokenizeGameText(src: string, modId?: string): GameTextToken[] {
 	const hits: Hit[] = []
+	// A formatter branch can contain arbitrary BBCode. Keep the entire expression
+	// intact until its branch is selected, otherwise {IfUpgraded:show:[gold]...} breaks.
+	const expressions = parseGameTemplate(src).filter((node) => node.type === 'variable')
+	const insideExpression = (start: number, end: number) =>
+		expressions.some((node) => start < node.end && end > node.start)
 	TAG_RE.lastIndex = 0
 	for (const match of src.matchAll(TAG_RE)) {
 		const start = match.index ?? 0
+		if (insideExpression(start, start + match[0].length)) continue
 		const name = match[2].toLowerCase()
 		const arg = parseArg(match[3])
 		let token: GameTextToken
@@ -35,7 +42,9 @@ export function tokenizeGameText(src: string, modId?: string): GameTextToken[] {
 		hits.push({ start, end: start + match[0].length, token })
 	}
 
-	const icons = findExplicitIcons(src, modId).sort((a, b) => a.start - b.start)
+	const icons = findExplicitIcons(src, modId)
+		.filter((icon) => !insideExpression(icon.start, icon.end))
+		.sort((a, b) => a.start - b.start)
 	for (const icon of icons) {
 		hits.push({
 			start: icon.start,

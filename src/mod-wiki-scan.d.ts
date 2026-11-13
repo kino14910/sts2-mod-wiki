@@ -7,6 +7,7 @@ declare module '*.mjs' {
 		pageTitle: string
 		entityType: string | null
 		entityId: string | null
+		entityModId?: string | null
 		sectionKey: string
 		sectionTitle: string
 		sortOrder: number
@@ -16,11 +17,14 @@ declare module '*.mjs' {
 	}
 
 	export interface ScannedModWiki {
-		mods: unknown[]
+		mods: { id: string; version: string | null; wikiManifest: string }[]
 		pages: unknown[]
 		files: ScannedModWikiFile[]
 		errors: string[]
 	}
 
 	export function scanModWiki(root?: string): ScannedModWiki
+	export function syncModWiki(db: D1Database, scan: ScannedModWiki, options?: {
+		dryRun?: boolean; emitSql?: boolean; assumeFresh?: boolean
+	}): Promise<{ plan: { source: string; case: string; reason: string }[]; statements: string[] }>
 }

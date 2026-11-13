@@ -3,6 +3,8 @@ import { clearSessionCookie, sessionCookie, signSession } from '#lib/server/auth
 import { rolePermissions } from '#lib/server/auth/permissions'
 import { ensureDevUser, SUBJECT_PATTERN } from '#lib/server/auth/users'
 import { getPlatformEnv } from '#lib/server/wiki/db'
+import { assertSameOrigin } from '#lib/server/wiki/api-helpers'
+import { isLocalHost } from '#lib/server/auth/github'
 import type { RequestHandler } from './$types'
 
 function publicSession(session: App.Locals['session']) {
@@ -19,7 +21,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 	return json({
 		session: publicSession(locals.session),
 		permissions: locals.session ? rolePermissions(locals.session.role) : []
-	})
+	}, { headers: { 'cache-control': 'no-store' } })
 }
 
 /**
@@ -27,9 +29,10 @@ export const GET: RequestHandler = async ({ locals }) => {
  * Production deployments are expected to mint the same signed cookie from a real IdP
  * (e.g. Cloudflare Access) or to provision users directly in D1.
  */
-export const POST: RequestHandler = async ({ request, platform, locals }) => {
+export const POST: RequestHandler = async ({ request, platform, locals, url }) => {
+	assertSameOrigin(request)
 	const env = getPlatformEnv(platform)
-	if (env?.WIKI_DEV_LOGIN !== '1' || !env.WIKI_SESSION_SECRET)
+	if (!isLocalHost(url) || env?.WIKI_DEV_LOGIN !== '1' || !env.WIKI_SESSION_SECRET)
 		error(404, 'Development login is disabled')
 	if (!locals.wikiDb) error(503, 'Wiki database unavailable')
 
@@ -50,6 +53,7 @@ export const POST: RequestHandler = async ({ request, platform, locals }) => {
 	)
 }
 
-export const DELETE: RequestHandler = async () => {
+export const DELETE: RequestHandler = async ({ request }) => {
+	assertSameOrigin(request)
 	return json({ ok: true }, { headers: { 'set-cookie': clearSessionCookie() } })
 }

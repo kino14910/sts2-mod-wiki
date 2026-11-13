@@ -4,6 +4,7 @@ import { requirePermission, WikiCollaborationError, type MaybeActor } from './ac
 import type { WikiEditStore } from './collaboration-types'
 import { publishRevision } from './publish-service'
 import { validateWikiContent } from './validation'
+import { validateSectionContent } from './content-validation'
 
 export const MAX_EDIT_SUMMARY_LENGTH = 500
 
@@ -26,8 +27,8 @@ function normalizeSummary(value: unknown): string {
 	return summary
 }
 
-function normalizeBaseVersion(value: unknown): number {
-	if (typeof value !== 'number' || !Number.isInteger(value) || value < 0)
+export function normalizeBaseVersion(value: unknown): number {
+	if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0)
 		throw new WikiCollaborationError(400, 'baseVersion must be a non-negative integer', 'BAD_VERSION')
 	return value
 }
@@ -53,6 +54,7 @@ export async function submitSectionEdit(
 
 	const section = await store.findSection(input.sectionId)
 	if (!section) throw new WikiCollaborationError(404, 'Section not found', 'SECTION_NOT_FOUND')
+	validateSectionContent(section, content)
 	if (section.version !== baseVersion)
 		throw new WikiCollaborationError(
 			409,
@@ -73,14 +75,6 @@ export async function submitSectionEdit(
 			summary,
 			submittedBy: actor.userId,
 			createdAt: new Date().toISOString()
-		})
-		await store.insertAuditLog({
-			id: crypto.randomUUID(),
-			actorId: actor.userId,
-			action: 'wiki.proposal.create',
-			targetType: 'wiki_section',
-			targetId: section.id,
-			metadata: { proposalId, baseVersion }
 		})
 		return {
 			kind: 'proposed',

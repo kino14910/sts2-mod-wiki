@@ -1,18 +1,21 @@
 <script lang="ts">
 	import type { Snippet } from "svelte";
 	import { page } from "$app/state";
-	import { entityHref, type EntityRef } from "#lib/entities";
-	import { findGameEntity } from "#lib/data/entities";
+	import { entityHref } from "#lib/entities";
+	import { findGameEntity, type ScopedEntityRef } from "#lib/data/entities";
+	import { resolvePowerReference } from "#lib/data/power-references";
+	import { getLocale } from "#lib/paraglide/runtime";
 	import HoverTooltip from "#lib/components/HoverTooltip.svelte";
 	import EntityTooltip from "#lib/components/EntityTooltip.svelte";
 	import WikiIcon from "#lib/components/WikiIcon.svelte";
 	import { cardWikiHref, type WikiEntry } from "#lib/data/power-wiki";
-	import { isSelfLink } from "#lib/data/wiki-links";
+	import { cardIcon, isSelfLink } from "#lib/data/wiki-links";
 	import { resolveIconSrc } from "#lib/data/icon-registry";
 
 	let {
 		entry,
 		ref,
+		locale,
 		text,
 		href,
 		tooltip,
@@ -23,7 +26,8 @@
 		children,
 	}: {
 		entry?: WikiEntry;
-		ref?: EntityRef;
+		ref?: ScopedEntityRef;
+		locale?: string;
 		text?: string;
 		href?: string | null;
 		tooltip?: string;
@@ -37,46 +41,30 @@
 	let resolved = $derived.by<WikiEntry | null>(() => {
 		if (entry) return entry;
 		if (!ref) return null;
-		return {
-			name: text ?? "",
-			kind:
-				ref.type === "card" ||
-				ref.type === "relic" ||
-				ref.type === "potion"
-					? ref.type
-					: "power",
-			id: ref.id,
-			description: "",
-			tooltip: tooltip ?? "",
-			href: href ?? entityHref(ref),
-		};
+		return resolvePowerReference(ref, locale ?? getLocale());
 	});
 
 	let label = $derived(text ?? resolved?.name ?? "");
-	let link = $derived(
-		href !== undefined
-			? href
-			: (resolved?.href ??
-					(resolved?.kind === "card" ? cardWikiHref(label) : null)),
-	);
 	let tip = $derived(tooltip ?? resolved?.tooltip);
 
-	let entityRef = $derived.by<EntityRef | null>(() => {
+	let entityRef = $derived.by<ScopedEntityRef | null>(() => {
 		if (ref) return ref;
 		if (
 			resolved &&
-			(resolved.kind === "card" || resolved.kind === "relic" || resolved.kind === "potion") &&
 			resolved.id
 		) {
-			return { type: resolved.kind, id: resolved.id };
+			return { type: resolved.kind, id: resolved.id, modId: resolved.modId };
 		}
 		return null;
 	});
 	let entity = $derived(entityRef ? findGameEntity(entityRef) : null);
+	let link = $derived(href === null ? null : entity ? entityHref({
+		type: entity.kind, id: entity.data.id, modId: entity.data.mod ?? 'sts2'
+	}) : ref ? null : href ?? resolved?.href ?? (resolved?.kind === "card" ? cardWikiHref(label) : null));
 	let isEntityKind = $derived(
 		!!entity && (entity.kind === "card" || entity.kind === "relic" || entity.kind === "potion")
 	);
-	let useEntityTip = $derived(isEntityKind);
+	let useEntityTip = $derived(isEntityKind && (!locale || locale === getLocale()));
 
 	let hovered = $state(false);
 	let tipX = $state(0);
@@ -91,6 +79,11 @@
 			name: string;
 		} => {
 			if (iconSrc) return { kind: iconKind, src: iconSrc, name: "" };
+			if (entity) {
+				const src = entity.kind === "card" ? cardIcon(entity.data)
+					: entity.kind === "relic" || entity.kind === "potion" ? entity.data.image : entity.data.icon;
+				return { kind: entity.kind === "keyword" ? "power" : entity.kind, src: src ?? null, name: "" };
+			}
 			if (icon)
 				return {
 					kind: "power",
@@ -103,7 +96,7 @@
 				};
 			if (!resolved) return { kind: "power", src: null, name: "" };
 			const kind = resolved.kind;
-			const ref: EntityRef = { type: kind, id: resolved.id ?? "" };
+			const ref: ScopedEntityRef = { type: kind, id: resolved.id ?? "", modId: resolved.modId };
 			const name = kind === "card" ? label : resolved.name;
 			return {
 				kind,

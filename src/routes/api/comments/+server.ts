@@ -5,6 +5,7 @@ import {
 	listComments
 } from '#lib/server/wiki/comment-service'
 import { createCommentStore } from '#lib/server/wiki/repository'
+import { canonicalCommentTarget } from '#lib/server/wiki/identity-catalog'
 import type { RequestHandler } from './$types'
 
 function fail(cause: unknown): never {
@@ -28,9 +29,9 @@ function clientIp(request: Request): string | null {
 export const GET: RequestHandler = async ({ url, request, locals }) => {
 	if (!locals.wikiDb) error(503, 'Comment database unavailable')
 	try {
+		const target = await canonicalCommentTarget(locals.wikiDb, url.searchParams.get('targetType'), url.searchParams.get('targetId'))
 		const page = await listComments(createCommentStore(locals.wikiDb), {
-			targetType: url.searchParams.get('targetType'),
-			targetId: url.searchParams.get('targetId'),
+			...target,
 			page: optionalNumber(url.searchParams.get('page')),
 			pageSize: optionalNumber(url.searchParams.get('pageSize')),
 			viewerToken: request.headers.get('x-comment-token')
@@ -48,9 +49,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const input = body as Record<string, unknown>
 
 	try {
+		const target = await canonicalCommentTarget(locals.wikiDb, input.targetType, input.targetId)
 		const comment = await createComment(createCommentStore(locals.wikiDb), {
-			targetType: input.targetType,
-			targetId: input.targetId,
+			...target,
 			parentId: input.parentId,
 			content: input.content,
 			authorName: input.authorName,

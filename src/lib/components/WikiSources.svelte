@@ -18,7 +18,7 @@
 					<h4 class="wiki-subheading mt-2.5 mb-0.5 text-[1.05rem] font-semibold text-[#f6da6f]"><span class="mw-headline">{group.subheading}</span></h4>
 				{/if}
 				<ul class="wiki-list my-0 mb-1.5 pl-5.5 list-disc">
-					{#each group.entries as entry (`${group.heading}-${group.subheading}-${entry.id ?? entry.name}`)}
+					{#each group.entries as entry (`${group.heading}-${group.subheading}-${entry.kind}-${entry.modId ?? 'sts2'}-${entry.id ?? entry.name}`)}
 						<li class="wiki-entry py-px leading-[1.55]">
 							<span class="wiki-text text-pretty"><WikiEntity {entry} /> - <WikiText text={entry.wikiText ?? entry.description} /></span>
 						</li>

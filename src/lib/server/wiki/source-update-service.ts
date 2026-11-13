@@ -3,12 +3,10 @@ import { diffLines } from '#lib/wiki-diff'
 import { requirePermission, WikiCollaborationError, type MaybeActor } from './access'
 import { createWikiEditStore } from './collaboration-repository'
 import { publishRevision } from './publish-service'
+import { normalizeBaseVersion } from './edit-service'
 import {
 	findSourceBySection,
-	findSourceUpdateById,
-	insertAuditLog,
-	setSourceUpdateReview,
-	updateSourceSync
+	findSourceUpdateById
 } from './repository'
 
 export interface SourceUpdateDetail {
@@ -18,6 +16,7 @@ export interface SourceUpdateDetail {
 	sectionKey: string
 	sourcePath: string
 	status: SourceUpdateStatus
+	currentVersion: number
 	baseContent: string
 	currentContent: string
 	incomingContent: string
@@ -53,6 +52,7 @@ export async function getSourceUpdateDetail(
 		sectionKey: section?.sectionKey ?? row.section_id,
 		sourcePath: source?.source_path ?? '',
 		status: row.status,
+		currentVersion: section?.version ?? 0,
 		baseContent: row.base_content,
 		currentContent,
 		incomingContent: row.incoming_content,
@@ -72,6 +72,7 @@ export interface ResolveSourceUpdateInput {
 	id: string
 	decision: unknown
 	note?: unknown
+	baseVersion?: unknown
 	actor: MaybeActor
 }
 
@@ -99,51 +100,43 @@ export async function resolveSourceUpdate(
 	const section = await store.findSection(row.section_id)
 	if (!section) throw new WikiCollaborationError(404, 'Section not found', 'SECTION_NOT_FOUND')
 
-	let publishedRevisionId: string | null = null
 	if (input.decision === 'approve') {
+		const baseVersion = normalizeBaseVersion(input.baseVersion)
+		if (section.version !== baseVersion)
+			throw new WikiCollaborationError(409, 'Section changed since this update was reviewed', 'VERSION_CONFLICT')
 		const source = await findSourceBySection(db, row.section_id)
 		if (!source) throw new WikiCollaborationError(404, 'Source record not found', 'NOT_FOUND')
-		if (section.currentContent !== row.incoming_content) {
-			const published = await publishRevision(store, {
+		if (source.id !== row.source_id || source.source_hash !== row.base_hash || source.source_status !== 'active')
+			throw new WikiCollaborationError(409, 'Source baseline changed; reload the update', 'SOURCE_CONFLICT')
+		await publishRevision(store, {
 				sectionId: row.section_id,
-				expectedVersion: section.version,
+				expectedVersion: baseVersion,
 				content: row.incoming_content,
 				summary: `Reviewed upstream update ${row.incoming_hash}`,
 				editorId: actor.userId,
 				sourceType: 'mod_update',
 				sourceReference: source.source_path,
 				actorId: actor.userId,
-				action: 'wiki.source_update.approve'
+				action: 'wiki.source_update.approve',
+				reviewNote: note,
+				sourceUpdate: {
+					id: row.id, sourceId: row.source_id, baseHash: row.base_hash,
+					incomingHash: row.incoming_hash, modVersion: row.incoming_mod_version ?? null
+				}
 			})
-			publishedRevisionId = published.revisionId
-		} else {
-			publishedRevisionId = row.published_revision_id
-		}
-		await updateSourceSync(db, source.id, {
-			hash: row.incoming_hash,
-			content: row.incoming_content,
-			modVersion: source.source_mod_version,
-			status: 'active'
-		})
+	} else {
+		const now = new Date().toISOString()
+		const results = await db.batch([
+			db.prepare(`UPDATE wiki_source_updates SET status = 'rejected', reviewed_by = ?,
+				review_note = ?, reviewed_at = ? WHERE id = ? AND status IN ('pending', 'conflict')`)
+				.bind(actor.userId, note, now, row.id),
+			db.prepare(`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
+				SELECT ?, ?, 'wiki.source_update.reject', 'wiki_source_update', ?, ? WHERE changes() = 1`)
+				.bind(crypto.randomUUID(), actor.userId, row.id, JSON.stringify({ note, sectionId: row.section_id }))
+		])
+		if (Number(results[0].meta?.changes ?? 0) !== 1)
+			throw new WikiCollaborationError(409, 'Source update was resolved concurrently', 'ALREADY_REVIEWED')
 	}
-
-	const changes = await setSourceUpdateReview(db, row.id, {
-		status: input.decision === 'approve' ? 'approved' : 'rejected',
-		reviewedBy: actor.userId,
-		reviewNote: note,
-		publishedRevisionId
-	})
-	if (changes === 0)
-		throw new WikiCollaborationError(409, 'Source update was resolved concurrently', 'ALREADY_REVIEWED')
-
-	await insertAuditLog(db, {
-		id: crypto.randomUUID(),
-		actorId: actor.userId,
-		action: `wiki.source_update.${input.decision}`,
-		targetType: 'wiki_source_update',
-		targetId: row.id,
-		metadata: { sectionId: row.section_id, incomingHash: row.incoming_hash, publishedRevisionId, note }
-	})
 
 	const detail = await getSourceUpdateDetail(db, row.id)
 	if (!detail) throw new WikiCollaborationError(404, 'Source update not found', 'NOT_FOUND')

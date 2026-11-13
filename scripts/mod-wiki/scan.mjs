@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
+import { publicEntityId, registerPublicEntityRefs } from '../../src/lib/entity-identity.ts'
 import {
 	isSafeSourcePath,
 	isValidModVersion,
@@ -28,6 +29,7 @@ function hashContent(content) {
 
 export function scanModWiki(root = projectRoot) {
 	const modsRoot = path.join(root, 'static/mods')
+	const contentRoot = path.join(root, 'content/wiki')
 	const errors = []
 	const mods = []
 	const pages = []
@@ -35,28 +37,38 @@ export function scanModWiki(root = projectRoot) {
 	const seenPaths = new Set()
 	const seenPageKeys = new Set()
 
-	if (!fs.existsSync(modsRoot)) return { mods, pages, files, errors }
-
-	for (const entry of fs.readdirSync(modsRoot, { withFileTypes: true })) {
-		if (!entry.isDirectory()) continue
-		const modId = entry.name
+	const directories = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name) : []
+	// Use the same identity policy as routes. Generated bundles replace legacy game data.
+	const catalog = []
+	for (const modId of [...new Set([...directories(path.join(root, 'generated/mods')), ...directories(modsRoot)])]) {
+		const bundle = path.join(root, 'generated/mods', modId, 'bundle.json')
+		const data = fs.existsSync(bundle) ? readJson(bundle)?.data : null
+		for (const [collection, type] of [['cards','card'], ['relics','relic'], ['potions','potion'], ['powers','power'], ['characters','character']]) {
+			const legacy = path.join(modsRoot, modId, `${collection}.json`)
+			const rows = data ? data[collection] : fs.existsSync(legacy) ? readJson(legacy) : []
+			if (Array.isArray(rows)) for (const row of rows) if (typeof row?.id === 'string') catalog.push({ type, id: row.id, modId })
+		}
+	}
+	registerPublicEntityRefs(catalog)
+	for (const modId of [...new Set([...directories(contentRoot), ...directories(modsRoot)])].sort()) {
 		const modDir = path.join(modsRoot, modId)
 		const modManifestPath = path.join(modDir, 'manifest.json')
-		if (!fs.existsSync(modManifestPath)) continue
-
-		const modManifest = readJson(modManifestPath)
-		if (modManifest?.id !== modId) {
+		const bundlePath = path.join(root, 'generated/mods', modId, 'bundle.json')
+		const modernDir = path.join(contentRoot, modId)
+		const modern = fs.existsSync(path.join(modernDir, 'manifest.json'))
+		const wikiDir = modern ? modernDir : path.join(modDir, 'wiki')
+		const wikiManifestPath = path.join(wikiDir, 'manifest.json')
+		if (!fs.existsSync(wikiManifestPath)) continue
+		const modManifest = fs.existsSync(bundlePath) ? readJson(bundlePath)?.manifest : fs.existsSync(modManifestPath) ? readJson(modManifestPath) : null
+		if (modManifest && modManifest.id !== modId) {
 			errors.push(`Mod manifest id "${modManifest?.id}" does not match directory "${modId}"`)
 			continue
 		}
-
-		const wikiDir = path.join(modDir, 'wiki')
-		const wikiManifestPath = path.join(wikiDir, 'manifest.json')
-		if (!fs.existsSync(wikiManifestPath)) continue
+		if (!modManifest && !modern) continue
 
 		const wikiManifest = readJson(wikiManifestPath)
 		const modVersion =
-			typeof wikiManifest?.version === 'string' ? wikiManifest.version : null
+			typeof wikiManifest?.version === 'string' ? wikiManifest.version : typeof modManifest?.version === 'string' ? modManifest.version : null
 		if (!isValidModVersion(modVersion)) {
 			errors.push(`Invalid mod wiki version for ${modId}`)
 			continue
@@ -83,13 +95,18 @@ export function scanModWiki(root = projectRoot) {
 
 			let entityType = null
 			let entityId = null
+			let entityModId = null
 			if (page.entity != null) {
-				if (!ENTITY_TYPES.has(page.entity.type) || typeof page.entity.id !== 'string' || !page.entity.id) {
+				if (!ENTITY_TYPES.has(page.entity.type) || typeof page.entity.id !== 'string' || !page.entity.id ||
+					(page.entity.modId !== undefined && typeof page.entity.modId !== 'string')) {
 					errors.push(`Invalid entity on page "${pageSlug}" in mod ${modId}`)
 					continue
 				}
 				entityType = page.entity.type
-				entityId = page.entity.id
+				entityModId = page.entity.modId ?? (page.entity.id.includes(':') ? page.entity.id.slice(0, page.entity.id.indexOf(':')) : modId)
+				entityId = publicEntityId({ type: entityType, id: page.entity.id,
+					modId: page.entity.modId ?? (page.entity.id.includes(':') ? undefined : modId) })
+				if (!entityId) { errors.push(`Invalid entity identity on page "${pageSlug}"`); continue }
 			}
 
 			pages.push({
@@ -99,7 +116,8 @@ export function scanModWiki(root = projectRoot) {
 				pageType: typeof page.pageType === 'string' ? page.pageType : 'documentation',
 				title: typeof page.title === 'string' ? page.title : pageSlug,
 				entityType,
-				entityId
+				entityId,
+				entityModId
 			})
 
 			if (!Array.isArray(page.sections)) {
@@ -119,8 +137,9 @@ export function scanModWiki(root = projectRoot) {
 				}
 				seenKeys.add(sectionKey)
 
-				const sourcePath = `static/mods/${modId}/wiki/${section.file}`
-				if (typeof section.file !== 'string' || !isSafeSourcePath(sourcePath) || !sourcePath.startsWith(`static/mods/${modId}/wiki/`)) {
+				const sourcePrefix = modern ? `content/wiki/${modId}/` : `static/mods/${modId}/wiki/`
+				const sourcePath = `${sourcePrefix}${section.file}`
+				if (typeof section.file !== 'string' || !isSafeSourcePath(sourcePath) || !sourcePath.startsWith(sourcePrefix)) {
 					errors.push(`Unsafe source path "${section.file}" on page "${pageSlug}"`)
 					continue
 				}
@@ -157,6 +176,7 @@ export function scanModWiki(root = projectRoot) {
 					pageTitle: pages.at(-1).title,
 					entityType,
 					entityId,
+					entityModId,
 					sectionKey,
 					sectionTitle: typeof section.title === 'string' ? section.title : sectionKey,
 					sortOrder: Number.isFinite(section.sortOrder) ? section.sortOrder : 0,

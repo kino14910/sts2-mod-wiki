@@ -27,11 +27,12 @@ export type GameTextNode =
 	| { type: 'text'; value: string }
 	| GameTextTagNode
 	| { type: 'entity'; ref: EntityRef; value: string; candidates: readonly EntityNameEntry[] }
-	| { type: 'variable'; name: string; raw: string; value: string; children: GameTextNode[] }
+	| { type: 'variable'; name: string; raw: string; value: string; children: GameTextNode[]; matchEntities?: boolean }
 	| {
 			type: 'icon'
 			kind: 'energy' | 'star' | 'asset'
 			count: number
+			label?: string
 			src: string
 			ref: IconRef
 			raw?: string

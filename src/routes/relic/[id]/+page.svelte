@@ -17,11 +17,13 @@
 		modName
 	} from '#lib/data/localize'
 	import { m } from '#lib/paraglide/messages'
+	import { collectionTextToPlain } from '#lib/text/collection-text'
 	import type { PageProps } from './$types'
 
 	let { data }: PageProps = $props()
 
 	let entry = $derived(localizedCollection(data.entry))
+	let text = $derived(collectionTextToPlain(entry.text))
 	let wiki = $derived(data.wiki)
 	let toc = $derived(
 		wiki
@@ -48,10 +50,11 @@
 
 <svelte:head>
 	<title>{entry.name} | {m.game_title()}</title>
-	<meta name="description" content={`${entry.name}: ${data.text}`} />
+	<meta name="description" content={`${entry.name}: ${text}`} />
 </svelte:head>
 
-<div class="glossary-page">
+{#key data.entityKey}
+<div class="glossary-page" data-entity-id={data.entityRef.id} data-entity-key={data.entityKey} data-mod-id={entry.mod}>
 	<section class="page">
 		<div class="wrap">
 			<nav class="crumbs" aria-label={m.breadcrumb()}>
@@ -123,7 +126,7 @@
 							<h2 class="font-display text-[1.1rem] font-semibold text-gold">
 								{m.power_effect()}
 							</h2>
-							<p class="mt-2 text-[0.95rem] leading-[1.6]">{data.text}</p>
+							<p class="mt-2 text-[0.95rem] leading-[1.6]">{text}</p>
 						</section>
 				</article>
 
@@ -153,7 +156,7 @@
 							</div>
 						</dl>
 						<p class="mt-3 rounded-sm border border-line bg-surface-2 p-2.5 text-[0.82rem] leading-[1.55]">
-							{data.text}
+							{text}
 						</p>
 						<section class="mt-3 border-t border-line pt-2.5">
 							<h2 class="font-mono text-[0.56rem] uppercase tracking-wider text-gold-soft">
@@ -167,6 +170,7 @@
 		</div>
 	</section>
 </div>
+{/key}
 
 <style>
 	.page {

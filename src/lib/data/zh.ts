@@ -9,6 +9,7 @@ export const COLOR_ZH: Record<ColorId, string> = {
 	regent: '摄政者',
 	necrobinder: '缚灵师',
 	defect: '故障机器人',
+	fool: '愚者',
 	colorless: '无色'
 };
 

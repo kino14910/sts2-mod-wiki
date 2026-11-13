@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { publicEntityId } from '#lib/entities'
 	import FilterButton from './FilterButton.svelte'
 	import FilterPanel from './FilterPanel.svelte'
 	import Motif from './Motif.svelte'
@@ -96,6 +97,10 @@
 	function groupId(group: string) {
 		return `group-${group.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 	}
+
+	function entryId(entry: GlossaryEntry) {
+		return publicEntityId({ type: entry.kind, id: entry.id, modId: entry.mod ?? 'sts2' })!
+	}
 </script>
 
 {#snippet tag(text: string)}
@@ -146,7 +151,7 @@
 			color={accent}
 		>
 			<div class="flex flex-col gap-1.25">
-				{#each group.entries as entry (entry.id)}
+				{#each group.entries as entry (entryId(entry))}
 					<article
 						class={[
 							'group relative grid scroll-mt-[calc(var(--header-height)+16px)] gap-2.75 rounded-[3px] border border-line bg-row px-2.75 py-2.25 transition-[border-color,background-color] duration-160 ease-[ease] [&:hover:not(:target)]:border-accent [&:hover:not(:target)]:bg-surface-2 target:border-(--kind-accent) target:bg-[color-mix(in_srgb,var(--kind-accent)_7%,var(--row))] target:shadow-[inset_2px_0_0_var(--kind-accent)] max-[620px]:gap-2 max-[620px]:px-2.25 max-[620px]:py-2',
@@ -154,7 +159,8 @@
 								? 'grid-cols-1'
 								: 'grid-cols-[34px_minmax(0,1fr)] max-[620px]:grid-cols-[28px_minmax(0,1fr)]'
 						]}
-						id={entry.id}
+						id={entryId(entry)}
+						data-entity-id={entryId(entry)}
 					>
 						{#if kind !== 'keyword'}
 							<span

@@ -1,6 +1,7 @@
 import type { RevisionSourceType } from '#lib/entities'
 import { WikiCollaborationError } from './access'
-import type { WikiEditStore } from './collaboration-types'
+import type { PublishInput, WikiEditStore } from './collaboration-types'
+import { validateSectionContent } from './content-validation'
 
 export interface PublishRevisionInput {
 	sectionId: string
@@ -15,6 +16,7 @@ export interface PublishRevisionInput {
 	proposalId?: string | null
 	reviewNote?: string | null
 	createdAt?: string
+	sourceUpdate?: PublishInput['sourceUpdate']
 }
 
 export interface PublishedRevision {
@@ -33,6 +35,7 @@ export async function publishRevision(
 ): Promise<PublishedRevision> {
 	const section = await store.findSection(input.sectionId)
 	if (!section) throw new WikiCollaborationError(404, 'Section not found', 'SECTION_NOT_FOUND')
+	validateSectionContent(section, input.content)
 	if (section.version !== input.expectedVersion)
 		throw new WikiCollaborationError(
 			409,
@@ -58,7 +61,8 @@ export async function publishRevision(
 		proposalId: input.proposalId ?? null,
 		reviewNote: input.reviewNote ?? null,
 		actorId: input.actorId ?? null,
-		action: input.action ?? 'wiki.section.publish'
+		action: input.action ?? 'wiki.section.publish',
+		sourceUpdate: input.sourceUpdate
 	})
 	if (!result.published)
 		throw new WikiCollaborationError(

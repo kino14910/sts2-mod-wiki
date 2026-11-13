@@ -81,12 +81,12 @@
 	);
 	let titleOutline = $derived(TYPE_TITLE_OUTLINE[card.type] ?? rarityInfo(card.rarity).outline);
 	let characterAssets = $derived(CHARACTER_ASSETS[card.color]);
-let frameSrc = $derived.by<string | null>(() => {
-	const cf = characterAssets?.cardFrame;
-	if (cf === undefined) return FRAMES[FRAME_TYPE[card.type]];
-	if (Object.keys(cf).length === 0) return null;
-	return cf[FRAME_TYPE[card.type]] ?? FRAMES[FRAME_TYPE[card.type]];
-});
+	let frameSrc = $derived.by<string | null>(() => {
+		const frames = characterAssets?.cardFrame;
+		if (frames === undefined) return FRAMES[FRAME_TYPE[card.type]];
+		if (Object.keys(frames).length === 0) return null;
+		return frames[card.type] ?? frames[FRAME_TYPE[card.type]] ?? FRAMES[FRAME_TYPE[card.type]];
+	});
 	let frameFilter = $derived(
 		characterAssets?.shader
 			? `url(#${frameTintFilterId(card.color)}) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5))`

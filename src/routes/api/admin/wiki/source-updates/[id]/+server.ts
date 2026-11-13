@@ -27,6 +27,7 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
 		const detail = await resolveSourceUpdate(db, {
 			id: params.id,
 			decision: body.decision,
+			baseVersion: body.baseVersion,
 			note: body.note,
 			actor: collaborationActor(locals)
 		})

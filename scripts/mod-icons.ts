@@ -53,7 +53,7 @@ export function indexIconFiles(modId: string, files: readonly IconFile[]) {
 		}
 		for (const [key, list] of grouped) {
 			const chosen = list.map((file) => file.relative).reduce(preferred)
-			map[key] = `/mods/${modId}/images/${chosen}`
+			map[key] = list.find((file) => file.relative === chosen)!.url
 			if (list.length > 1) {
 				conflicts.push({
 					modId,
@@ -89,13 +89,13 @@ function reportConflicts(conflicts: readonly IconConflict[]) {
 	}
 }
 
-export function collectModIcons(modsDir: string): ModIconIndex {
+export function collectModIcons(modsDir: string, excluded: ReadonlySet<string> = new Set()): ModIconIndex {
 	const icons: Record<string, Record<string, string>> = {}
 	const conflicts: IconConflict[] = []
 	if (!fs.existsSync(modsDir)) return { icons, conflicts }
 
 	for (const entry of fs.readdirSync(modsDir, { withFileTypes: true })) {
-		if (!entry.isDirectory()) continue
+		if (!entry.isDirectory() || excluded.has(entry.name)) continue
 		const modId = entry.name
 		const imagesDir = path.join(modsDir, modId, 'images')
 		if (!fs.existsSync(imagesDir)) continue

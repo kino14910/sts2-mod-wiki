@@ -1,4 +1,5 @@
 import { insertAuditLog, maxRevisionNo } from './repository'
+import { WikiCollaborationError } from './access'
 import type {
 	NewProposal,
 	ProposalState,
@@ -14,6 +15,7 @@ import type {
 const SECTION_SELECT = `
 	SELECT s.id AS id, s.page_id AS pageId, s.section_key AS sectionKey,
 		s.content_type AS contentType, s.sort_order AS sortOrder, s.version AS version,
+		EXISTS (SELECT 1 FROM wiki_identity_archives a WHERE a.page_id = s.page_id) AS identityArchived,
 		s.current_revision_id AS currentRevisionId,
 		COALESCE(r.content, '') AS currentContent, s.updated_at AS updatedAt
 	FROM wiki_sections s
@@ -96,6 +98,14 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 				where.push('p.section_id = ?')
 				params.push(filter.sectionId)
 			}
+			if (filter.submittedBy) {
+				where.push('p.submitted_by = ?')
+				params.push(filter.submittedBy)
+			}
+			if (filter.pageId) {
+				where.push('s.page_id = ?')
+				params.push(filter.pageId)
+			}
 			const clause = where.length ? `WHERE ${where.join(' AND ')}` : ''
 			const { results } = await db
 				.prepare(
@@ -115,11 +125,12 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 		},
 
 		async insertProposal(input: NewProposal): Promise<void> {
-			await db
-				.prepare(
+			const insert = db.prepare(
 					`INSERT INTO wiki_edit_proposals
 					(id, section_id, base_revision_id, base_version, proposed_content, summary, submitted_by, status, created_at)
-					VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`
+					SELECT ?, ?, ?, ?, ?, ?, ?, 'pending', ?
+					WHERE EXISTS (SELECT 1 FROM wiki_sections WHERE id = ? AND version = ? AND current_revision_id IS ?
+					AND NOT EXISTS (SELECT 1 FROM wiki_identity_archives a WHERE a.page_id = wiki_sections.page_id))`
 				)
 				.bind(
 					input.id,
@@ -129,9 +140,20 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 					input.proposedContent,
 					input.summary,
 					input.submittedBy,
-					input.createdAt
+					input.createdAt,
+					input.sectionId, input.baseVersion, input.baseRevisionId
 				)
-				.run()
+			const results = await db.batch([
+				insert,
+				statement(db,
+					`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
+					 SELECT ?, ?, 'wiki.proposal.create', 'wiki_section', ?, ?
+					 WHERE EXISTS (SELECT 1 FROM wiki_edit_proposals WHERE id = ?)`,
+					[crypto.randomUUID(), input.submittedBy, input.sectionId,
+					 JSON.stringify({ proposalId: input.id, baseVersion: input.baseVersion }), input.id])
+			])
+			if (Number(results[0].meta?.changes ?? 0) !== 1)
+				throw new WikiCollaborationError(409, 'Section changed while submitting the proposal', 'VERSION_CONFLICT')
 		},
 
 		async setProposalStatus(proposalId, update: ProposalStatusUpdate): Promise<number> {
@@ -154,11 +176,40 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 				sql += ' AND status = ?'
 				params.push(update.onlyIfStatus)
 			}
-			const result = await db.prepare(sql).bind(...params).run()
-			return Number(result.meta?.changes ?? 0)
+			if (!update.audit) {
+				const result = await db.prepare(sql).bind(...params).run()
+				return Number(result.meta?.changes ?? 0)
+			}
+			const results = await db.batch([
+				statement(db, sql, params),
+				statement(db,
+					`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
+					 SELECT ?, ?, ?, 'wiki_proposal', ?, ? WHERE changes() = 1`,
+					[crypto.randomUUID(), update.audit.actorId, update.audit.action, proposalId,
+					 JSON.stringify(update.audit.metadata ?? {})])
+			])
+			return Number(results[0].meta?.changes ?? 0)
 		},
 
 		async publish(input: PublishInput): Promise<PublishResult> {
+			const guards = [`EXISTS (SELECT 1 FROM wiki_sections WHERE id = ? AND version = ? AND current_revision_id IS ?
+				AND NOT EXISTS (SELECT 1 FROM wiki_identity_archives a WHERE a.page_id = wiki_sections.page_id))`]
+			const guardParams: unknown[] = [input.sectionId, input.expectedVersion, input.parentRevisionId]
+			if (input.proposalId) {
+				guards.push(`EXISTS (SELECT 1 FROM wiki_edit_proposals
+					WHERE id = ? AND section_id = ? AND status = 'pending'
+					AND base_version = ? AND base_revision_id IS ?)`)
+				guardParams.push(input.proposalId, input.sectionId, input.expectedVersion, input.parentRevisionId)
+			}
+			if (input.sourceUpdate) {
+				guards.push(`EXISTS (SELECT 1 FROM wiki_source_updates u
+					JOIN wiki_section_sources src ON src.id = u.source_id
+					WHERE u.id = ? AND u.source_id = ? AND u.section_id = ?
+					AND u.status IN ('pending', 'conflict') AND u.base_hash = ? AND u.incoming_hash = ?
+					AND src.source_hash = u.base_hash AND src.source_status = 'active')`)
+				guardParams.push(input.sourceUpdate.id, input.sourceUpdate.sourceId, input.sectionId,
+					input.sourceUpdate.baseHash, input.sourceUpdate.incomingHash)
+			}
 			const statements: D1PreparedStatement[] = [
 				// 1. Only create the revision when the caller still holds the expected version.
 				statement(
@@ -166,7 +217,7 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 					`INSERT INTO wiki_revisions
 					(id, section_id, revision_no, parent_revision_id, content, summary, editor_id, source_type, source_reference, created_at)
 					SELECT ?, ?, (SELECT COALESCE(MAX(revision_no), 0) + 1 FROM wiki_revisions WHERE section_id = ?), ?, ?, ?, ?, ?, ?, ?
-					WHERE EXISTS (SELECT 1 FROM wiki_sections WHERE id = ? AND version = ?)`,
+					WHERE ${guards.join(' AND ')}`,
 					[
 						input.revisionId,
 						input.sectionId,
@@ -178,17 +229,15 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 						input.sourceType,
 						input.sourceReference,
 						input.createdAt,
-						input.sectionId,
-						input.expectedVersion
+						...guardParams
 					]
 				),
-				// 2. Conditional link is the optimistic lock. If step 1 skipped, the FK on
-				//    current_revision_id fails and D1 rolls the entire batch back.
+				// A skipped insert must also skip the link; zero-row CAS is a normal conflict.
 				statement(
 					db,
 					`UPDATE wiki_sections SET current_revision_id = ?, version = version + 1, updated_at = ?
-					WHERE id = ? AND version = ?`,
-					[input.revisionId, input.createdAt, input.sectionId, input.expectedVersion]
+					WHERE id = ? AND version = ? AND EXISTS (SELECT 1 FROM wiki_revisions WHERE id = ?)`,
+					[input.revisionId, input.createdAt, input.sectionId, input.expectedVersion, input.revisionId]
 				)
 			]
 
@@ -198,16 +247,33 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 						db,
 						`UPDATE wiki_edit_proposals
 						SET status = 'approved', reviewed_by = ?, review_note = ?, reviewed_at = ?, published_revision_id = ?
-						WHERE id = ? AND status = 'pending' AND base_version = ?`,
+						WHERE id = ? AND status = 'pending' AND base_version = ?
+						AND EXISTS (SELECT 1 FROM wiki_revisions WHERE id = ?)`,
 						[
 							input.actorId ?? null,
 							input.reviewNote ?? null,
 							input.createdAt,
 							input.revisionId,
 							input.proposalId,
-							input.expectedVersion
+							input.expectedVersion,
+							input.revisionId
 						]
 					)
+				)
+			}
+			if (input.sourceUpdate) {
+				const source = input.sourceUpdate
+				statements.push(
+					statement(db, `UPDATE wiki_section_sources
+						SET source_hash = ?, source_content = ?, source_mod_version = ?, source_status = 'active',
+						last_synced_at = ?, updated_at = ? WHERE id = ?
+						AND EXISTS (SELECT 1 FROM wiki_revisions WHERE id = ?)`,
+						[source.incomingHash, input.content, source.modVersion, input.createdAt, input.createdAt,
+						 source.sourceId, input.revisionId]),
+					statement(db, `UPDATE wiki_source_updates SET status = 'approved', reviewed_by = ?,
+						review_note = ?, reviewed_at = ?, published_revision_id = ? WHERE id = ?
+						AND EXISTS (SELECT 1 FROM wiki_revisions WHERE id = ?)`,
+						[input.actorId, input.reviewNote, input.createdAt, input.revisionId, source.id, input.revisionId])
 				)
 			}
 
@@ -232,7 +298,8 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 							revisionNo: input.revisionNo,
 							sourceType: input.sourceType,
 							sourceReference: input.sourceReference,
-							proposalId: input.proposalId ?? null
+							proposalId: input.proposalId ?? null,
+							sourceUpdateId: input.sourceUpdate?.id ?? null
 						}),
 						input.sectionId,
 						input.revisionId,
@@ -241,26 +308,10 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 				)
 			)
 
-			await db.batch(statements)
-
-			// Verification by identity is more reliable than per-statement `meta.changes`.
-			const linked = await db
-				.prepare('SELECT version FROM wiki_sections WHERE id = ? AND current_revision_id = ? LIMIT 1')
-				.bind(input.sectionId, input.revisionId)
-				.first<{ version: number }>()
-			if (linked && Number(linked.version) === input.expectedVersion + 1) {
-				return { published: true, version: Number(linked.version), conflict: false }
-			}
-
-			// A concurrent writer won: remove the unlinked revision (never referenced by any
-			// section) so history only ever contains published versions.
-			await db
-				.prepare(
-					'DELETE FROM wiki_revisions WHERE id = ? AND NOT EXISTS (SELECT 1 FROM wiki_sections WHERE current_revision_id = ?)'
-				)
-				.bind(input.revisionId, input.revisionId)
-				.run()
-			return { published: false, version: input.expectedVersion, conflict: true }
+			// Use the result of our transaction. A later head cannot invalidate this publication.
+			const results = await db.batch(statements)
+			const published = Number(results[0].meta?.changes ?? 0) === 1
+			return { published, version: input.expectedVersion + (published ? 1 : 0), conflict: !published }
 		},
 
 		insertAuditLog(input): Promise<void> {

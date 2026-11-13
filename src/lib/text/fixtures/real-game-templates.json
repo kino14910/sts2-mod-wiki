@@ -1,0 +1,12 @@
+{
+  "FGO_CARD_WISDOM_OF_THE_PEOPLE.description": "恢复{Heal:diff()}点生命。\n[gold]消耗[/gold]你所有的状态牌。{IfUpgraded:show:\n获得{Np:diff()}%[gold]宝具值[/gold]|}",
+  "FGO_CARD_DRAGON_CORE.description": "[gold]消耗[/gold][gold]手牌[/gold]中所有非攻击牌，每消耗一张牌，将1张随机{IfUpgraded:show:已[gold]升级[/gold]的|}攻击牌加入你的[gold]手牌[/gold]。",
+  "FGO_CARD_CHARISMA.description": "{Fatigue:choose(0):|[gold]疲劳[/gold]：{Fatigue:diff()}。\n}你可以在能量不足时打出卡牌。\n每缺少1点能量，失去1点生命并获得1层[gold]疲劳[/gold]。\n若[gold]疲劳[/gold]大于你的当前生命值，则获得等量[gold]灾厄[/gold]。",
+  "FGO_CARD_ULTRA_MANIFESTO.description": "获得{energyPrefix:energyIcons(8)}。\n获得{NpDamagePower:diff()}%[gold]宝具威力[/gold]。\n将手牌抽至上限。\n其他友方在这个回合内不能再抽任何牌。",
+  "FGO_CARD_PROOF_AND_REBUTTAL.description": "抽{Cards:cond:=1?一|{:diff()}}张牌。\n将[gold]手牌[/gold]中的任意张牌放到[gold]抽牌堆[/gold]的顶部。",
+  "SHIV.description": "Deal {Damage:diff()} damage{TargetType:choose(AllEnemies): to ALL enemies|}.",
+  "ASTRAL_PULSE.description": "Deal {Damage:diff()} damage to ALL enemies {HitCount:choose(2):twice|{HitCount:diff()} times}.",
+  "BOWLER_HAT.description": "Gain [blue]{GoldIncrease:percentMore()}%[/blue] additional [gold]Gold[/gold].",
+  "ARCHAIC_TOOTH.description": "Upon pickup, [gold]Transform[/gold] {StarterCard.StringValue:cond:[gold]{StarterCard}[/gold] into [gold]{AncientCard}[/gold]|a starter card into an ancient version}.",
+  "CHARGE.description": "Choose {Cards:diff()} {Cards:plural:card|cards} in your [gold]Draw Pile[/gold] to [gold]Transform[/gold] into\n[gold]{Cards:plural:{IfUpgraded:show:Minion Dive Bomb+|Minion Dive Bomb}[/gold]|{IfUpgraded:show:Minion Dive Bombs+|Minion Dive Bombs}[/gold]}."
+}

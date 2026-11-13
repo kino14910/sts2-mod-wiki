@@ -16,6 +16,8 @@ import raw from './power-wiki.json'
 import zhMirror from './power-wiki.zh.json'
 import tooltips from './wiki-tooltips.json'
 import { KEYWORD_ALIASES, POWER_ALIASES } from './wiki-aliases'
+import { scopedEntityKey } from './entities'
+import { publicEntityId } from '../entity-identity.ts'
 
 export type { WikiDetails, WikiEntry, WikiGroup } from './power-references'
 
@@ -90,10 +92,10 @@ export function wikiTerm(name: string) {
 }
 
 const GAME_ENTITIES: Array<{ ref: PowerEntityRef; name: string; mod: string }> = [
-	...CARDS.map((card) => ({ ref: { type: 'card', id: card.id } as const, name: card.name, mod: card.mod })),
-	...RELICS.map((relic) => ({ ref: { type: 'relic', id: relic.id } as const, name: relic.name, mod: relic.mod })),
-	...POTIONS.map((potion) => ({ ref: { type: 'potion', id: potion.id } as const, name: potion.name, mod: potion.mod })),
-	...POWERS.map((power) => ({ ref: { type: 'power', id: power.id } as const, name: power.name, mod: power.mod ?? 'sts2' }))
+	...CARDS.map((card) => ({ ref: { type: 'card', id: card.id, modId: card.mod } as const, name: card.name, mod: card.mod })),
+	...RELICS.map((relic) => ({ ref: { type: 'relic', id: relic.id, modId: relic.mod } as const, name: relic.name, mod: relic.mod })),
+	...POTIONS.map((potion) => ({ ref: { type: 'potion', id: potion.id, modId: potion.mod } as const, name: potion.name, mod: potion.mod })),
+	...POWERS.map((power) => ({ ref: { type: 'power', id: power.id, modId: power.mod ?? 'sts2' } as const, name: power.name, mod: power.mod ?? 'sts2' }))
 ]
 
 function entityNames(entity: (typeof GAME_ENTITIES)[number]) {
@@ -109,7 +111,7 @@ for (const entity of GAME_ENTITIES) {
 	for (const name of entityNames(entity)) {
 		const slot = `${entity.ref.type}:${name.trim().toLowerCase()}`
 		const ids = NAME_IDS.get(slot) ?? new Set<string>()
-		ids.add(entity.ref.id)
+		ids.add(scopedEntityKey(entity.ref))
 		NAME_IDS.set(slot, ids)
 	}
 }
@@ -167,7 +169,7 @@ export const WIKI_ENTITY_ALIASES: Map<string, WikiEntry> = (() => {
 			const entry = resolvePowerReference(ref, 'eng')
 			if (!entry) continue
 			const zh = resolvePowerReference(ref, 'zhs')
-			const aliases = [ref.id, ...(zh && zh.name !== entry.name ? [zh.name] : [])]
+			const aliases = [publicEntityId(ref) ?? ref.id, ...(zh && zh.name !== entry.name ? [zh.name] : [])]
 			for (const alias of aliases) {
 				const key = alias.trim().toLowerCase()
 				if (!map.has(key)) map.set(key, entry)
@@ -255,12 +257,13 @@ export function wikiRelic(name: string): WikiRelic | undefined {
 }
 
 const CARD_HREFS = (() => {
-	const map = new Map<string, string>()
+	const map = new Map<string, string | null>()
+	const put = (key: string, href: string) => map.set(key, map.has(key) ? null : href)
 	for (const card of CARDS) {
 		const href = cardHref(card)
-		map.set(card.name.trim().toLowerCase(), href)
-		const zh = zhTitle('card', card.id)
-		if (zh) map.set(zh.trim().toLowerCase(), href)
+		const mod = MOD_BY_ID.get(card.mod)
+		const zh = mod ? modContentText(mod, 'card', card.id, 'title', 'zhs') : undefined
+		for (const name of new Set([card.name, ...(zh ? [zh] : [])])) put(name.trim().toLowerCase(), href)
 	}
 	return map
 })()

@@ -18,7 +18,8 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 		const comment = await editComment(createCommentStore(locals.wikiDb), {
 			commentId: params.id,
 			token: request.headers.get('x-comment-token'),
-			content: input.content
+			content: input.content,
+			updatedAt: input.updatedAt
 		})
 		return json(comment)
 	} catch (cause) {

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte'
 	import DiffView from './DiffView.svelte'
 	import type { DiffResult, RevisionView } from '#lib/wiki-collaboration'
 	import { m } from '#lib/paraglide/messages'
@@ -6,10 +7,14 @@
 	let {
 		sectionId,
 		canRevert = false,
+		initiallyOpen = false,
+		baseVersion,
 		onReverted
 	}: {
 		sectionId: string
 		canRevert?: boolean
+		initiallyOpen?: boolean
+		baseVersion?: number
 		onReverted?: () => void
 	} = $props()
 
@@ -27,6 +32,10 @@
 	let diff = $state<DiffPayload | null>(null)
 	let busy = $state('')
 	let notice = $state('')
+	const contentId = $props.id()
+	onMount(() => {
+		if (initiallyOpen) { open = true; void load() }
+	})
 
 	function formatTime(value: string): string {
 		const date = new Date(value)
@@ -87,7 +96,7 @@
 			const response = await fetch(`/api/wiki/sections/${encodeURIComponent(sectionId)}/revert`, {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ revisionId: revision.id })
+				body: JSON.stringify({ revisionId: revision.id, baseVersion })
 			})
 			if (!response.ok) {
 				const body = (await response.json().catch(() => null)) as { message?: string } | null
@@ -110,10 +119,13 @@
 		type="button"
 		class="rounded-md border border-white/15 px-2.5 py-1 text-[0.78rem] text-link hover:text-gold"
 		onclick={toggle}
+		aria-expanded={open}
+		aria-controls={contentId}
 	>
 		{m.wiki_history()} {open ? '▴' : '▾'}
 	</button>
 
+	<div id={contentId}>
 	{#if open}
 		{#if loading && !loaded}
 			<p class="mt-3 text-[0.8rem] opacity-60">{m.wiki_history_loading()}</p>
@@ -152,7 +164,7 @@
 						>
 							{m.wiki_history_diff()}
 						</button>
-						{#if canRevert}
+						{#if canRevert && baseVersion !== undefined}
 							<button
 								type="button"
 								class="text-link hover:text-gold disabled:opacity-45"
@@ -172,4 +184,5 @@
 			{/each}
 		</ul>
 	{/if}
+	</div>
 </div>

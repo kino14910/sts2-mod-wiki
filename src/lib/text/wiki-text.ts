@@ -1,5 +1,5 @@
 import { getLocale } from '#lib/paraglide/runtime'
-import { entityHref, type EntityRef } from '#lib/entities'
+import { entityHref, resolvePublicEntityRef, type EntityRef } from '#lib/entities'
 import {
 	ALIGN_TAGS,
 	EFFECT_TAGS,
@@ -8,7 +8,9 @@ import {
 	parseArg,
 	sizeToUnit
 } from './bbcode'
-import { ICON_PATTERN } from './game-text/icon-syntax'
+import { findExplicitIcons, resolveExplicitIcon, UPGRADED_PATTERN } from './game-text/icon-syntax'
+import type { IconRef } from '#lib/data/icon-registry'
+import { findGameEntity, type ScopedEntityRef } from '#lib/data/entities'
 import {
 	WIKI_ENTITY_PREFERENCE,
 	getEntityNameIndex,
@@ -25,13 +27,12 @@ import {
 	type WikiEntry,
 	type WikiTerm
 } from '#lib/data/power-wiki'
-import { resolvePowerReference, type PowerEntityRef } from '#lib/data/power-references'
+import { resolvePowerReference } from '#lib/data/power-references'
 import {
 	cardById,
 	cardByName,
 	cardIcon,
-	potionImageByName,
-	relicHrefByName
+	potionImageByName
 } from '#lib/data/wiki-links'
 
 export interface WikiInlineIcon {
@@ -64,11 +65,12 @@ export type WikiNode =
 	| WikiTagNode
 	| { type: 'break' }
 	| { type: 'upgraded'; value: string }
+	| { type: 'icon'; ref: IconRef; src: string; raw: string; diagnostic?: string }
 	| {
 			type: 'entity'
 			value: string
 			entry: WikiEntry
-			ref?: EntityRef
+			ref?: ScopedEntityRef
 			href?: string | null
 			tooltip?: string
 			icon?: WikiInlineIcon
@@ -82,12 +84,13 @@ export type WikiNode =
 	  }
 
 export interface WikiTextOptions {
+	modId?: string
 	locale?: string
 	current?: EntityRef | null
 }
 
 /** [[type:id|label]] 属于 Wiki 显式引用，必须先于 BBCode 解析 */
-export const WIKI_REF_PATTERN = /\[\[(card|relic|potion|power):([^\]|]+)(?:\|([^\]]+))?\]\]/g
+export const WIKI_REF_PATTERN = /\[\[(card|relic|potion|power|keyword):([^\]|]+)(?:\|([^\]]+))?\]\]/g
 const TAG_RE = /\[(\/?)([a-zA-Z_]+)([^\]]*)\]/g
 /** 能量 / 星图标属于游戏文本，Wiki 正文按原样保留字面量 */
 const GAME_ONLY_TAGS = new Set(['energy_icons', 'star_icons', 'energy', 'star'])
@@ -116,16 +119,8 @@ const TOOLTIP_PATTERN = TOOLTIP_NAMES.length
 	? new RegExp(`(?<![\\w])(${TOOLTIP_NAMES.map(escapeRegex).join('|')})(?![\\w])`, 'gi')
 	: null
 
-function placeholder(name: string, tooltip = ''): WikiEntry {
-	return { name, description: '', tooltip, kind: 'power' }
-}
-
 function compactName(value: string) {
 	return value.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]/g, '')
-}
-
-function wikiLocale(locale: string): 'eng' | 'zhs' {
-	return locale === 'zhs' ? 'zhs' : 'eng'
 }
 
 /** 图标后的实体名标签合并：只用于显式图标语法，不是实体名称匹配 */
@@ -160,19 +155,13 @@ function captureLabel(value: string, from: number, term: WikiTerm | undefined, e
 	return { label, next: start + label.length }
 }
 
-function captureAlias(value: string, from: number, aliases: string[]) {
-	const leading = /^\s*/.exec(value.slice(from))?.[0] ?? ''
-	const start = from + leading.length
-	for (const alias of aliases) {
-		if (!alias) continue
-		if (value.slice(start, start + alias.length).toLowerCase() === alias.toLowerCase()) {
-			return { label: value.slice(start, start + alias.length), next: start + alias.length }
-		}
-	}
-	return { label: '', next: from }
-}
-
 function inlineIconFor(word: string, entry: WikiEntry, skipTerm = false): WikiInlineIcon | undefined {
+	const entity = entry.id ? findGameEntity({ type: entry.kind, id: entry.id, modId: entry.modId }) : null
+	if (entity) {
+		const src = entity.kind === 'card' ? cardIcon(entity.data)
+			: entity.kind === 'relic' || entity.kind === 'potion' ? entity.data.image : entity.data.icon
+		return src ? { kind: entry.kind, src, name: '', label: word } : undefined
+	}
 	const term = skipTerm ? undefined : wikiTerm(word)
 	if (term?.icon) return { kind: 'power', src: '', name: term.icon, label: word }
 	if (entry.kind === 'relic') {
@@ -192,11 +181,8 @@ function inlineIconFor(word: string, entry: WikiEntry, skipTerm = false): WikiIn
 }
 
 /** 统一实体数据：EntityRef → 已本地化的 WikiEntry（tooltip / href / 图标） */
-function entryForRef(name: string, ref: EntityRef, locale: string): WikiEntry {
-	const reference =
-		ref.type === 'keyword'
-			? null
-			: resolvePowerReference({ type: ref.type as PowerEntityRef['type'], id: ref.id }, wikiLocale(locale))
+function entryForRef(name: string, ref: ScopedEntityRef, locale: string): WikiEntry {
+	const reference = resolvePowerReference(ref, locale)
 	const term = wikiTerm(name)
 	return (
 		reference ??
@@ -243,6 +229,7 @@ function matchVisibleText(value: string, options: WikiTextOptions): WikiNode[] {
 	const locale = options.locale ?? getLocale()
 	const matches = scanEntityNames(value, {
 		locale,
+		modId: options.modId,
 		scope: 'wiki',
 		strategy: 'wiki',
 		prefer: WIKI_ENTITY_PREFERENCE,
@@ -283,74 +270,41 @@ function matchVisibleText(value: string, options: WikiTextOptions): WikiNode[] {
 /** 显式引用 / 图标 / 升级值先解析；剩余纯文本才进入实体匹配 */
 function tokenizePlain(value: string, options: WikiTextOptions): WikiNode[] {
 	const base: WikiNode[] = []
-	let last = 0
-	ICON_PATTERN.lastIndex = 0
-	for (const match of value.matchAll(ICON_PATTERN)) {
-		const start = match.index ?? 0
+	const icons = findExplicitIcons(value, options.modId)
+	const hits: Array<{ start: number; end: number; icon?: (typeof icons)[number]; upgraded?: string }> =
+		icons.map((icon) => ({ start: icon.start, end: icon.end, icon }))
+	for (const match of value.matchAll(UPGRADED_PATTERN)) {
+		const start = match.index
 		const end = start + match[0].length
-		if (start > last) base.push({ type: 'text', value: value.slice(last, start) })
-		if (match[3]) {
-			base.push({ type: 'text', value: '(' })
-			base.push({ type: 'upgraded', value: match[3] })
-			base.push({ type: 'text', value: ')' })
-			last = end
+		if (!icons.some((icon) => start < icon.end && end > icon.start)) hits.push({ start, end, upgraded: match[1] })
+	}
+	hits.sort((a, b) => a.start - b.start)
+	let last = 0
+	for (const hit of hits) {
+		if (hit.start < last) continue
+		if (hit.start > last) base.push({ type: 'text', value: value.slice(last, hit.start) })
+		if (hit.upgraded !== undefined) {
+			base.push({ type: 'text', value: '(' }, { type: 'upgraded', value: hit.upgraded }, { type: 'text', value: ')' })
+			last = hit.end
 			continue
 		}
-
-		const isFile = match[1] !== undefined
-		const raw = (match[1] ?? match[2] ?? '').trim()
-
-		if (isFile && !/^Icon/i.test(raw)) {
-			const relic = wikiRelic(raw)
-			if (relic) {
-				const { label, next } = captureAlias(value, end, relic.aliases)
-				const entry = wikiEntryFor(relic.name) ?? placeholder(relic.name, relic.tooltip)
-				base.push({
-					type: 'entity',
-					value: label || relic.name,
-					entry,
-					ref: entry.id ? { type: entry.kind, id: entry.id } : undefined,
-					href: relicHrefByName(relic.name) ?? entry.href ?? null,
-					tooltip: relic.tooltip || entry.tooltip,
-					icon: { kind: 'relic', src: relic.icon, name: '', label }
-				})
-				last = label ? next : end
-				continue
-			}
-			base.push({ type: 'text', value: match[0] })
-			last = end
-			continue
+		const token = hit.icon!.token
+		const resolved = resolveExplicitIcon(token, options.locale)
+		if (resolved.ref.kind === 'entity') {
+			const ref = resolved.ref.ref
+			const name = resolved.ref.name ?? ref.id
+			const entry = entryForRef(name, ref, options.locale ?? getLocale())
+			const { label, next } = captureLabel(value, hit.end, wikiTerm(name), entry)
+			base.push({ type: 'entity', value: label || name, entry, ref,
+				icon: { kind: entry.kind, src: resolved.src, name: '', label } })
+			last = label ? next : hit.end
+		} else {
+			base.push({ type: 'icon', ...resolved, raw: token.raw })
+			last = hit.end
 		}
-
-		const name = isFile ? raw.replace(/^Icon\s*/i, '').trim() : raw
-		const short = name.replace(/_.*$/, '')
-		const term = wikiTerm(short) ?? wikiTerm(name)
-		const entry = wikiEntryFor(short) ?? wikiEntryFor(name) ?? placeholder(name, term?.tooltip)
-		const { label, next } = captureLabel(value, end, term, entry)
-		const sameLabel = !!label
-		base.push({
-			type: 'entity',
-			value: sameLabel ? label : name,
-			entry,
-			ref: entry.id ? { type: entry.kind, id: entry.id } : undefined,
-			tooltip: term?.tooltip ?? entry.tooltip,
-			icon: {
-				kind: 'power',
-				src: '',
-				name: term?.icon || (entry.kind === 'power' ? entry.name : ''),
-				label: sameLabel ? label : ''
-			}
-		})
-		last = sameLabel ? next : end
 	}
 	if (last < value.length) base.push({ type: 'text', value: value.slice(last) })
-
-	const result: WikiNode[] = []
-	for (const node of base) {
-		if (node.type === 'text') result.push(...matchVisibleText(node.value, options))
-		else result.push(node)
-	}
-	return result
+	return base.flatMap((node) => node.type === 'text' ? matchVisibleText(node.value, options) : [node])
 }
 
 function tokenizeInline(value: string, options: WikiTextOptions): WikiNode[] {
@@ -361,8 +315,9 @@ function tokenizeInline(value: string, options: WikiTextOptions): WikiNode[] {
 		const start = match.index ?? 0
 		if (start > last) nodes.push(...tokenizePlain(value.slice(last, start), options))
 		const entry = resolvePowerReference(
-			{ type: match[1] as PowerEntityRef['type'], id: match[2].trim() },
-			wikiLocale(options.locale ?? getLocale())
+			{ type: match[1] as EntityRef['type'], id: match[2].trim(),
+				modId: match[2].includes(':') ? undefined : options.modId },
+			options.locale ?? getLocale()
 		)
 		if (entry) {
 			const label = match[3]?.trim() || entry.name
@@ -370,7 +325,8 @@ function tokenizeInline(value: string, options: WikiTextOptions): WikiNode[] {
 				type: 'entity',
 				value: label,
 				entry,
-				ref: { type: match[1] as PowerEntityRef['type'], id: match[2].trim() },
+			ref: resolvePublicEntityRef({ type: match[1] as EntityRef['type'], id: match[2].trim(),
+				modId: match[2].includes(':') ? undefined : options.modId })!,
 				icon: inlineIconFor(label, entry, true)
 			})
 		} else {
@@ -400,10 +356,7 @@ function tokenizeSegments(src: string): Segment[] {
 	for (const match of src.matchAll(WIKI_REF_PATTERN)) {
 		protectedRanges.push([match.index ?? 0, (match.index ?? 0) + match[0].length])
 	}
-	ICON_PATTERN.lastIndex = 0
-	for (const match of src.matchAll(ICON_PATTERN)) {
-		protectedRanges.push([match.index ?? 0, (match.index ?? 0) + match[0].length])
-	}
+	for (const icon of findExplicitIcons(src)) protectedRanges.push([icon.start, icon.end])
 
 	const overlaps = (start: number, end: number) =>
 		protectedRanges.some(([from, to]) => start < to && end > from)

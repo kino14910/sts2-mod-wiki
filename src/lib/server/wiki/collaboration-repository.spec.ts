@@ -42,7 +42,7 @@ function fakeDb(linkedVersion: number | null = 4) {
 			batchCalls.push(
 				statements.map((item) => ({ sql: item.__record.sql, params: [...item.__record.params] }))
 			)
-			return statements.map(() => ({ results: [], success: true, meta: { changes: 1 } }))
+			return statements.map(() => ({ results: [], success: true, meta: { changes: linked === null ? 0 : 1 } }))
 		}
 	}
 
@@ -89,7 +89,8 @@ describe('D1 publish transaction', () => {
 			'rev-new',
 			'2026-02-02T00:00:00.000Z',
 			's1',
-			3
+			3,
+			'rev-new'
 		])
 		// The audit row is only written if the publish actually landed.
 		expect(statements[2].sql).toContain('current_revision_id = ? AND version = ?')
@@ -106,18 +107,18 @@ describe('D1 publish transaction', () => {
 		expect(statements[2].params).toContain('p1')
 	})
 
-	it('reports a conflict and removes the unlinked revision when the version moved', async () => {
+	it('reports a transaction conflict without reading the later head or deleting history', async () => {
 		const fake = fakeDb(null)
 		const result = await createWikiEditStore(fake.db).publish(input())
 		expect(result.conflict).toBe(true)
 		expect(result.published).toBe(false)
-		expect(fake.firstCalls.some((call) => call.sql.includes('SELECT version'))).toBe(true)
+		expect(fake.firstCalls.some((call) => call.sql.includes('SELECT version'))).toBe(false)
 		expect(
 			fake.runCalls.some(
 				(call) =>
 					call.sql.includes('DELETE FROM wiki_revisions') && call.sql.includes('NOT EXISTS')
 			)
-		).toBe(true)
+		).toBe(false)
 	})
 
 	it('aliases D1 columns to the camelCase store contract', async () => {

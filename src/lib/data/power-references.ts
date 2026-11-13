@@ -1,16 +1,16 @@
 import { dataFiles, localizationFiles } from 'virtual:mods'
-import { entityHref } from '#lib/entities'
+import { entityHref, publicEntityId, resolvePublicEntityRef } from '#lib/entities'
 import { stripBBCode } from '#lib/text/bbcode'
 import { cardTextToPlain } from '#lib/text/card-text'
 import { cardTextToWiki } from '#lib/text/card-wiki-text'
 import { collectionTextToPlain, resolveCollectionText } from '#lib/text/collection-text'
-import { POWERS } from './glossary'
-import { CARDS, MOD_BY_ID, POTIONS, RELICS, modContentText } from './mods'
+import { localizeEntity } from './localize'
+import { type ScopedEntityRef } from './entities'
 
 /**
  * Power wiki pages only declare which game entities they link to. The links live in
- * static/mods/{modId}/powers.json; every visible string is resolved from the mod
- * localization files (eng / zhs) and the structural game data, never stored inline.
+ * normalized virtual:mods collections (artifact bundles or the legacy adapter);
+ * visible strings come from localization and structural game data.
  */
 
 export type PowerReferenceKind = 'card' | 'relic' | 'potion' | 'power'
@@ -19,6 +19,7 @@ export type WikiLocale = 'eng' | 'zhs'
 export interface PowerEntityRef {
 	type: PowerReferenceKind
 	id: string
+	modId?: string
 	/** Machine tag for variant links such as MadScience (Sapping); not display text. */
 	variant?: string
 }
@@ -49,6 +50,7 @@ export interface WikiEntry {
 	kind: PowerReferenceKind
 	/** Canonical entity id, used as a stable key in lists. */
 	id?: string
+	modId?: string
 	/** Link derived from entityHref; null when the entity has no page. */
 	href?: string | null
 }
@@ -82,6 +84,7 @@ function isReferenceKind(value: unknown): value is PowerReferenceKind {
 function parseRef(value: unknown): PowerEntityRef | null {
 	if (!isRecord(value) || !isReferenceKind(value.type) || typeof value.id !== 'string') return null
 	const ref: PowerEntityRef = { type: value.type, id: value.id }
+	if (typeof value.modId === 'string') ref.modId = value.modId
 	if (typeof value.variant === 'string') ref.variant = value.variant
 	return ref
 }
@@ -117,12 +120,24 @@ export const POWER_REFERENCES: Record<string, PowerReferences> = (() => {
 	const result: Record<string, PowerReferences> = {}
 	for (const [path, raw] of Object.entries(dataFiles)) {
 		if (!path.endsWith('/powers.json') || !Array.isArray(raw)) continue
+		const owner = path.match(/\/mods\/([^/]+)\/powers\.json$/)?.[1]
 		for (const value of raw) {
 			if (!isRecord(value) || typeof value.id !== 'string') continue
 			const sources = parseSectionList(value.sources)
 			const interactions = parseSectionList(value.interactions)
 			if (sources.length || interactions.length) {
-				result[value.id] = { sources, interactions }
+				const id = publicEntityId({ type: 'power', id: value.id, modId: owner })
+				if (id === null) continue
+				// Only explicit sources/interactions are evidence here. Generic assembly
+				// refs (including inherited hover tips) do not imply applying a power.
+				const scopeRefs = (sections: PowerReferenceSection[]) => sections.map((section) => ({ ...section,
+					groups: section.groups.map((group) => ({ ...group, refs: group.refs.flatMap((ref) => {
+						const resolved = resolvePublicEntityRef(ref.modId || ref.id.includes(':') ? ref : { ...ref, modId: owner })
+							?? (!ref.modId && !ref.id.includes(':') ? resolvePublicEntityRef(ref) : null)
+						return resolved ? [{ ...ref, id: resolved.id, modId: resolved.modId }] : []
+					}) }))
+				}))
+				result[id] = { sources: scopeRefs(sources), interactions: scopeRefs(interactions) }
 			}
 		}
 	}
@@ -153,22 +168,6 @@ function wikiLabel(locale: WikiLocale, key: string) {
 	return WIKI_LABELS[locale]?.[key] ?? WIKI_LABELS.eng[key] ?? key
 }
 
-const CARD_BY_ID = new Map(CARDS.map((card) => [card.id, card] as const))
-const RELIC_BY_ID = new Map(RELICS.map((relic) => [relic.id, relic] as const))
-const POTION_BY_ID = new Map(POTIONS.map((potion) => [potion.id, potion] as const))
-const POWER_BY_ID = new Map(POWERS.map((power) => [power.id, power] as const))
-
-function localizedField(
-	modId: string,
-	kind: PowerReferenceKind,
-	id: string,
-	field: 'title' | 'description',
-	locale: WikiLocale
-) {
-	const mod = MOD_BY_ID.get(modId)
-	return mod ? modContentText(mod, kind, id, field, locale) : undefined
-}
-
 function escapeHtml(value: string) {
 	return value
 		.replace(/&/g, '&amp;')
@@ -189,66 +188,43 @@ function entryTooltip(name: string, description: string) {
 
 /** Resolve one reference into a localized, linkable wiki entry. */
 export function resolvePowerReference(
-	ref: PowerEntityRef,
-	locale: WikiLocale = 'eng'
+	ref: PowerEntityRef | ScopedEntityRef,
+	locale: string = 'eng'
 ): WikiEntry | null {
-	let modId: string
-	let name: string
+	const view = localizeEntity(ref, locale)
+	if (!view) return null
+	const { entity, template, variables } = view
+	let name = view.name
 	let description: string
 	let wikiText: string | undefined
-
-	if (ref.type === 'card') {
-		const card = CARD_BY_ID.get(ref.id)
-		if (!card) return null
-		modId = card.mod
-		name = localizedField(modId, 'card', ref.id, 'title', locale) ?? card.name
-		const template = localizedField(modId, 'card', ref.id, 'description', locale) ?? card.text
-		description = cardTextToPlain(template, { variables: card.variables })
-		wikiText = card.upgrade?.variables
-			? cardTextToWiki(template, card.variables ?? {}, card.upgrade.variables)
-			: undefined
-	} else if (ref.type === 'relic' || ref.type === 'potion') {
-		const item =
-			ref.type === 'relic' ? RELIC_BY_ID.get(ref.id) : POTION_BY_ID.get(ref.id)
-		if (!item) return null
-		modId = item.mod
-		name = localizedField(modId, ref.type, ref.id, 'title', locale) ?? item.name
-		const template = localizedField(modId, ref.type, ref.id, 'description', locale) ?? item.text
-		const variables = { ...item.variables, ...(locale === 'zhs' ? item.variablesZh : {}) }
-		description = collectionTextToPlain(resolveCollectionText(template, variables))
-		wikiText = undefined
+	if (entity.kind === 'card') {
+		description = cardTextToPlain(template, { variables, locale })
+		wikiText = entity.data.upgrade?.variables
+			? cardTextToWiki(template, variables, entity.data.upgrade.variables) : undefined
+	} else if (entity.kind === 'relic' || entity.kind === 'potion') {
+		description = collectionTextToPlain(resolveCollectionText(template, variables, { locale }))
 	} else {
-		const power = POWER_BY_ID.get(ref.id)
-		if (!power) return null
-		modId = power.mod ?? 'sts2'
-		name = localizedField(modId, 'power', ref.id, 'title', locale) ?? power.name
-		const template = localizedField(modId, 'power', ref.id, 'description', locale)
-		description = template ? stripBBCode(template) : stripBBCode(power.summary)
-		wikiText = undefined
+		description = stripBBCode(template)
 	}
-
-	if (ref.variant) {
+	if ('variant' in ref && ref.variant) {
 		const key = `WIKI_VARIANT_${upperSnake(ref.variant)}`
-		const variant = wikiLabel(locale, key)
-		if (variant !== key) {
-			name = locale === 'zhs' ? `${name}（${variant}）` : `${name} (${variant})`
-		}
+		const variant = wikiLabel(locale === 'zhs' ? 'zhs' : 'eng', key)
+		if (variant !== key) name = locale === 'zhs' ? `${name}（${variant}）` : `${name} (${variant})`
 	}
-
+	const resolvedRef = { type: entity.kind, id: entity.data.id, modId: entity.data.mod ?? 'sts2' }
 	return {
-		id: ref.id,
-		name,
-		description,
-		wikiText,
+		id: entity.data.id, modId: entity.data.mod ?? 'sts2', name, description, wikiText,
 		tooltip: entryTooltip(name, description),
-		kind: ref.type,
-		href: entityHref({ type: ref.type, id: ref.id })
+		kind: entity.kind === 'keyword' ? 'power' : entity.kind,
+		href: entityHref(resolvedRef)
 	}
 }
 
 /** All references declared by a power, in declaration order. */
-export function listPowerReferences(powerId: string): PowerEntityRef[] {
-	const refs = POWER_REFERENCES[powerId]
+export function listPowerReferences(powerId: string, modId?: string): PowerEntityRef[] {
+	const resolved = resolvePublicEntityRef({ type: 'power', id: powerId, modId })
+	const id = resolved ? publicEntityId(resolved) : null
+	const refs = id === null ? undefined : POWER_REFERENCES[id]
 	if (!refs) return []
 	return [...refs.sources, ...refs.interactions].flatMap((section) =>
 		section.groups.flatMap((group) => group.refs)
@@ -256,8 +232,10 @@ export function listPowerReferences(powerId: string): PowerEntityRef[] {
 }
 
 /** Render-ready sources / interactions for one power in the requested locale. */
-export function powerReferenceDetails(powerId: string, locale: WikiLocale = 'eng'): WikiReferences {
-	const refs = POWER_REFERENCES[powerId]
+export function powerReferenceDetails(powerId: string, locale: WikiLocale = 'eng', modId?: string): WikiReferences {
+	const resolved = resolvePublicEntityRef({ type: 'power', id: powerId, modId })
+	const id = resolved ? publicEntityId(resolved) : null
+	const refs = id === null ? undefined : POWER_REFERENCES[id]
 	if (!refs) return { sources: [], interactions: [] }
 
 	const build = (sections: PowerReferenceSection[]): WikiDetails[] =>

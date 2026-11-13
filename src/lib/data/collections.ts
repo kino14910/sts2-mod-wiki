@@ -1,4 +1,5 @@
 /** 遗物与药水共享的展示类型与筛选元数据 */
+import { publicEntityId } from '../entity-identity.ts';
 
 export type CollectionKind = 'relic' | 'potion';
 
@@ -22,7 +23,8 @@ export type CollectionCharacter =
 	| 'silent'
 	| 'regent'
 	| 'necrobinder'
-	| 'defect';
+	| 'defect'
+	| 'fool';
 
 export type CollectionVariables = Record<string, string | number>;
 
@@ -45,6 +47,12 @@ export interface CollectionEntry {
 	variables?: CollectionVariables;
 	/** 中文模板专用变量，例如附魔名称 */
 	variablesZh?: CollectionVariables;
+}
+
+export function collectionHref(entry: CollectionEntry): string {
+	const id = publicEntityId({ type: entry.kind, id: entry.id, modId: entry.mod });
+	if (id === null) throw new Error(`Invalid collection identity: ${entry.mod}:${entry.id}`);
+	return entry.kind === 'relic' ? `/relic/${encodeURIComponent(id)}` : `/potions#potion-${encodeURIComponent(id).replaceAll('%3A', ':')}`;
 }
 
 export interface RarityMeta {
@@ -83,6 +91,7 @@ export const COLLECTION_CHARACTERS: CollectionCharacter[] = [
 	'regent',
 	'necrobinder',
 	'defect',
+	'fool',
 	'any'
 ];
 

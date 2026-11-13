@@ -1,11 +1,12 @@
 PRAGMA foreign_keys = ON;
 
 -- Comments are anonymous card tips, not wiki content: they no longer reference wiki_pages/wiki_sections.
--- The previous comments table was never written by any released feature, so it is rebuilt instead of migrated.
+-- Preserve authenticated comments, including replies, even on privately deployed installations.
+-- Migration 0005 imports compatible targets into the expanded comment table.
 DROP INDEX IF EXISTS idx_comments_page_created;
 DROP INDEX IF EXISTS idx_comments_section_created;
 DROP INDEX IF EXISTS idx_comments_parent_created;
-DROP TABLE IF EXISTS comments;
+ALTER TABLE comments RENAME TO comments_authenticated_legacy;
 
 CREATE TABLE comments (
 	id TEXT PRIMARY KEY,

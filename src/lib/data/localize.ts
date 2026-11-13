@@ -18,7 +18,9 @@ import {
 	type CardType,
 	type ColorId
 } from './cards';
-import { KEYWORD_LOCALES, MOD_BY_ID, MOD_LOCALES, modContentText } from './mods';
+import { CHARACTER_ASSETS, KEYWORD_LOCALES, MOD_BY_ID, MOD_LOCALES, modContentText } from './mods';
+import { findGameEntity, type GameEntity, type ScopedEntityRef } from './entities';
+import type { ContentKind, LocalizedField } from './mod-dependency';
 import {
 	ALL_ENTRIES,
 	TERM_INDEX,
@@ -47,12 +49,70 @@ export function isZh() {
 	return getLocale() === 'zhs';
 }
 
-export function localizedCard(card: Card): Card {
-	const mod = MOD_BY_ID.get(card.mod);
-	if (!mod) return card;
+/** Exact lookup and English fallback shared by display, references and name indexes. */
+export function localizedContentField(
+	modId: string,
+	kind: ContentKind,
+	id: string,
+	field: LocalizedField,
+	locale: string,
+	fallback = true
+): { value: string; locale: string } | undefined {
+	const mod = MOD_BY_ID.get(modId);
+	if (!mod) return undefined;
+	for (const language of fallback && locale !== 'eng' ? [locale, 'eng'] : [locale]) {
+		const value = modContentText(mod, kind, id, field, language);
+		if (value !== undefined) return { value, locale: language };
+	}
+	return undefined;
+}
 
-	const name = modContentText(mod, 'card', card.id, 'title', getLocale());
-	const text = modContentText(mod, 'card', card.id, 'description', getLocale());
+export interface LocalizedEntity {
+	entity: GameEntity;
+	name: string;
+	/** Original template, before variable evaluation or style removal. */
+	template: string;
+	variables: Record<string, string | number>;
+	nameLocale: string;
+	descriptionLocale: string;
+}
+
+export function localizeEntity(ref: ScopedEntityRef, locale: string = getLocale()): LocalizedEntity | null {
+	const entity = findGameEntity(ref);
+	if (!entity) return null;
+	if (entity.kind === 'keyword') {
+		const key = entity.data.id.toUpperCase();
+		const title = KEYWORD_LOCALES[locale]?.[`${key}.title`];
+		const description = KEYWORD_LOCALES[locale]?.[`${key}.description`];
+		return {
+			entity,
+			name: title ?? KEYWORD_LOCALES.eng?.[`${key}.title`] ?? entity.data.name,
+			template: description ?? KEYWORD_LOCALES.eng?.[`${key}.description`] ?? entity.data.summary,
+			variables: {}, nameLocale: title === undefined ? 'eng' : locale,
+			descriptionLocale: description === undefined ? 'eng' : locale
+		};
+	}
+	const modId = entity.data.mod ?? 'sts2';
+	const title = localizedContentField(modId, entity.kind, entity.data.id, 'title', locale);
+	const description = localizedContentField(modId, entity.kind, entity.data.id, 'description', locale);
+	const data = entity.data;
+	const template = entity.kind === 'power' ? entity.data.summary : entity.data.text;
+	const variables = entity.kind === 'card' ? entity.data.variables ?? {}
+		: entity.kind === 'power' ? {}
+			: { ...entity.data.variables, ...(description?.locale === 'zhs' ? entity.data.variablesZh : {}) };
+	return {
+		entity, name: title?.value ?? data.name, template: description?.value ?? template,
+		variables, nameLocale: title?.locale ?? 'eng', descriptionLocale: description?.locale ?? 'eng'
+	};
+}
+
+export function localizedCard(card: Card): Card {
+	return localizedCardForLocale(card, getLocale());
+}
+
+export function localizedCardForLocale(card: Card, locale: string): Card {
+	const name = localizedContentField(card.mod, 'card', card.id, 'title', locale)?.value;
+	const text = localizedContentField(card.mod, 'card', card.id, 'description', locale)?.value;
 	if (name === undefined && text === undefined) return card;
 
 	return {
@@ -62,32 +122,35 @@ export function localizedCard(card: Card): Card {
 	};
 }
 
-export function localizedCards(cards: Card[]) {
-	return cards.map(localizedCard);
+export function localizedCards(cards: Card[], locale: string = getLocale()) {
+	return cards.map((card) => localizedCardForLocale(card, locale));
 }
 
 /** 当前语言下的遗物 / 药水条目；中文描述里的变量同时合并 variablesZh */
 export function localizedCollection(entry: CollectionEntry): CollectionEntry {
-	if (!isZh()) return entry;
+	return localizedCollectionForLocale(entry, getLocale());
+}
 
-	const mod = MOD_BY_ID.get(entry.mod);
-	if (!mod) return entry;
-
-	const name = modContentText(mod, entry.kind, entry.id, 'title', getLocale());
-	const template = modContentText(mod, entry.kind, entry.id, 'description', getLocale());
+export function localizedCollectionForLocale(entry: CollectionEntry, locale: string): CollectionEntry {
+	const name = localizedContentField(entry.mod, entry.kind, entry.id, 'title', locale)?.value;
+	const description = localizedContentField(entry.mod, entry.kind, entry.id, 'description', locale);
+	const template = description?.value;
 	if (name === undefined && template === undefined) return entry;
 
 	return {
 		...entry,
 		name: name ?? entry.name,
-		text: template
-			? resolveCollectionText(template, { ...entry.variables, ...entry.variablesZh })
+		text: template !== undefined
+			? resolveCollectionText(template, {
+				...entry.variables,
+				...(description?.locale === 'zhs' ? entry.variablesZh : {})
+			}, { locale })
 			: entry.text
 	};
 }
 
-export function localizedCollections(entries: CollectionEntry[]) {
-	return entries.map(localizedCollection);
+export function localizedCollections(entries: CollectionEntry[], locale: string = getLocale()) {
+	return entries.map((entry) => localizedCollectionForLocale(entry, locale));
 }
 
 const COLLECTION_RARITY_ZH: Record<CollectionRarity, string> = {
@@ -122,7 +185,8 @@ const COLLECTION_CHARACTER_EN: Record<CollectionCharacter, string> = {
 	silent: 'Silent',
 	regent: 'Regent',
 	necrobinder: 'Necrobinder',
-	defect: 'Defect'
+	defect: 'Defect',
+	fool: 'Fool'
 };
 
 export function collectionCharacterName(character: CollectionCharacter) {
@@ -136,6 +200,9 @@ export function ancientName(ancient: string) {
 }
 
 export function colorName(id: string) {
+	const labels = CHARACTER_ASSETS[id]?.labels;
+	const label = labels?.[getLocale()] ?? labels?.eng;
+	if (label) return label;
 	if (isZh()) return COLOR_ZH[id as ColorId] ?? id.charAt(0).toUpperCase() + id.slice(1);
 	const info = (COLORS as Record<string, (typeof COLORS)[ColorId] | undefined>)[id];
 	return info?.name ?? id.charAt(0).toUpperCase() + id.slice(1);
@@ -190,11 +257,15 @@ export function keywordPlacement(keywords: CardKeyword[]) {
 }
 
 export function localizedEntry(entry: GlossaryEntry): GlossaryEntry {
+	return localizedEntryForLocale(entry, getLocale());
+}
+
+export function localizedEntryForLocale(entry: GlossaryEntry, locale: string): GlossaryEntry {
 	if (entry.mod) {
 		const mod = MOD_BY_ID.get(entry.mod);
-		const name = mod ? modContentText(mod, 'power', entry.id, 'title', getLocale()) : undefined;
+		const name = mod ? localizedContentField(mod.id, 'power', entry.id, 'title', locale)?.value : undefined;
 		const summary = mod
-			? modContentText(mod, 'power', entry.id, 'description', getLocale())
+			? localizedContentField(mod.id, 'power', entry.id, 'description', locale)?.value
 			: undefined;
 		if (name !== undefined || summary !== undefined) {
 			return {
@@ -205,7 +276,16 @@ export function localizedEntry(entry: GlossaryEntry): GlossaryEntry {
 		}
 	}
 
-	if (!isZh()) return entry;
+	if (entry.kind === 'keyword') {
+		const view = localizeEntity({ type: 'keyword', id: entry.id }, locale);
+		const zh = locale === 'zhs' ? GLOSSARY_ZH[entry.id] : undefined;
+		if (view) return {
+			...entry, name: view.name, summary: stripBBCode(view.template),
+			detail: zh?.detail ?? entry.detail,
+			aliases: zh?.aliases ? [...new Set([...(entry.aliases ?? []), ...zh.aliases])] : entry.aliases
+		};
+	}
+	if (locale !== 'zhs') return entry;
 	const zh = GLOSSARY_ZH[entry.id];
 	if (!zh) return entry;
 	return {
@@ -217,8 +297,8 @@ export function localizedEntry(entry: GlossaryEntry): GlossaryEntry {
 	};
 }
 
-export function localizedEntries(entries: GlossaryEntry[]) {
-	return entries.map(localizedEntry);
+export function localizedEntries(entries: GlossaryEntry[], locale: string = getLocale()) {
+	return entries.map((entry) => localizedEntryForLocale(entry, locale));
 }
 
 export function groupName(group: string) {

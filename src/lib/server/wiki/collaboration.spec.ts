@@ -273,6 +273,7 @@ describe('server-side permissions', () => {
 			revertToRevision(db.store, {
 				sectionId: 's1',
 				revisionId: 'rev-s1-1',
+				baseVersion: 1,
 				actor: actor('member')
 			})
 		).rejects.toMatchObject({ status: 403 })
@@ -475,6 +476,7 @@ describe('history and rollback', () => {
 		const result = await revertToRevision(db.store, {
 			sectionId: 's1',
 			revisionId: original.id,
+			baseVersion: 3,
 			actor: actor('moderator')
 		})
 		expect(result.version).toBe(4)
@@ -494,6 +496,7 @@ describe('history and rollback', () => {
 			revertToRevision(db.store, {
 				sectionId: 's1',
 				revisionId: 'rev-s1-1',
+				baseVersion: 1,
 				actor: actor('moderator')
 			})
 		).rejects.toMatchObject({ status: 400 })
@@ -501,6 +504,7 @@ describe('history and rollback', () => {
 			revertToRevision(db.store, {
 				sectionId: 's1',
 				revisionId: 'missing',
+				baseVersion: 1,
 				actor: actor('moderator')
 			})
 		).rejects.toMatchObject({ status: 404 })

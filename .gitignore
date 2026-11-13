@@ -7,6 +7,7 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+output
 
 # OS
 .DS_Store
@@ -29,3 +30,13 @@ project.inlang/cache/
 
 static/mods
 .workbuddy
+
+# Reproducible build imports (raw DLL/PCK stay outside the repository)
+.cache/
+generated/mods/
+static/imported/
+.svelte-docs-review.tmp
+__pycache__/
+*.pyc
+output/playwright/
+.playwright-cli/

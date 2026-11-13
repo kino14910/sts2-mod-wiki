@@ -64,6 +64,9 @@ const KNOWN_TAGS = new Set([
 	'u',
 	'br',
 	'energy_icons',
+	'star_icons',
+	'energy',
+	'star',
 	...Object.keys(NAMED_COLORS),
 	...ALIGN_TAGS,
 	...EFFECT_TAGS

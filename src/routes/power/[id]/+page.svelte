@@ -9,6 +9,7 @@
 	import WikiIntro from '#lib/components/WikiIntro.svelte'
 	import WikiText from '#lib/components/WikiText.svelte'
 	import type { CollectionEntry, CollectionKind } from '#lib/data/collections'
+	import { entityHref, publicEntityKey } from '#lib/entities'
 	import { powerHref } from '#lib/data/glossary'
 	import {
 		behaviorName,
@@ -35,7 +36,8 @@
 	let potions = $derived(localizedCollections(data.potions))
 	let modLabel = $derived(entry.mod ? modName(entry.mod) : '')
 
-	let showAllCards = $state(false)
+	let expandedCardSources = $state<string | null>(null)
+	let showAllCards = $derived(expandedCardSources === data.entityKey)
 	let visibleCards = $derived(showAllCards ? data.cards : data.cards.slice(0, 6))
 	let sourceCount = $derived(
 		data.cards.length + relics.length + potions.length + relatedPowers.length
@@ -73,9 +75,9 @@
 
 {#snippet collectionRows(items: CollectionEntry[], kind: CollectionKind)}
 	<ul class="wiki-prose">
-		{#each items as item (`${kind}-${item.id}`)}
+		{#each items as item (publicEntityKey({ type: kind, id: item.id, modId: item.mod }))}
 			<li>
-				<a href={`${resolve(kind === 'relic' ? '/relics' : '/potions')}#${kind}-${item.id}`}
+				<a href={entityHref({ type: kind, id: item.id, modId: item.mod })}
 					>{item.name}</a
 				>
 				— {collectionTextToPlain(item.text)}
@@ -94,7 +96,8 @@
 	<WikiText text={text} />
 {/snippet}
 
-<div class="glossary-page">
+{#key data.entityKey}
+<div class="glossary-page" data-entity-id={data.entityRef.id} data-entity-key={data.entityKey} data-mod-id={entry.mod ?? 'sts2'}>
 	<section class="page">
 		<div class="wrap">
 			<nav class="crumbs" aria-label={m.breadcrumb()}>
@@ -227,28 +230,6 @@
 							<p class="wiki-prose-p">{m.power_sources_empty()}</p>
 						{/if}
 
-						{#if data.cards.length}
-							<div class="wiki-source-group">
-								{@render sourceHeading(m.power_sources_cards(), data.cards.length)}
-								<div class="wiki-card-list">
-									{#each visibleCards as card (card.id)}
-										<CardRow {card} showActions={false} />
-									{/each}
-								</div>
-								{#if data.cards.length > 6}
-									<button
-										class="button button--ghost wiki-more"
-										type="button"
-										onclick={() => (showAllCards = !showAllCards)}
-									>
-										{showAllCards
-											? m.power_show_less()
-											: m.power_show_all({ count: data.cards.length })}
-									</button>
-								{/if}
-							</div>
-						{/if}
-
 						{#if relics.length}
 							<div class="wiki-source-group">
 								{@render sourceHeading(m.power_sources_relics(), relics.length)}
@@ -267,7 +248,7 @@
 							<div class="wiki-source-group">
 								{@render sourceHeading(m.power_sources_powers(), relatedPowers.length)}
 								<ul class="wiki-prose">
-									{#each relatedPowers as item (item.id)}
+									{#each relatedPowers as item (publicEntityKey({ type: 'power', id: item.id, modId: item.mod ?? 'sts2' }))}
 										<li><a href={powerHref(item)}>{item.name}</a> — {item.summary}</li>
 									{/each}
 								</ul>
@@ -314,6 +295,7 @@
 		</div>
 	</section>
 </div>
+{/key}
 
 <style>
 	.page {

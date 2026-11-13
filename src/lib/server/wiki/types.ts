@@ -71,6 +71,7 @@ export interface WikiSourceUpdateRow {
 	incoming_content: string
 	base_hash: string
 	incoming_hash: string
+	incoming_mod_version?: string | null
 	status: SourceUpdateStatus
 	reviewed_by: string | null
 	review_note: string | null
@@ -129,7 +130,7 @@ export interface CommentStore {
 	countRecentByToken(tokenHash: string, since: string): Promise<number>
 	countRecentByIp(ipHash: string, since: string): Promise<number>
 	insertComment(input: CommentInsert): Promise<void>
-	updateContent(id: string, tokenHash: string, content: string): Promise<number>
+	updateContent(id: string, tokenHash: string, content: string, expected?: { updatedAt: string; content: string }): Promise<number>
 	softDelete(id: string, tokenHash: string): Promise<number>
 	insertAuditLog(input: AuditLogInsert): Promise<void>
 }

@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { browser } from '$app/env'
-	import { afterNavigate, replaceState } from '$app/navigation'
+	import { afterNavigate, goto } from '$app/navigation'
 	import { page } from '$app/state'
 	import CardFilters from '#lib/components/CardFilters.svelte'
 	import CardRow from '#lib/components/CardRow.svelte'
@@ -13,6 +12,7 @@
 		type CardType
 	} from '#lib/data/cards'
 	import { CARDS } from '#lib/data/mods'
+	import { publicEntityKey } from '#lib/entities'
 	import {
 		colorName,
 		localizedCards,
@@ -25,19 +25,19 @@
 	import { m } from '#lib/paraglide/messages'
 	import { cardTextToPlain } from '#lib/text/card-text'
 	import { WindowVirtualizer } from 'virtua/svelte'
+	
+	const searchParams = page.url.searchParams
 
-	const params = browser ? page.url.searchParams : new URLSearchParams()
-
-	let query = $state(params.get('q') ?? '')
-	let color = $state(params.get('color') ?? 'all')
-	let type = $state(params.get('type') ?? 'all')
-	let rarity = $state(params.get('rarity') ?? 'all')
-	let cost = $state(params.get('cost') ?? 'all')
-	let mod = $state(params.get('mod') ?? 'all')
-	let sort = $state(params.get('sort') ?? 'default')
-	let multiplayer = $state(params.get('multiplayer') === '1')
-	let viewUpgrades = $state(params.get('upgrades') === '1')
-	let viewBetaArt = $state(params.get('beta') === '1')
+    let query = $state(searchParams.get('q') ?? '')
+    let color = $state(searchParams.get('color') ?? 'all')
+    let type = $state(searchParams.get('type') ?? 'all')
+    let rarity = $state(searchParams.get('rarity') ?? 'all')
+    let cost = $state(searchParams.get('cost') ?? 'all')
+    let mod = $state(searchParams.get('mod') ?? 'all')
+    let sort = $state(searchParams.get('sort') ?? 'default')
+    let multiplayer = $state(searchParams.get('multiplayer') === '1')
+    let viewUpgrades = $state(searchParams.get('upgrades') === '1')
+    let viewBetaArt = $state(searchParams.get('beta') === '1')
 
 	let upgradedOverrides = $state<Record<string, boolean>>({})
 
@@ -156,7 +156,7 @@
 	})
 
 	function groupKey(group: CardGroup) {
-		return `${group[0]?.id ?? ''}:${group.length}`
+		return group.map(cardKey).join('|')
 	}
 
 	function resetScroll() {
@@ -201,7 +201,7 @@
 
 		const url = new URL(page.url.href)
 		url.search = next.toString()
-		replaceState(url, {})
+		goto(url, { shallow: true, replace: true })
 	}
 
 	function handleFilterChange() {
@@ -225,12 +225,16 @@
 		resetScroll()
 	}
 
+	function cardKey(card: Card) {
+		return publicEntityKey({ type: 'card', id: card.id, modId: card.mod })!
+	}
+
 	function isUpgraded(card: Card) {
-		return upgradedOverrides[card.id] ?? viewUpgrades
+		return upgradedOverrides[cardKey(card)] ?? viewUpgrades
 	}
 
 	function toggleUpgraded(card: Card) {
-		upgradedOverrides[card.id] = !isUpgraded(card)
+		upgradedOverrides[cardKey(card)] = !isUpgraded(card)
 	}
 
 	function resetUpgrades() {
@@ -318,7 +322,7 @@
 							<div
 								class="grid grid-cols-[repeat(auto-fit,minmax(30em,1fr))] items-start gap-[1em] pb-[1em]"
 							>
-								{#each group as card, cardIndex (card.id)}
+								{#each group as card, cardIndex (cardKey(card))}
 									<CardRow
 										{card}
 										upgraded={isUpgraded(card)}

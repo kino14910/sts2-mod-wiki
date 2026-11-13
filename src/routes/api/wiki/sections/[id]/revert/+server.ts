@@ -16,6 +16,7 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
 		const result = await revertToRevision(createWikiEditStore(db), {
 			sectionId: params.id,
 			revisionId: String(body.revisionId ?? ''),
+			baseVersion: body.baseVersion,
 			summary: body.summary,
 			actor: collaborationActor(locals)
 		})

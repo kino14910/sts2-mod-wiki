@@ -217,8 +217,9 @@ export async function createComment(
 		content
 	})
 
+	const stored = await store.findComment(id)
 	return toView(
-		{
+		stored ?? {
 			id,
 			target_type: target.targetType,
 			target_id: target.targetId,
@@ -239,6 +240,7 @@ export interface EditCommentInput {
 	commentId: string
 	token: unknown
 	content: unknown
+	updatedAt?: unknown
 }
 
 export async function editComment(
@@ -252,8 +254,10 @@ export async function editComment(
 	if (existing.status !== 'visible')
 		throw new CommentError(409, 'deleted comments cannot be edited')
 	if (existing.author_token_hash !== tokenHash) throw new CommentError(403, 'not your comment')
+	if (input.updatedAt !== undefined && input.updatedAt !== existing.updated_at)
+		throw new CommentError(409, 'comment changed since it was loaded, reload and retry')
 
-	const changes = await store.updateContent(existing.id, tokenHash, content)
+	const changes = await store.updateContent(existing.id, tokenHash, content, { updatedAt: existing.updated_at, content: existing.content })
 	if (changes === 0) throw new CommentError(409, 'comment changed while editing, reload and retry')
 
 	const updated = await store.findComment(existing.id)
@@ -282,19 +286,7 @@ export async function deleteComment(
 		throw new CommentError(409, 'comment could not be deleted')
 	}
 
-	// Soft deletion keeps the row and leaves an audit trail for moderation review.
-	await store.insertAuditLog({
-		id: crypto.randomUUID(),
-		actorId: null,
-		action: 'comment.delete',
-		targetType: 'comment',
-		targetId: existing.id,
-		metadata: {
-			targetType: existing.target_type,
-			targetId: existing.target_id,
-			authorName: existing.author_name
-		}
-	})
+	// The store commits soft deletion, history and audit together.
 
 	const latest = (await store.findComment(existing.id)) ?? existing
 	return toView({ ...latest, status: 'deleted' }, tokenHash)

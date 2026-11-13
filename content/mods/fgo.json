@@ -1,0 +1,36 @@
+{
+  "assembly": "Fgo",
+  "resourceRoot": "Fgo",
+  "display": {
+    "cardPool": {
+      "fgo": {
+        "labels": {
+          "eng": "Fgo",
+          "zhs": "御主"
+        },
+        "char": "images/charui/character_icon_fgo.png",
+        "cardEnergy": "images/ui/energy_fgo_big.png",
+        "textEnergy": "images/ui/energy_fgo.png",
+        "accent": "#a6a199",
+        "energyOutline": "#5c5440",
+        "cardFrame": {
+          "attack": "images/card_frames/card_frame_attack.png",
+          "skill": "images/card_frames/card_frame_skill.png",
+          "power": "images/card_frames/card_frame_power.png"
+        }
+      },
+      "noble": {
+        "labels": {
+          "eng": "Noble Phantasm",
+          "zhs": "宝具"
+        },
+        "char": "images/charui/character_icon_noble.png",
+        "cardEnergy": "images/ui/energy_noble_big.png",
+        "textEnergy": "images/ui/energy_fgo.png",
+        "accent": "#ffd700",
+        "energyOutline": "#be6900",
+        "cardFrame": {}
+      }
+    }
+  }
+}

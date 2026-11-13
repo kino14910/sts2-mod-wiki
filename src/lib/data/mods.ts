@@ -1,121 +1,16 @@
 import { cardImageFiles, cardThumbFiles, dataFiles, localizationFiles, manifestFiles } from 'virtual:mods';
-import {
-	ALL_CARD_KEYWORDS,
-	CARD_TYPES,
-	COLORS,
-	isBuiltinRarity,
-	isValidRarityId,
-	registerCardRarities,
-	type Card,
-	type CardAttributes,
-	type CardRarityDefinition,
-	type CardRarityManifest,
-	type CardType,
-	type CardVariables,
-	type MotifName
-} from './cards';
-import {
-	isCollectionCharacter,
-	isPotionRarity,
-	isRelicRarity,
-	type CollectionCharacter,
-	type CollectionEntry,
-	type CollectionKind,
-	type CollectionRarity,
-	type CollectionVariables
-} from './collections';
-import {
-	entryIdFor,
-	isModDependency,
-	resolveContentText,
-	type ContentKind,
-	type LocalizedField,
-	type ModDependency
-} from './mod-dependency';
-import type { GlossaryEntry, StackType, TurnBehavior } from './glossary';
+import { COLORS, isBuiltinRarity, registerCardRarities, type Card, type CardRarityDefinition, type CardRarityManifest } from './cards';
+import type { CollectionEntry, CollectionKind } from './collections';
+import { entryIdFor, resolveContentText, type ContentKind, type LocalizedField } from './mod-dependency';
+import type { GlossaryEntry } from './glossary';
 import { resolveCollectionText } from '../text/collection-text';
 import { stripBBCode } from '../text/bbcode';
+import { adaptLegacyCollectionVariables } from '../text/legacy-variables';
+import { initializePublicEntityRefs } from '../entity-identity.ts';
 
-/**
- * 模组清单：static/mods/{modid}/manifest.json 即注册一个模组。
- * 卡牌结构数据来自清单声明的 cards 文件；
- * 卡牌与 Buff 的名称/描述根据清单的前置依赖自动生成本地化 Key，
- * 并从 static/mods/{modid}/localization/{locale}/*.json 读取。
- * 清单中声明的相对路径资源统一解析为 /mods/{modid}/...。
- */
-/** 角色资源：颜色 id -> 图片路径 */
-export interface CharacterAssets {
-	/** 角色筛选图标 */
-	char: string;
-	/** 卡面费用图标 */
-	cardEnergy?: string;
-	/** 卡牌文本中的能量图标 */
-	textEnergy?: string;
-	/** 卡面第二费用（星）图标 */
-	secondCardEnergy?: string;
-	/** 卡牌文本中的第二费用（星）图标 */
-	secondTextEnergy?: string;
-	/** 角色主题色（卡面艺术窗渐变） */
-	accent?: string;
-	/** 角色能量描边色（费用数字描边） */
-	energyOutline?: string;
-	/** 卡框图片：卡牌类型 -> 图片路径（已按 /mods/{id}/... 解析）。空对象 {} 表示不使用任何卡框 */
-	cardFrame?: Partial<Record<CardType, string>>;
-	/** 卡框 HSV 着色（对应 tools/card-frame-preview 的 HSV 渲染法），可省略表示不染色 */
-	shader?: { h: number; s: number; v: number };
-}
-
-export interface ModManifest {
-	id: string;
-	name: string;
-	author: string;
-	version?: string;
-	blurb: string;
-	/** 前置依赖，决定 Entry ID 与本地化 Key 的生成方式 */
-	dependency?: ModDependency;
-	/** 卡牌数据文件 */
-	cards?: string;
-	/** Buff 数据文件 */
-	powers?: string;
-	/** 遗物数据文件 */
-	relics?: string;
-	/** 药水数据文件 */
-	potions?: string;
-	/** 颜色 id -> 角色资源 */
-	cardPool?: Record<string, CharacterAssets>;
-	/** 自定义卡牌稀有度 id -> 展示元数据；未声明但出现在 cards 中的值也会自动注册 */
-	cardRarities?: Record<string, CardRarityManifest>;
-}
-
-export interface LocalizedModText {
-	name?: string;
-	blurb?: string;
-}
-
-/** Buff 结构数据，名称与描述由本地化 Key 提供 */
-export interface ModPowerData {
-	id: string;
-	group?: string;
-	stack?: StackType;
-	behavior?: TurnBehavior;
-	cap?: string;
-	icon?: string;
-	motif?: MotifName;
-	enemyOnly?: boolean;
-	aliases?: string[];
-}
-
-/** 卡牌结构数据，名称与文本由本地化文件提供；pool 为权威卡池字段，color 由 pool 派生 */
-type CardData = CardAttributes & {
-	id: string;
-	color?: string;
-	pool?: string | string[];
-	type: CardType;
-	rarity: string;
-	image?: string;
-	fullArt?: boolean;
-	upgrade?: Partial<CardAttributes>;
-};
+/** Runtime adapter for validated import bundles and the separate vanilla offline dataset. */
+export type { CharacterAssets, ModManifest, ModPowerData } from './mod-schema';
+import { isRecord, isString, isManifest, isCardData, isModPowerData, isCollectionData, isModCharacterData, poolTokens, type CharacterAssets, type ModManifest, type LocalizedModText, type ModCharacterData } from './mod-schema';
 
 interface LoadedMod {
 	manifest: ModManifest;
@@ -123,6 +18,7 @@ interface LoadedMod {
 	powers: GlossaryEntry[];
 	relics: CollectionEntry[];
 	potions: CollectionEntry[];
+	characters: Array<ModCharacterData & { mod: string }>;
 }
 
 const BASE_MOD_ID = 'sts2';
@@ -136,122 +32,6 @@ export const MOD_LOCALES: Record<string, Record<string, LocalizedModText>> = {};
 
 /** locale -> card_keywords.json 的扁平键值 */
 export const KEYWORD_LOCALES: Record<string, Record<string, string>> = {};
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function isString(value: unknown): value is string {
-	return typeof value === 'string';
-}
-
-function isCharacterAssets(value: unknown): value is CharacterAssets {
-	if (!isRecord(value)) return false;
-	return (
-		isString(value.char) &&
-		(value.cardEnergy === undefined || isString(value.cardEnergy)) &&
-		(value.textEnergy === undefined || isString(value.textEnergy)) &&
-		(value.secondCardEnergy === undefined || isString(value.secondCardEnergy)) &&
-		(value.secondTextEnergy === undefined || isString(value.secondTextEnergy)) &&
-		(value.accent === undefined || isString(value.accent)) &&
-		(value.energyOutline === undefined || isString(value.energyOutline)) &&
-		(value.cardFrame === undefined ||
-			(isRecord(value.cardFrame) &&
-				Object.entries(value.cardFrame).every(
-					([type, path]) => typeof type === 'string' && isString(path)
-				))) &&
-		(value.shader === undefined ||
-			(isRecord(value.shader) &&
-				typeof value.shader.h === 'number' &&
-				typeof value.shader.s === 'number' &&
-				typeof value.shader.v === 'number'))
-	);
-}
-
-function isCardRarityManifest(value: unknown): value is CardRarityManifest {
-	if (!isRecord(value)) return false;
-	const optionalText = (entry: unknown) => entry === undefined || isString(entry);
-	return (
-		optionalText(value.name) &&
-		optionalText(value.nameZh) &&
-		optionalText(value.labelKey) &&
-		optionalText(value.color) &&
-		optionalText(value.banner) &&
-		optionalText(value.outline) &&
-		optionalText(value.base) &&
-		(value.fullArt === undefined || typeof value.fullArt === 'boolean')
-	);
-}
-
-function isManifest(value: unknown): value is ModManifest {
-	if (!isRecord(value)) return false;
-
-	const declaresContent =
-		value.cards !== undefined ||
-		value.powers !== undefined ||
-		value.relics !== undefined ||
-		value.potions !== undefined;
-
-	return (
-		isString(value.id) &&
-		isString(value.name) &&
-		isString(value.author) &&
-		isString(value.blurb) &&
-		(value.dependency === undefined || isModDependency(value.dependency)) &&
-		(!declaresContent || value.dependency !== undefined) &&
-		(value.cards === undefined || isString(value.cards)) &&
-		(value.powers === undefined || isString(value.powers)) &&
-		(value.relics === undefined || isString(value.relics)) &&
-		(value.potions === undefined || isString(value.potions)) &&
-		(value.cardPool === undefined ||
-			(isRecord(value.cardPool) && Object.values(value.cardPool).every(isCharacterAssets))) &&
-		(value.cardRarities === undefined ||
-			(isRecord(value.cardRarities) &&
-				Object.values(value.cardRarities).every(isCardRarityManifest)))
-	);
-}
-
-function isVariables(value: unknown): value is CardVariables {
-	return (
-		isRecord(value) &&
-		Object.values(value).every((entry) => typeof entry === 'string' || typeof entry === 'number')
-	);
-}
-
-const isCardCost = (value: unknown) =>
-	typeof value === 'number' || value === 'X' || value === null;
-const isOptional =
-	(validate: (value: unknown) => boolean) => (value: unknown) =>
-		value === undefined || validate(value);
-const isKeywords = (value: unknown) =>
-	Array.isArray(value) &&
-	value.every((keyword) => isString(keyword) && (ALL_CARD_KEYWORDS as string[]).includes(keyword));
-
-const CARD_ATTRIBUTE_VALIDATORS: Record<keyof CardAttributes, (value: unknown) => boolean> = {
-	cost: isCardCost,
-	secondEnergy: isOptional(isCardCost),
-	variables: isOptional(isVariables),
-	keywords: isKeywords
-};
-
-function isCardUpgrade(value: unknown): value is Partial<CardAttributes> {
-	return (
-		isRecord(value) &&
-		Object.entries(value).every(([key, entry]) => {
-			const validate = CARD_ATTRIBUTE_VALIDATORS[key as keyof CardAttributes];
-			return validate !== undefined && validate(entry);
-		})
-	);
-}
-
-function poolTokens(value: unknown): string[] | undefined {
-	if (!isRecord(value)) return undefined;
-	const p = value.pool;
-	if (p === undefined) return undefined;
-	if (isString(p)) return [p];
-	if (Array.isArray(p) && p.every(isString)) return p as string[];
-	return undefined;
-}
 
 function poolOf(value: unknown): string[] {
 	if (!isRecord(value)) return [];
@@ -274,75 +54,6 @@ function cardColorOf(value: unknown, manifest: ModManifest): string {
 		}
 	}
 	return 'colorless';
-}
-
-function isCardData(value: unknown): value is CardData {
-	if (!isRecord(value)) return false;
-	const { type, rarity, image, fullArt, upgrade } = value;
-	const hasPool = poolTokens(value) !== undefined;
-	const hasColor = isString(value.color) && value.color in COLORS;
-	return (
-		isString(value.id) &&
-		value.id.trim().length > 0 &&
-		(hasPool || hasColor) &&
-		isString(type) &&
-		type in CARD_TYPES &&
-		isValidRarityId(rarity) &&
-		(image === undefined || isString(image)) &&
-		(fullArt === undefined || typeof fullArt === 'boolean') &&
-		Object.entries(CARD_ATTRIBUTE_VALIDATORS).every(([key, validate]) => validate(value[key])) &&
-		(upgrade === undefined || isCardUpgrade(upgrade))
-	);
-}
-
-function isModPowerData(value: unknown): value is ModPowerData {
-	if (!isRecord(value)) return false;
-	return (
-		isString(value.id) &&
-		value.id.trim().length > 0 &&
-		(value.group === undefined || isString(value.group)) &&
-		(value.stack === undefined || isString(value.stack)) &&
-		(value.behavior === undefined || isString(value.behavior)) &&
-		(value.cap === undefined || isString(value.cap)) &&
-		(value.icon === undefined || isString(value.icon)) &&
-		(value.motif === undefined || isString(value.motif)) &&
-		(value.enemyOnly === undefined || typeof value.enemyOnly === 'boolean') &&
-		(value.aliases === undefined ||
-			(Array.isArray(value.aliases) && value.aliases.every(isString)))
-	);
-}
-
-/** 遗物 / 药水结构数据，名称与描述由本地化文件提供 */
-interface CollectionData {
-	id: string;
-	rarity: CollectionRarity;
-	character: CollectionCharacter;
-	tags: string[];
-	image?: string;
-	upgraded?: boolean;
-	ancient?: string;
-	variables?: CollectionVariables;
-	variablesZh?: CollectionVariables;
-}
-
-function isCollectionData(value: unknown, kind: CollectionKind): value is CollectionData {
-	if (!isRecord(value)) return false;
-	const { id, rarity, character, tags, image, upgraded, ancient, variables, variablesZh } = value;
-	return (
-		isString(id) &&
-		id.trim().length > 0 &&
-		isString(rarity) &&
-		(kind === 'relic' ? isRelicRarity(rarity) : isPotionRarity(rarity)) &&
-		isString(character) &&
-		isCollectionCharacter(character) &&
-		Array.isArray(tags) &&
-		tags.every(isString) &&
-		(image === undefined || isString(image)) &&
-		(upgraded === undefined || typeof upgraded === 'boolean') &&
-		(ancient === undefined || isString(ancient)) &&
-		(variables === undefined || isVariables(variables)) &&
-		(variablesZh === undefined || isVariables(variablesZh))
-	);
 }
 
 function loadGlobalLocalization() {
@@ -533,6 +244,10 @@ function loadCollection(
 			continue;
 		}
 
+		const origin = { modId: manifest.id, source: manifest.id === BASE_MOD_ID ? 'legacy-static' : 'build' } as const;
+		const variables = adaptLegacyCollectionVariables(template, value.variables, origin);
+		const zhTemplate = modContentText(manifest, kind, value.id, 'description', 'zhs') ?? template;
+		const variablesZh = value.variablesZh ? adaptLegacyCollectionVariables(zhTemplate, value.variablesZh, origin) : undefined;
 		entries.push({
 			id: value.id,
 			name,
@@ -541,12 +256,12 @@ function loadCollection(
 			rarity: value.rarity,
 			character: value.character,
 			tags: value.tags,
-			text: resolveCollectionText(template, value.variables),
+			text: resolveCollectionText(template, variables),
 			image: value.image ? resolveAsset(manifest.id, value.image) : undefined,
 			upgraded: value.upgraded,
 			ancient: value.ancient,
-			variables: value.variables,
-			variablesZh: value.variablesZh
+			variables,
+			variablesZh
 		});
 	}
 
@@ -572,7 +287,9 @@ function loadMod(path: string, value: unknown): LoadedMod | undefined {
 		cards: loadCards(dir, value),
 		powers: loadPowers(dir, value),
 		relics: loadCollection(dir, value, 'relic'),
-		potions: loadCollection(dir, value, 'potion')
+		potions: loadCollection(dir, value, 'potion'),
+		characters: value.characters && Array.isArray(dataFiles[`${dir}/${value.characters}`])
+			? (dataFiles[`${dir}/${value.characters}`] as unknown[]).filter(isModCharacterData).map((row) => ({ ...row, mod: value.id })) : []
 	};
 }
 
@@ -606,6 +323,15 @@ export const CARDS: Card[] = loaded.flatMap((entry) => entry.cards);
 export const MOD_POWERS: GlossaryEntry[] = loaded.flatMap((entry) => entry.powers);
 export const RELICS: CollectionEntry[] = loaded.flatMap((entry) => entry.relics);
 export const POTIONS: CollectionEntry[] = loaded.flatMap((entry) => entry.potions);
+export const MOD_CHARACTERS = loaded.flatMap((entry) => entry.characters);
+
+initializePublicEntityRefs([
+	...CARDS.map((row) => ({ type: 'card' as const, id: row.id, modId: row.mod })),
+	...RELICS.map((row) => ({ type: 'relic' as const, id: row.id, modId: row.mod })),
+	...POTIONS.map((row) => ({ type: 'potion' as const, id: row.id, modId: row.mod })),
+	...MOD_POWERS.map((row) => ({ type: 'power' as const, id: row.id, modId: row.mod ?? BASE_MOD_ID })),
+	...MOD_CHARACTERS.map((row) => ({ type: 'character' as const, id: row.id, modId: row.mod }))
+]);
 
 function rarityLabels(modId: string, id: string, def: CardRarityManifest): Record<string, string> {
 	const key = def.labelKey ?? `RARITY_${id}.title`
@@ -641,6 +367,7 @@ for (const entry of loaded) {
 	for (const [color, assets] of Object.entries(entry.manifest.cardPool ?? {})) {
 		if (color in CHARACTER_ASSETS) continue;
 		CHARACTER_ASSETS[color] = {
+			labels: assets.labels,
 			char: resolveAsset(entry.manifest.id, assets.char),
 			cardEnergy: assets.cardEnergy
 				? resolveAsset(entry.manifest.id, assets.cardEnergy)

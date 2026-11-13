@@ -25,9 +25,9 @@ export function isSafeSourcePath(value: string): boolean {
 	if (value.length === 0 || value.length > MAX_SOURCE_PATH_LENGTH) return false
 	if (value.startsWith('/') || value.includes('\\') || value.includes('..')) return false
 	if (!value.endsWith('.md')) return false
-	const match = /^static\/mods\/([^/]+)\/wiki\/(.+)$/.exec(value)
+	const match = /^(?:static\/mods\/([^/]+)\/wiki|content\/wiki\/([^/]+))\/(.+)$/.exec(value)
 	if (!match) return false
-	return /^[a-z0-9][a-z0-9._-]*$/.test(match[1]) && isValidPageSlug(match[2].replace(/\.md$/, ''))
+	return /^[a-z0-9][a-z0-9._-]*$/.test(match[1] ?? match[2]) && isValidPageSlug(match[3].replace(/\.md$/, ''))
 }
 
 export function validateWikiContent(value: string): string | null {

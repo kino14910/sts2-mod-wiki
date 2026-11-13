@@ -1,9 +1,10 @@
 import { getLocale } from '#lib/paraglide/runtime'
-import { entityKey, type EntityRef } from '#lib/entities'
+import type { EntityRef } from '#lib/entities'
 import type { ContentKind } from './mod-dependency'
-import { findGameEntity, listEntityRefs, type GameEntity } from './entities'
+import { findGameEntity, listEntityRefs, scopedEntityKey, type GameEntity, type ScopedEntityRef } from './entities'
+import { localizedContentField } from './localize'
 import { escapeRegExp } from './glossary'
-import { KEYWORD_LOCALES, MOD_BY_ID, modContentText } from './mods'
+import { KEYWORD_LOCALES, MOD_CONTENT_LOCALES } from './mods'
 import { GLOSSARY_ZH } from './zh'
 import { KEYWORD_ALIASES, POWER_ALIASES } from './wiki-aliases'
 
@@ -11,7 +12,6 @@ export type GameEntityType = GameEntity['kind']
 
 const BASE_LOCALE = 'eng'
 const BASE_MOD_ID = 'sts2'
-const INDEX_LOCALES = ['eng', 'zhs'] as const
 
 /**
  * 游戏文本（gold 段）的消解顺序：本地化数据里金色高亮绝大多数指向 Power / Keyword。
@@ -40,7 +40,7 @@ export type EntityMatchStrategy = 'game' | 'wiki'
 
 export interface EntityNameEntry {
 	name: string
-	ref: EntityRef
+	ref: ScopedEntityRef
 	entity: GameEntity
 	/** title: 当前语言标题；alias: 别名 / 跨语言标题；id: 结构 id */
 	source: 'title' | 'alias' | 'id'
@@ -69,6 +69,8 @@ export interface EntityNameIndex {
 
 export interface EntityMatchContext {
 	locale?: string
+	/** Prefer an explicitly supplied Mod scope without changing legacy entity ids. */
+	modId?: string
 	/** 显式消解顺序；不传时 game 策略用游戏默认顺序，wiki 策略不按类型优先 */
 	prefer?: readonly GameEntityType[]
 	/** 名称可见范围，默认 game */
@@ -105,7 +107,7 @@ export interface ScannedEntityMatch {
 
 interface Candidate {
 	name: string
-	ref: EntityRef
+	ref: ScopedEntityRef
 	source: EntityNameEntry['source']
 	scope: EntityNameScope
 }
@@ -128,7 +130,7 @@ function isContentKind(value: string): value is ContentKind {
 function addCandidate(
 	map: CandidateMap,
 	name: string,
-	ref: EntityRef,
+	ref: ScopedEntityRef,
 	source: Candidate['source'],
 	scope: EntityNameScope = 'game'
 ) {
@@ -146,25 +148,26 @@ function uniquify(list: Candidate[]): Candidate[] {
 		(candidate.source === 'title' ? 2 : candidate.source === 'alias' ? 1 : 0)
 	const best = new Map<string, Candidate>()
 	for (const candidate of list) {
-		const key = entityKey(candidate.ref)
+		const key = scopedEntityKey(candidate.ref)
 		const existing = best.get(key)
 		if (!existing || rank(candidate) > rank(existing)) best.set(key, candidate)
 	}
 	return [...best.values()]
 }
 
-function titleFor(ref: EntityRef, locale: string): string | undefined {
+function titleFor(ref: ScopedEntityRef, locale: string): string | undefined {
+	const entity = findGameEntity(ref)
+	if (!entity) return undefined
 	if (ref.type === 'keyword') {
-		return KEYWORD_LOCALES[locale]?.[`${ref.id.toUpperCase()}.title`]
+		return KEYWORD_LOCALES[locale]?.[`${entity.data.id.toUpperCase()}.title`]
 	}
 	if (!isContentKind(ref.type)) return undefined
-	const modId = findGameEntity(ref)?.data.mod ?? BASE_MOD_ID
-	const mod = MOD_BY_ID.get(modId)
-	return mod ? modContentText(mod, ref.type, ref.id, 'title', locale) : undefined
+	const modId = entity.data.mod ?? BASE_MOD_ID
+	return localizedContentField(modId, ref.type, entity.data.id, 'title', locale, false)?.value
 }
 
-function localizedTitle(ref: EntityRef, locale: string): string | undefined {
-	return titleFor(ref, locale) ?? (locale === BASE_LOCALE ? undefined : titleFor(ref, BASE_LOCALE))
+function localizedTitle(ref: ScopedEntityRef, locale: string): string | undefined {
+	return titleFor(ref, locale) ?? (locale === BASE_LOCALE ? undefined : titleFor(ref, BASE_LOCALE)) ?? findGameEntity(ref)?.data.name
 }
 
 function getTitleCandidates(locale: string): CandidateMap {
@@ -180,11 +183,11 @@ function getTitleCandidates(locale: string): CandidateMap {
 	return map
 }
 
-function aliasesFor(ref: EntityRef, locale: string): string[] {
+function aliasesFor(ref: ScopedEntityRef, locale: string): string[] {
 	const entity = findGameEntity(ref)
 	if (!entity || (entity.kind !== 'power' && entity.kind !== 'keyword')) return []
 	const aliases = [...(entity.data.aliases ?? [])]
-	if (locale !== BASE_LOCALE && ref.type === 'keyword') {
+	if (locale === 'zhs' && ref.type === 'keyword') {
 		aliases.push(...(GLOSSARY_ZH[ref.id]?.aliases ?? []))
 	}
 	return aliases
@@ -192,7 +195,7 @@ function aliasesFor(ref: EntityRef, locale: string): string[] {
 
 /** Wiki 中文别名指向英文术语名，借 eng 的 .title 反查后保留全部候选 */
 function wikiAliasTargets(locale: string): Candidate[] {
-	if (locale === BASE_LOCALE) return []
+	if (locale !== 'zhs') return []
 	const english = getTitleCandidates(BASE_LOCALE)
 	const result: Candidate[] = []
 	for (const [alias, target] of Object.entries({ ...POWER_ALIASES, ...KEYWORD_ALIASES })) {
@@ -221,7 +224,7 @@ function buildIndex(locale: string): EntityNameIndex {
 		}
 	}
 	// 跨语言标题与结构 id 只供 Wiki 正文使用，不扩大 GameText 的匹配范围。
-	for (const other of INDEX_LOCALES) {
+	for (const other of new Set([BASE_LOCALE, ...Object.keys(MOD_CONTENT_LOCALES), ...Object.keys(KEYWORD_LOCALES)])) {
 		if (other === locale) continue
 		for (const ref of listEntityRefs()) {
 			const title = titleFor(ref, other)
@@ -314,9 +317,9 @@ function resolveList(
 	if (!list.length) return { status: 'none', entry: null, candidates: [] }
 
 	let pool = [...list]
-	if (pool.length > 1 && context.current) {
-		const filtered = pool.filter((entry) => entityKey(entry.ref) !== entityKey(context.current!))
-		if (filtered.length) pool = filtered
+	if (context.modId) {
+		const scoped = pool.filter((entry) => entry.ref.modId === context.modId)
+		if (scoped.length) pool = scoped
 	}
 	if (pool.length === 1) {
 		return { status: 'resolved', entry: pool[0], candidates: list }
@@ -330,7 +333,7 @@ function resolveList(
 		if (!group.length) continue
 		const titled = group.filter((entry) => entry.source === 'title')
 		const chosen = titled.length ? titled : group
-		if (new Set(chosen.map((entry) => entityKey(entry.ref))).size === 1) {
+		if (new Set(chosen.map((entry) => scopedEntityKey(entry.ref))).size === 1) {
 			return { status: 'resolved', entry: chosen[0], candidates: list }
 		}
 		return { status: 'ambiguous', entry: null, candidates: list }

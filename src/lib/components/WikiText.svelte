@@ -1,28 +1,32 @@
 <script lang="ts">
 	import WikiEntity from '#lib/components/WikiEntity.svelte'
-	import { entityKey, type EntityRef } from '#lib/entities'
+	import type { EntityRef } from '#lib/entities'
+	import { scopedEntityKey } from '#lib/data/entities'
 	import { parseWikiText, type WikiNode } from '#lib/text/wiki-text'
 
 	let {
 		text,
 		locale,
+		modId,
 		current = null
 	}: {
 		text: string
 		locale?: string
+		modId?: string
 		current?: EntityRef | null
 	} = $props()
 
-	let nodes = $derived(parseWikiText(text, { locale, current }))
+	let nodes = $derived(parseWikiText(text, { locale, current, modId }))
 </script>
 
 <!-- 模板空白会进入 textContent，递归 snippet 与根节点的标记必须紧贴 -->
-{#snippet renderNode(node: WikiNode)}{#if node.type === 'text'}{node.value}{:else if node.type === 'break'}<br />{:else if node.type === 'upgraded'}<span class="wiki-upgraded text-[#94ee93]">{node.value}</span>{:else if node.type === 'ambiguous'}<span
+{#snippet renderNode(node: WikiNode)}{#if node.type === 'text'}{node.value}{:else if node.type === 'break'}<br />{:else if node.type === 'upgraded'}<span class="wiki-upgraded text-[#94ee93]">{node.value}</span>{:else if node.type === 'icon'}{#if node.src}<img class="wiki-icon" src={node.src} alt="" aria-hidden="true" data-icon-ref={JSON.stringify(node.ref)} />{:else}<span class="wiki-icon" data-icon-missing={node.diagnostic} title={node.diagnostic}>□</span>{/if}{:else if node.type === 'ambiguous'}<span
 		class="wiki-ambiguous"
 		role="note"
-		data-entity-candidates={JSON.stringify(node.refs.map(entityKey))}
-		title={node.refs.map(entityKey).join(' / ')}>{node.value}</span
+		data-entity-candidates={JSON.stringify(node.refs.map(scopedEntityKey))}
+		title={node.refs.map(scopedEntityKey).join(' / ')}>{node.value}</span
 	>{:else if node.type === 'entity'}<WikiEntity
+		locale={locale}
 		entry={node.entry}
 		ref={node.ref}
 		text={node.icon ? '' : node.value}

@@ -7,12 +7,14 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import adapter from '@sveltejs/adapter-cloudflare';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import type { Plugin } from 'vite';
+import { importedModuleFiles, readImportedMods } from './scripts/imported-mods.ts';
 
 /**
  * 扫描各模组的 images/cards 目录，按归一化卡 id 生成 PNG 原图与 WebP 缩略图 URL。
  */
-function collectCardArt(modsDir: string) {
+function collectCardArt(modsDir: string, excluded: ReadonlySet<string> = new Set()) {
 	const images: Record<string, Record<string, string>> = {};
 	const thumbs: Record<string, Record<string, string>> = {};
 	if (!fs.existsSync(modsDir)) return { images, thumbs };
@@ -27,7 +29,7 @@ function collectCardArt(modsDir: string) {
 	};
 
 	for (const entry of fs.readdirSync(modsDir, { withFileTypes: true })) {
-		if (!entry.isDirectory()) continue;
+		if (!entry.isDirectory() || excluded.has(entry.name)) continue;
 
 		const cardsImgDir = path.join(modsDir, entry.name, 'images', 'cards');
 		if (!fs.existsSync(cardsImgDir)) continue;
@@ -65,7 +67,11 @@ function collectCardArt(modsDir: string) {
 function modDataPlugin(): Plugin {
 	const modsDir = path.resolve('static/mods');
 	const localeDir = path.resolve('static/localization');
+	const importedDir = path.resolve('generated/mods');
+	const configDir = path.resolve('content/mods');
+	const importedAssetsDir = path.resolve('static/imported');
 	const LOCALE_FILES = ['card_keywords.json', 'mods.json'];
+	let building = false;
 
 	function readJson(file: string) {
 		try {
@@ -78,20 +84,29 @@ function modDataPlugin(): Plugin {
 
 	return {
 		name: 'sts2-mod-data',
+		configResolved(config) { building = config.command === 'build'; },
 		resolveId(id) {
 			if (id === 'virtual:mods') return '\0virtual:mods';
 			return null;
 		},
 		async load(id) {
 			if (id !== '\0virtual:mods') return null;
+			const imported = readImportedMods(importedDir, configDir);
+			const importedIds = new Set(imported.map((bundle) => bundle.id));
+			if (building) for (const dir of [modsDir, localeDir, importedDir, configDir, importedAssetsDir]) this.addWatchFile(dir);
+			if (building) for (const bundle of imported) {
+				this.addWatchFile(path.join(importedDir, bundle.id, 'bundle.json'));
+				this.addWatchFile(path.join(configDir, `${bundle.id}.json`));
+				for (const asset of Object.keys(bundle.assets)) this.addWatchFile(path.resolve('static', bundle.assetBase.slice(1), asset));
+			}
 
 			// 按需加载，避免 svelte-kit sync 阶段为构建期工具额外初始化 TS 模块图。
 			const { collectModIcons } = await import('./scripts/mod-icons.ts');
 			const manifestFiles: Record<string, unknown> = {};
 			const dataFiles: Record<string, unknown> = {};
 			const localizationFiles: Record<string, unknown> = {};
-			const { images: cardImageFiles, thumbs: cardThumbFiles } = collectCardArt(modsDir);
-			const { icons: iconFiles, conflicts: iconConflicts } = collectModIcons(modsDir);
+			const { images: cardImageFiles, thumbs: cardThumbFiles } = collectCardArt(modsDir, importedIds);
+			const { icons: iconFiles, conflicts: iconConflicts } = collectModIcons(modsDir, importedIds);
 
 			if (fs.existsSync(localeDir)) {
 				for (const entry of fs.readdirSync(localeDir, { withFileTypes: true })) {
@@ -107,6 +122,7 @@ function modDataPlugin(): Plugin {
 
 			for (const entry of fs.existsSync(modsDir) ? fs.readdirSync(modsDir, { withFileTypes: true }) : []) {
 				if (!entry.isDirectory()) continue;
+				if (importedIds.has(entry.name)) continue;
 
 				const manifestPath = path.join(modsDir, entry.name, 'manifest.json');
 				if (!fs.existsSync(manifestPath)) continue;
@@ -151,6 +167,24 @@ function modDataPlugin(): Plugin {
 				}
 			}
 
+			for (const bundle of imported) {
+				const files = importedModuleFiles(bundle);
+				Object.assign(manifestFiles, files.manifestFiles);
+				Object.assign(dataFiles, files.dataFiles);
+				Object.assign(localizationFiles, files.localizationFiles);
+				cardImageFiles[bundle.id] = files.cardImages;
+				cardThumbFiles[bundle.id] = files.cardThumbnails;
+				iconFiles[bundle.id] = files.icons.map;
+				for (let i = iconConflicts.length - 1; i >= 0; i--) {
+					if (iconConflicts[i].modId === bundle.id) iconConflicts.splice(i, 1);
+				}
+				iconConflicts.push(...files.icons.conflicts);
+			}
+			if (building) for (const file of [...Object.keys(manifestFiles), ...Object.keys(dataFiles), ...Object.keys(localizationFiles)]) {
+				const physical = path.resolve(file.slice(1));
+				if (fs.existsSync(physical)) this.addWatchFile(physical);
+			}
+
 			return [
 				`export const manifestFiles = ${JSON.stringify(manifestFiles)};`,
 				`export const dataFiles = ${JSON.stringify(dataFiles)};`,
@@ -164,22 +198,25 @@ function modDataPlugin(): Plugin {
 		configureServer(server) {
 			server.watcher.add(modsDir);
 			server.watcher.add(localeDir);
+			server.watcher.add(importedDir);
+			server.watcher.add(configDir);
+			server.watcher.add(importedAssetsDir);
 		},
-		handleHotUpdate({ file, server }) {
+		hotUpdate({ file }) {
 			const normalized = file.replaceAll('\\', '/');
-			const watched = [modsDir, localeDir].map((dir) => dir.replaceAll('\\', '/'));
+			const watched = [modsDir, localeDir, importedDir, configDir, importedAssetsDir].map((dir) => dir.replaceAll('\\', '/'));
 			const isTracked =
-				watched.some((dir) => normalized.startsWith(dir)) &&
+				watched.some((dir) => normalized.startsWith(dir + '/')) &&
 				(normalized.endsWith('.json') ||
 					/\/images\/.*\.(png|webp)$/.test(normalized));
 			if (!isTracked) {
 				return;
 			}
 
-			const mod = server.moduleGraph.getModuleById('\0virtual:mods');
+			const mod = this.environment.moduleGraph.getModuleById('\0virtual:mods');
 			if (!mod) return;
 
-			server.moduleGraph.invalidateModule(mod);
+			this.environment.moduleGraph.invalidateModule(mod);
 			return [mod];
 		}
 	};
@@ -215,7 +252,11 @@ export default defineConfig({
 		expect: { requireAssertions: true },
 		projects: [
 			{
-				extends: './vite.config.ts',
+				plugins: [modDataPlugin(), svelte({ configFile: false, compilerOptions: { runes: true } })],
+				resolve: { alias: {
+					'#lib': path.resolve('src/lib'),
+					'$app/state': path.resolve('src/lib/testing/app-state.ts')
+				} },
 				test: {
 					name: 'client',
 					browser: {

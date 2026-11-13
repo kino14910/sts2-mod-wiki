@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import DiffView from './DiffView.svelte'
 	import { m } from '#lib/paraglide/messages'
+	import { getLocale } from '#lib/paraglide/runtime'
+	import { wikiUi } from '#lib/wiki-article'
 	import type { DiffResult, ProposalView, WikiViewer } from '#lib/wiki-collaboration'
 
 	interface SourceUpdateItem {
@@ -17,6 +18,7 @@
 		sectionKey: string
 		sourcePath: string
 		status: string
+		currentVersion: number
 		currentContent: string
 		incomingContent: string
 		conflictDiff: DiffResult
@@ -24,9 +26,13 @@
 		hasCommunityDrift: boolean
 	}
 
-	let { viewer, onChanged }: { viewer: WikiViewer; onChanged: () => void } = $props()
+	let { viewer, onChanged, pageId, sectionIds }: {
+		viewer: WikiViewer; onChanged: () => void | Promise<void>; pageId?: string; sectionIds?: string[]
+	} = $props()
 
 	let canReview = $derived(viewer.permissions.includes('wiki:proposal:review'))
+	let canPropose = $derived(viewer.session?.status === 'active' && viewer.permissions.includes('wiki:proposal:create'))
+	let ui = $derived(wikiUi(getLocale()))
 	let canViewSource = $derived(viewer.permissions.includes('wiki:source:view'))
 	let canResolveSource = $derived(viewer.permissions.includes('wiki:source:review'))
 
@@ -38,41 +44,51 @@
 	let busy = $state('')
 	let errorMessage = $state('')
 	let notice = $state('')
+	let requestSequence = 0
 
 	async function load() {
+		const sequence = ++requestSequence
 		errorMessage = ''
+		const scope = pageId ? `&pageId=${encodeURIComponent(pageId)}` : ''
+		const belongsToPage = (sectionId: string) => !sectionIds || sectionIds.includes(sectionId)
 		const requests: Promise<void>[] = []
-		if (canReview) {
+		if (canPropose) {
 			requests.push(
-				fetch('/api/wiki/proposals?status=pending', { cache: 'no-store' })
+				fetch(`/api/wiki/proposals?status=pending${scope}`, { cache: 'no-store' })
 					.then(async (response) => {
 						if (!response.ok) throw new Error(String(response.status))
 						const body = (await response.json()) as { items: ProposalView[] }
-						proposals = body.items
+						if (sequence === requestSequence) proposals = body.items.filter((item) => belongsToPage(item.sectionId))
 					})
 			)
 		}
 		if (canViewSource) {
 			requests.push(
-				fetch('/api/admin/wiki/source-updates', { cache: 'no-store' })
+				fetch(`/api/admin/wiki/source-updates${pageId ? `?pageId=${encodeURIComponent(pageId)}` : ''}`, { cache: 'no-store' })
 					.then(async (response) => {
 						if (!response.ok) throw new Error(String(response.status))
 						const body = (await response.json()) as { items: SourceUpdateItem[] }
-						sourceUpdates = body.items.filter((item) =>
-							['pending', 'conflict'].includes(item.status)
+						if (sequence === requestSequence) sourceUpdates = body.items.filter((item) =>
+							belongsToPage(item.sectionId) && ['pending', 'conflict'].includes(item.status)
 						)
 					})
 			)
 		}
 		const results = await Promise.allSettled(requests)
-		if (results.some((result) => result.status === 'rejected')) errorMessage = m.wiki_edit_error()
+		if (sequence === requestSequence && results.some((result) => result.status === 'rejected')) errorMessage = m.wiki_edit_error()
 	}
 
-	onMount(() => {
-		if (canReview || canViewSource) void load()
-	})
+	function initialize() {
+		void sectionIds
+		void viewer.session?.userId
+		proposals = []
+		sourceUpdates = []
+		detail = null
+		void load()
+		return () => { requestSequence++ }
+	}
 
-	async function decide(kind: 'proposal' | 'source', id: string, decision: 'approve' | 'reject') {
+	async function decide(kind: 'proposal' | 'source', id: string, decision: 'approve' | 'reject' | 'withdraw') {
 		busy = id
 		errorMessage = ''
 		notice = ''
@@ -84,17 +100,18 @@
 			const response = await fetch(url, {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ decision, note })
+				body: JSON.stringify({ decision, note, ...(kind === 'source' && detail?.id === id ? { baseVersion: detail.currentVersion } : {}) })
 			})
-			const body = (await response.json().catch(() => null)) as { message?: string } | null
+			const body = (await response.json().catch(() => null)) as { message?: string; status?: string } | null
 			if (!response.ok) throw new Error(body?.message ?? m.wiki_edit_error())
-			notice = decision === 'approve' ? m.wiki_review_approved() : m.wiki_review_rejected()
+			if (body?.status === 'conflict') errorMessage = ui.conflict
+			else notice = decision === 'approve' ? m.wiki_review_approved() : decision === 'withdraw' ? ui.withdrawn : m.wiki_review_rejected()
 			if (kind === 'source') {
 				detail = null
 				openDetailId = ''
 			}
 			await load()
-			onChanged()
+			await onChanged()
 		} catch (cause) {
 			errorMessage = cause instanceof Error ? cause.message : m.wiki_edit_error()
 		} finally {
@@ -128,9 +145,10 @@
 	}
 </script>
 
-{#if canReview || canViewSource}
-	<section class="mt-10 rounded-md border border-gold/25 bg-white/5 p-5" aria-label={m.wiki_review_title()}>
+{#if canPropose || canReview || canViewSource}
+	<section {@attach initialize} data-wiki-moderation class="mt-10 rounded-md border border-gold/25 bg-white/5 p-5" aria-label={m.wiki_review_title()}>
 		<h2 class="font-serif text-xl text-gold">{m.wiki_review_title()}</h2>
+		<button type="button" class="mt-2 text-xs text-link hover:underline" disabled={busy !== ''} onclick={load}>{ui.refresh}</button>
 
 		{#if errorMessage}
 			<p class="mt-2 text-[0.8rem] text-red-400" role="alert">{errorMessage}</p>
@@ -149,7 +167,7 @@
 			/>
 		</label>
 
-		{#if canReview}
+		{#if canPropose}
 			<h3 class="mt-5 text-[0.9rem] font-semibold">{m.wiki_review()} ({proposals.length})</h3>
 			{#if proposals.length === 0}
 				<p class="mt-2 text-[0.8rem] opacity-60">{m.wiki_review_empty()}</p>
@@ -172,6 +190,7 @@
 							<div class="mt-2"><DiffView diff={proposal.diff} /></div>
 						{/if}
 						<div class="mt-2 flex flex-wrap gap-3">
+							{#if canReview}
 							<button
 								type="button"
 								class="rounded-md bg-link px-2.5 py-1 font-semibold text-black disabled:opacity-45"
@@ -188,6 +207,9 @@
 							>
 								{m.wiki_review_reject()}
 							</button>
+							{:else if proposal.submittedBy === viewer.session?.userId}
+								<button type="button" class="text-link hover:underline" disabled={busy !== ''} onclick={() => decide('proposal', proposal.id, 'withdraw')}>{ui.withdraw}</button>
+							{/if}
 						</div>
 					</li>
 				{/each}
@@ -225,7 +247,7 @@
 								<button
 									type="button"
 									class="text-link hover:text-gold disabled:opacity-45"
-									disabled={busy !== ''}
+									disabled={busy !== '' || detail?.id !== update.id}
 									onclick={() => decide('source', update.id, 'approve')}
 								>
 									{m.wiki_source_update_approve()}

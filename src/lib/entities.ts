@@ -1,3 +1,6 @@
+import { publicEntityId } from './entity-identity.ts'
+export { initializePublicEntityRefs, registerPublicEntityRefs, resolvePublicEntityRef, publicEntityId, toPublicEntityRef, publicEntityKey } from './entity-identity.ts'
+
 export const ENTITY_TYPES = ['card', 'relic', 'potion', 'power', 'keyword', 'character'] as const
 
 export type EntityType = (typeof ENTITY_TYPES)[number]
@@ -6,6 +9,9 @@ export interface EntityRef {
 	type: EntityType
 	id: string
 }
+
+export type ScopedEntityRef = EntityRef & { modId?: string }
+export type ResolvedEntityRef = EntityRef & { modId: string }
 
 const ENTITY_TYPE_SET = new Set<string>(ENTITY_TYPES)
 const MAX_ID_LENGTH = 191
@@ -39,8 +45,12 @@ export function parseEntityKey(key: string): EntityRef | null {
 	return { type, id }
 }
 
-export function entityHref(ref: EntityRef): string {
-	const id = encodeURIComponent(ref.id)
+export function entityHref(ref: ScopedEntityRef): string | null {
+	const publicId = publicEntityId(ref)
+	if (publicId === null) return null
+	const id = encodeURIComponent(publicId)
+	// SvelteKit prerender compares fragment text against literal DOM ids.
+	const fragment = id.replaceAll('%3A', ':')
 	switch (ref.type) {
 		case 'card':
 			return `/cards/${id}`
@@ -49,9 +59,9 @@ export function entityHref(ref: EntityRef): string {
 		case 'power':
 			return `/power/${id}`
 		case 'potion':
-			return `/potions#potion-${id}`
+			return `/potions#potion-${fragment}`
 		case 'keyword':
-			return `/keywords#${id}`
+			return `/keywords#${fragment}`
 		case 'character':
 			return `/cards?color=${id}`
 	}

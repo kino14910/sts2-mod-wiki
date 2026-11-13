@@ -84,7 +84,39 @@ describe('mod wiki scanner', () => {
 		const result = scanModWiki(root)
 		expect(result.errors).toEqual([])
 		expect(result.files[0].entityType).toBe('character')
-		expect(result.files[0].entityId).toBe('NeroBride')
+		expect(result.files[0].entityId).toBe('fgo:NeroBride')
+	})
+
+	it('preserves explicit cross-mod prefixes and canonicalizes a unique vanilla prefix', () => {
+		const root = makeRoot(); addMod(root, 'fgo')
+		write(root, 'static/mods/sts2/cards.json', JSON.stringify([{ id: 'Bash' }, { id: 'TeslaCoil' }]))
+		write(root, 'static/mods/fgo/cards.json', JSON.stringify([{ id: 'TeslaCoil' }]))
+		write(root, 'static/mods/fgo/wiki/manifest.json', JSON.stringify({ pages: [
+			{ slug: 'vanilla', entity: { type: 'card', id: 'sts2:Bash' }, sections: [{ key: 'overview', file: 'vanilla.md' }] },
+			{ slug: 'collision', entity: { type: 'card', id: 'sts2:TeslaCoil' }, sections: [{ key: 'overview', file: 'collision.md' }] },
+			{ slug: 'other', entity: { type: 'card', id: 'other:Shared' }, sections: [{ key: 'overview', file: 'other.md' }] },
+			{ slug: 'scoped', entity: { type: 'card', id: 'Shared', modId: 'other' }, sections: [{ key: 'overview', file: 'scoped.md' }] }
+		] }))
+		for (const file of ['vanilla', 'collision', 'other', 'scoped']) write(root, `static/mods/fgo/wiki/${file}.md`, '# Article')
+		const result = scanModWiki(root)
+		expect(result.errors).toEqual([])
+		expect(result.files.map((f) => f.entityId)).toEqual(['Bash', 'sts2:TeslaCoil', 'other:Shared', 'other:Shared'])
+	})
+
+	it('rejects conflicting explicit namespace inputs and malformed prefixes', () => {
+		const root = makeRoot(); addMod(root, 'fgo')
+		for (const entity of [
+			{ type: 'card', id: 'sts2:Bash', modId: 'fgo' },
+			{ type: 'card', id: 'other:bad:scope' },
+			{ type: 'card', id: 'Bash', modId: 123 }
+		]) {
+			write(root, 'static/mods/fgo/wiki/manifest.json', JSON.stringify({ pages: [
+				{ slug: 'index', entity, sections: [{ key: 'overview', file: 'index/overview.md' }] }
+			] }))
+			const result = scanModWiki(root)
+			expect(result.errors.length).toBeGreaterThan(0)
+			expect(result.files).toHaveLength(0)
+		}
 	})
 
 	it('rejects path traversal and unsafe markup before any database write', () => {

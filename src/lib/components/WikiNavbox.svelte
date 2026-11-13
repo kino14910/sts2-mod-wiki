@@ -2,6 +2,7 @@
 	export interface WikiNavboxItem {
 		name: string
 		href: string | null
+		key?: string
 	}
 
 	export interface WikiNavboxRow {
@@ -12,6 +13,7 @@
 
 	export interface WikiNavboxGroup {
 		label: string
+		key?: string
 		href?: string | null
 		rows: WikiNavboxRow[]
 	}
@@ -45,7 +47,7 @@
 
 {#snippet pills(items: WikiNavboxItem[])}
 	<ul class="nb-pills">
-		{#each items as item (item.name)}
+		{#each items as item (item.key ?? item.href ?? item.name)}
 			<li class={{ selflink: !item.href }}>
 				{#if item.href}
 					<a href={item.href}>{item.name}</a>
@@ -95,7 +97,7 @@
 		</summary>
 
 		<div class="nb-body">
-			{#each sections as section (section.label)}
+			{#each sections as section (section.key ?? section.label)}
 				<div class="nb-group">
 					{#if section.href}
 						<a href={section.href}>{section.label}</a>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation'
+	import { refreshAll } from '$app/navigation'
 	import WikiModerationPanel from '#lib/components/wiki/WikiModerationPanel.svelte'
 	import WikiSectionPanel from '#lib/components/wiki/WikiSectionPanel.svelte'
 	import type { PageProps } from './$types'
@@ -7,7 +7,7 @@
 	let { data }: PageProps = $props()
 
 	let title = $derived(data.wikiMeta.slug.split('/').join(' / '))
-	const refresh = () => void invalidateAll()
+	const refresh = () => void refreshAll()
 </script>
 
 <svelte:head>

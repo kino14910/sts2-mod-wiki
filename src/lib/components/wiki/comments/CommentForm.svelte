@@ -28,6 +28,7 @@
 	let content = $state('')
 	let submitting = $state(false)
 	let errorMessage = $state('')
+	const contentId = $props.id()
 
 	onMount(() => {
 		authorName = getCommentName()
@@ -87,7 +88,9 @@
 		</label>
 	{/if}
 
+	<label for={contentId} class="sr-only">{m.comments_placeholder()}</label>
 	<textarea
+		id={contentId}
 		class="w-full resize-y rounded-md border border-white/15 bg-black/30 px-3 py-2 text-[0.88rem] leading-[1.55] text-ink outline-none focus:border-link"
 		name="content"
 		rows={compact ? 2 : 4}

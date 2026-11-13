@@ -71,7 +71,7 @@
 	}
 </script>
 
-<article class="rounded-md border border-white/10 bg-white/5 px-3 py-2.5">
+<article data-comment-id={comment.id} class="rounded-md border border-white/10 bg-white/5 px-3 py-2.5">
 	<header class="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-[0.78rem]">
 		<span class="font-semibold text-ink">{comment.author.name}</span>
 		<time class="opacity-55" datetime={comment.createdAt}>{formatTime(comment.createdAt)}</time>

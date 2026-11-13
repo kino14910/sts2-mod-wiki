@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit'
+import { resolveEntityRoute } from '#lib/entity-route'
 import { POWERS, escapeRegExp, type GlossaryEntry } from '#lib/data/glossary'
 import type { ContentKind } from '#lib/data/mod-dependency'
 import { CARDS, MOD_BY_ID, POTIONS, RELICS, modContentText } from '#lib/data/mods'
@@ -6,7 +6,6 @@ import { powerReferenceDetails } from '#lib/data/power-references'
 import { localizePowerWiki, powerWikiIntro } from '#lib/data/power-wiki'
 import { GLOSSARY_ZH } from '#lib/data/zh'
 import { getLocale } from '#lib/paraglide/runtime'
-import { m } from '#lib/paraglide/messages'
 import { stripBBCode } from '#lib/text/bbcode'
 import { cardTextToPlain } from '#lib/text/card-text'
 import { collectionTextToPlain } from '#lib/text/collection-text'
@@ -39,7 +38,7 @@ function nameVariants(entry: GlossaryEntry) {
 			if (value) names.add(stripBBCode(value))
 		}
 	}
-	const zh = GLOSSARY_ZH[entry.id]
+	const zh = (entry.mod ?? 'sts2') === 'sts2' ? GLOSSARY_ZH[entry.id] : undefined
 	if (zh) {
 		names.add(zh.name)
 		for (const alias of zh.aliases ?? []) names.add(alias)
@@ -57,11 +56,10 @@ function matcher(names: string[]) {
 		(pattern?.test(text) ?? false) || wide.some((name) => text.includes(name))
 }
 
-export const load: PageLoad = ({ params, data }) => {
-	const index = POWERS.findIndex((entry) => entry.id === params.id)
-	if (index === -1) error(404, m.power_not_found())
-
-	const entry = POWERS[index]
+export const load: PageLoad = ({ params, data, url }) => {
+	const route = resolveEntityRoute('power', params.id, url)
+	const entry = route.game.data
+	const isBaseGame = (entry.mod ?? 'sts2') === 'sts2'
 	const matches = matcher(nameVariants(entry))
 
 	const cards = CARDS.filter((card) =>
@@ -81,7 +79,7 @@ export const load: PageLoad = ({ params, data }) => {
 		matches(textVariants(item.mod, 'potion', item.id, collectionTextToPlain(item.text)))
 	)
 	const powers = POWERS.filter(
-		(item) => item.id !== entry.id && matches(textVariants(item.mod, 'power', item.id, item.summary))
+		(item) => item !== entry && matches(textVariants(item.mod, 'power', item.id, item.summary))
 	)
 
 	const mod = entry.mod ? MOD_BY_ID.get(entry.mod) : undefined
@@ -92,18 +90,20 @@ export const load: PageLoad = ({ params, data }) => {
 			})).filter((item) => item.name)
 		: []
 
-	const references = powerReferenceDetails(
-		params.id,
+	const references = isBaseGame ? powerReferenceDetails(
+		entry.id,
 		getLocale() === 'zhs' ? 'zhs' : 'eng'
-	)
+	) : { sources: [], interactions: [] }
 
-	const wiki = data.wiki ? localizePowerWiki(data.wiki, params.id, getLocale()) : data.wiki
+	const wiki = data.wiki && isBaseGame ? localizePowerWiki(data.wiki, entry.id, getLocale()) : data.wiki
 
 	return {
 		...data,
+		entityRef: route.entityRef,
+		entityKey: route.entityKey,
 		wiki,
 		entry,
-		intro: powerWikiIntro(params.id),
+		intro: isBaseGame ? powerWikiIntro(entry.id) : [],
 		sources: references.sources,
 		interactions: references.interactions,
 		names,

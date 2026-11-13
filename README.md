@@ -14,10 +14,10 @@ pnpm dlx sv@1.1.1 create --template demo --types ts --add vitest="usages:unit,co
 Start a development server:
 
 ```sh
-npm run dev
+pnpm dev
 
 # or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm dev --open
 ```
 
 ## Building
@@ -25,14 +25,24 @@ npm run dev -- --open
 Create a production version of the app:
 
 ```sh
-npm run build
+pnpm build
 ```
 
-Preview the production build with `npm run preview`.
+Preview the production build with `pnpm preview`.
 
 ## Mod data
 
-Mods live under `static/mods/{modid}/`. See [docs/mod-manifest.md](docs/mod-manifest.md) for the manifest dependency schema and generated localization keys.
+Configured mods are imported directly from DLL/PCK build artifacts:
+
+```sh
+pnpm mod:import --mod fgo --build "D:/Steam/steamapps/common/Slay the Spire 2/mods/Fgo"
+```
+
+See [docs/build-import.md](docs/build-import.md) for prerequisites, data boundaries, validation, incremental imports and snapshots. Generated mod data, parsed evidence, presentation configuration and community content are separate. The existing vanilla offline dataset remains under `static/mods/sts2`; imported mods no longer load manually maintained data from `static/mods/{modid}`.
+
+See [docs/mod-manifest.md](docs/mod-manifest.md) for entity ID and localization conventions. Run `pnpm db:migrate:local` before testing community features locally.
+
+See [the implementation review](docs/review-2026-11-13.md), [community collaboration](docs/wiki-collaboration.md), and [public entity identities](docs/public-entity-identity.md) for architecture, authentication, non-destructive history migration, and known data limitations. `pnpm data:audit-vanilla` compares the legacy vanilla catalog with the installed game without rewriting either input.
 
 ## Adding features
 

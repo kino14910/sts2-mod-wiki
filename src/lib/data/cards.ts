@@ -1,4 +1,6 @@
-export type ColorId = 'ironclad' | 'silent' | 'regent' | 'necrobinder' | 'defect' | 'colorless';
+import { publicEntityId } from '../entity-identity.ts';
+
+export type ColorId = 'ironclad' | 'silent' | 'regent' | 'necrobinder' | 'defect' | 'fool' | 'colorless';
 export type CardType = 'attack' | 'skill' | 'power' | 'status' | 'curse' | 'quest';
 export type Rarity =
 	| 'basic'
@@ -89,6 +91,7 @@ export const COLORS: Record<ColorId, { name: string; short: string; accent: stri
 	regent: { name: 'Regent', short: 'RG', accent: '#d5aa5b', motif: 'crown' },
 	necrobinder: { name: 'Necrobinder', short: 'NB', accent: '#9a73c9', motif: 'skull' },
 	defect: { name: 'Defect', short: 'DF', accent: '#5aa9c9', motif: 'orb' },
+	fool: { name: 'Fool', short: 'FO', accent: '#d62000', motif: 'moon' },
 	colorless: { name: 'Colorless', short: 'CL', accent: '#a6a199', motif: 'star' }
 };
 
@@ -263,7 +266,9 @@ export function rarityMatches(filter: string, cardRarity: string): boolean {
 }
 
 export function cardHref(card: Card) {
-	return `/cards/${card.id}`;
+	const id = publicEntityId({ type: 'card', id: card.id, modId: card.mod });
+	if (id === null) throw new Error(`Invalid card identity: ${card.mod}:${card.id}`);
+	return `/cards/${encodeURIComponent(id)}`;
 }
 
 export function isUpgradable(card: Card) {

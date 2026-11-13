@@ -1,5 +1,6 @@
 import type { CommentTargetType } from '#lib/comments'
-import type { EntityRef, PageType, RevisionSourceType } from '#lib/entities'
+import { resolvePublicEntityRef, type EntityRef, type PageType, type RevisionSourceType } from '#lib/entities'
+import { CommentError, COMMENT_RATE_LIMIT_PER_IP, COMMENT_RATE_LIMIT_PER_TOKEN } from './comment-service'
 import type {
 	CommentInsert,
 	CommentRow,
@@ -22,7 +23,7 @@ const REVISION_COLUMNS =
 const SOURCE_COLUMNS =
 	'id, section_id, source_type, source_path, source_hash, source_content, source_mod_version, source_status, last_synced_at, created_at, updated_at'
 const UPDATE_COLUMNS =
-	'id, source_id, section_id, base_content, current_content, incoming_content, base_hash, incoming_hash, status, reviewed_by, review_note, created_at, reviewed_at, published_revision_id'
+	'id, source_id, section_id, base_content, current_content, incoming_content, base_hash, incoming_hash, incoming_mod_version, status, reviewed_by, review_note, created_at, reviewed_at, published_revision_id'
 const COMMENT_COLUMNS =
 	'id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content, status, created_at, updated_at'
 
@@ -72,11 +73,15 @@ export async function findPageByEntity(
 	db: D1Database,
 	ref: EntityRef
 ): Promise<WikiPageRow | null> {
+	const resolved = resolvePublicEntityRef(ref)
+	const scopedId = resolved ? `${resolved.modId}:${resolved.id}` : ref.id
 	return db
 		.prepare(
-			`SELECT ${PAGE_COLUMNS} FROM wiki_pages WHERE page_type = 'entity' AND entity_type = ? AND entity_id = ? LIMIT 1`
+			`SELECT ${PAGE_COLUMNS} FROM wiki_pages WHERE page_type = 'entity' AND entity_type = ? AND entity_id IN (?, ?)
+			AND NOT EXISTS (SELECT 1 FROM wiki_identity_archives a WHERE a.page_id = wiki_pages.id)
+			ORDER BY CASE WHEN entity_id = ? THEN 0 ELSE 1 END LIMIT 1`
 		)
-		.bind(ref.type, ref.id)
+		.bind(ref.type, ref.id, scopedId, scopedId)
 		.first<WikiPageRow>()
 }
 
@@ -87,7 +92,8 @@ export async function findPageByModSlug(
 ): Promise<WikiPageRow | null> {
 	return db
 		.prepare(
-			`SELECT ${PAGE_COLUMNS} FROM wiki_pages WHERE page_type = 'mod' AND mod_id = ? AND slug = ? LIMIT 1`
+			`SELECT ${PAGE_COLUMNS} FROM wiki_pages WHERE page_type = 'mod' AND mod_id = ? AND slug = ?
+			AND NOT EXISTS (SELECT 1 FROM wiki_identity_archives a WHERE a.page_id = wiki_pages.id) LIMIT 1`
 		)
 		.bind(modId, slug)
 		.first<WikiPageRow>()
@@ -434,6 +440,7 @@ export function createCommentStore(db: D1Database): CommentStore {
 				.prepare(
 					`SELECT ${COMMENT_COLUMNS} FROM comments
 					WHERE target_type = ? AND target_id = ? AND parent_id IS NULL
+					AND NOT EXISTS (SELECT 1 FROM wiki_comment_identity_archives a WHERE a.comment_id = comments.id)
 					ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`
 				)
 				.bind(targetType, targetId, limit, offset)
@@ -456,7 +463,8 @@ export function createCommentStore(db: D1Database): CommentStore {
 		countTopLevel(targetType: CommentTargetType, targetId: string): Promise<number> {
 			return countRows(
 				db,
-				'SELECT COUNT(*) AS value FROM comments WHERE target_type = ? AND target_id = ? AND parent_id IS NULL',
+				`SELECT COUNT(*) AS value FROM comments WHERE target_type = ? AND target_id = ? AND parent_id IS NULL
+				AND NOT EXISTS (SELECT 1 FROM wiki_comment_identity_archives a WHERE a.comment_id = comments.id)`,
 				targetType,
 				targetId
 			)
@@ -497,9 +505,16 @@ export function createCommentStore(db: D1Database): CommentStore {
 		},
 
 		async insertComment(input: CommentInsert): Promise<void> {
-			await db
+			// Count and insertion form one SQL statement, so parallel requests cannot all pass
+			// a separate rate check before any insert is visible.
+			const result = await db
 				.prepare(
-					'INSERT INTO comments (id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+					`INSERT INTO comments (id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content)
+					SELECT ?, ?, ?, ?, ?, ?, ?, ?
+					WHERE (SELECT COUNT(*) FROM comments WHERE author_token_hash = ?
+					AND created_at >= strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-60 seconds')) < ?
+					AND (? IS NULL OR (SELECT COUNT(*) FROM comments WHERE author_ip_hash = ?
+					AND created_at >= strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-60 seconds')) < ?)`
 				)
 				.bind(
 					input.id,
@@ -509,30 +524,38 @@ export function createCommentStore(db: D1Database): CommentStore {
 					input.authorName,
 					input.authorTokenHash,
 					input.authorIpHash,
-					input.content
+					input.content,
+					input.authorTokenHash, COMMENT_RATE_LIMIT_PER_TOKEN,
+					input.authorIpHash, input.authorIpHash, COMMENT_RATE_LIMIT_PER_IP
 				)
 				.run()
+			if (!Number(result.meta?.changes ?? 0)) throw new CommentError(429, 'comment rate limit exceeded')
 		},
 
-		async updateContent(id: string, tokenHash: string, content: string): Promise<number> {
+		async updateContent(id: string, tokenHash: string, content: string, expected): Promise<number> {
 			const result = await db
 				.prepare(
-					`UPDATE comments SET content = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
-					WHERE id = ? AND author_token_hash = ? AND status = 'visible'`
+					`UPDATE comments SET content = ?, updated_at = CASE
+					WHEN strftime('%Y-%m-%dT%H:%M:%fZ', 'now') <= updated_at THEN strftime('%Y-%m-%dT%H:%M:%fZ', updated_at, '+0.001 seconds')
+					ELSE strftime('%Y-%m-%dT%H:%M:%fZ', 'now') END
+					WHERE id = ? AND author_token_hash = ? AND status = 'visible'
+					AND (? IS NULL OR (updated_at = ? AND content = ?))`
 				)
-				.bind(content, id, tokenHash)
+				.bind(content, id, tokenHash, expected?.updatedAt ?? null, expected?.updatedAt ?? null, expected?.content ?? null)
 				.run()
 			return Number(result.meta?.changes ?? 0)
 		},
 
 		async softDelete(id: string, tokenHash: string): Promise<number> {
-			const result = await db
-				.prepare(
-					"UPDATE comments SET status = 'deleted' WHERE id = ? AND author_token_hash = ? AND status = 'visible'"
-				)
-				.bind(id, tokenHash)
-				.run()
-			return Number(result.meta?.changes ?? 0)
+			const results = await db.batch([
+				db.prepare(`UPDATE comments SET status = 'deleted', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+					WHERE id = ? AND author_token_hash = ? AND status = 'visible'`).bind(id, tokenHash),
+				db.prepare(`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
+					SELECT ?, NULL, 'comment.delete', 'comment', id,
+					json_object('targetType', target_type, 'targetId', target_id, 'authorName', author_name)
+					FROM comments WHERE id = ? AND changes() = 1`).bind(crypto.randomUUID(), id)
+			])
+			return Number(results[0].meta?.changes ?? 0)
 		},
 
 		async insertAuditLog(input): Promise<void> {

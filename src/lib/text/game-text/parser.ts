@@ -1,7 +1,9 @@
 import { ALIGN_TAGS, EFFECT_TAGS, NAMED_COLORS, sizeToUnit } from '../bbcode'
-import { classifyIconRef, iconDiagnostic, resolveIconSrc, type IconRef } from '#lib/data/icon-registry'
+import { resolveIconSrc, type IconRef } from '#lib/data/icon-registry'
+import { resolveExplicitIcon } from './icon-syntax'
 import type { GameTextNode, GameTextOptions, GameTextStyle, GameTextTagNode } from './types'
 import { tokenizeGameText, type GameTextToken } from './tokenizer'
+import { parseGameTemplate, resolveGameTemplate } from '../game-template'
 
 /**
  * gold 状态只由本地化文件里的命名标签 [gold] 产生。
@@ -42,20 +44,20 @@ function iconNode(token: OpenToken, options: GameTextOptions): GameTextNode | nu
 		modId: options.modId
 	}
 	const src = resolveIconSrc(ref, options) ?? ''
-	const count =
+	const amount =
 		name === 'energy_icons' || name === 'star_icons'
-			? Math.max(0, Number(arg) || 0)
+			? Math.trunc(Number(arg) || 0)
 			: 1
-	return { type: 'icon', kind, count, src, ref }
+	// Raw icon tags are accepted too; avoid allocating an unbounded repeat array.
+	const compact = amount <= 0 || amount >= 5
+	return { type: 'icon', kind, count: compact ? 1 : amount, src, ref, ...(compact ? { label: String(amount) } : {}) }
 }
 
 function explicitIconNode(
 	token: Extract<GameTextToken, { type: 'iconRef' }>,
 	options: GameTextOptions
 ): GameTextNode {
-	const ref = classifyIconRef(token.ref, options.locale)
-	const src = resolveIconSrc(ref) ?? ''
-	const diagnostic = iconDiagnostic(ref) ?? undefined
+	const { ref, src, diagnostic } = resolveExplicitIcon({ type: 'icon', ref: token.ref, raw: token.raw }, options.locale)
 	return {
 		type: 'icon',
 		kind: 'asset',
@@ -67,24 +69,47 @@ function explicitIconNode(
 	}
 }
 
-export function parseGameTextNodes(src: string, options: GameTextOptions = {}): GameTextNode[] {
+type VariableNode = Extract<GameTextNode, { type: 'variable' }>
+
+function tokensWithVariables(src: string, options: GameTextOptions, evaluate: boolean) {
+	if (!evaluate) return tokenizeGameText(src, options.modId).map((token) => ({ token, variable: undefined as VariableNode | undefined }))
+	return parseGameTemplate(src).flatMap((node) => {
+		if (node.type === 'text') return tokenizeGameText(node.value, options.modId).map((token) => ({ token, variable: undefined as VariableNode | undefined }))
+		const value = resolveGameTemplate(node.raw, {
+			...options,
+			variables: options.mode === 'collection' ? options.collectionVariables ?? options.variables : options.variables
+		})
+		const variable: VariableNode = {
+			type: 'variable', name: node.name, raw: node.raw.slice(1, -1), value, children: [],
+			// Selected text branches inherit semantic highlighting. Scalar values do not
+			// become entity links merely because their enclosing tag happens to be gold.
+			matchEntities: !!node.args && /^(?:show:|choose\(|cond:|plural(?:\(|:))|\|/.test(node.args)
+		}
+		const tokens = tokenizeGameText(value, options.modId)
+		if (!tokens.length) tokens.push({ type: 'text', value: '' })
+		return tokens.map((token) => ({ token, variable }))
+	})
+}
+
+export function parseGameTextNodes(src: string, options: GameTextOptions = {}, evaluateTemplates = false): GameTextNode[] {
 	const root: GameTextNode[] = []
 	const stack: Array<{ name: string; children: GameTextNode[] }> = []
 	const current = () => (stack.length ? stack[stack.length - 1].children : root)
 
-	for (const token of tokenizeGameText(src, options.modId)) {
+	for (const { token, variable } of tokensWithVariables(src, options, evaluateTemplates)) {
+		const emit = (node: GameTextNode) => current().push(variable ? { ...variable, children: [node] } : node)
 		switch (token.type) {
 			case 'text':
-				current().push({ type: 'text', value: token.value })
+				emit({ type: 'text', value: token.value })
 				break
 			case 'unknown':
-				current().push({ type: 'text', value: token.raw })
+				emit({ type: 'text', value: token.raw })
 				break
 			case 'break':
-				current().push({ type: 'break' })
+				emit({ type: 'break' })
 				break
 			case 'iconRef':
-				current().push(explicitIconNode(token, options))
+				emit(explicitIconNode(token, options))
 				break
 			case 'close': {
 				let index = -1
@@ -101,7 +126,7 @@ export function parseGameTextNodes(src: string, options: GameTextOptions = {}): 
 			case 'open': {
 				const icon = iconNode(token, options)
 				if (icon) {
-					current().push(icon)
+					emit(icon)
 					break
 				}
 				const tag: GameTextTagNode = {

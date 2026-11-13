@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { m } from '#lib/paraglide/messages'
+	import { getLocale } from '#lib/paraglide/runtime'
+	import { wikiUi } from '#lib/wiki-article'
 
 	export interface WikiTocItem {
 		id: string
@@ -12,6 +14,8 @@
 	let { items, collapsible = false }: { items: WikiTocItem[]; collapsible?: boolean } = $props()
 
 	let open = $state(true)
+	let ui = $derived(wikiUi(getLocale()))
+	const listId = $props.id()
 </script>
 
 <nav
@@ -28,14 +32,15 @@
 				class="text-[0.72rem] font-normal text-link hover:text-gold"
 				type="button"
 				aria-expanded={open}
+				aria-controls={listId}
 				onclick={() => (open = !open)}
 			>
-				[{open ? 'hide' : 'show'}]
+				[{open ? ui.hide : ui.show}]
 			</button>
 		{/if}
 	</div>
 	{#if open}
-		<ul class="rounded-md bg-surface-2 px-2 py-1.25 font-display">
+		<ul id={listId} class="rounded-md bg-surface-2 px-2 py-1.25 font-display">
 			{#each items as item (item.id)}
 				<li
 					class={['py-px', item.indent && 'pl-4']}

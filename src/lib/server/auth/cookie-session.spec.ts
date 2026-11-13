@@ -53,4 +53,8 @@ describe('signed wiki session cookies', () => {
 		expect(header).toContain('SameSite=Lax')
 		expect(clearSessionCookie()).toContain('Max-Age=0')
 	})
+	it('treats malformed percent-encoded cookies as unauthenticated input', () => {
+		expect(readSessionCookie(requestWithCookie(`${SESSION_COOKIE}=%`))).toBeNull()
+		expect(readSessionCookie(requestWithCookie(`${SESSION_COOKIE}=%E0%A4`))).toBeNull()
+	})
 })

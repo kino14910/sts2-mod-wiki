@@ -1,4 +1,4 @@
-import { buildBaseLibEntryId, buildRitsuLibEntryId, normalizeSegment } from './entry-id';
+import { buildBaseLibEntryId, buildRitsuLibEntryId, normalizeSegment } from './entry-id.ts';
 
 /**
  * 前置依赖：决定该模组内容的 Entry ID 与本地化 Key 如何生成。

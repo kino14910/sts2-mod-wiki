@@ -15,6 +15,8 @@ import {
 	listSectionsByPage
 } from './repository'
 import { composeSections, documentFromSections } from './sections'
+import { ensureCardSections } from './card-initialization'
+import { canonicalWikiEntity, ensureCanonicalIdentities, pinEntityOwnership } from './identity-catalog'
 import type {
 	WikiPageMeta,
 	WikiPageRow,
@@ -68,8 +70,9 @@ function buildView(
 
 export async function loadWikiPage(
 	db: D1Database | null,
-	ref: EntityRef
+	inputRef: EntityRef
 ): Promise<WikiPageView> {
+	const ref = canonicalWikiEntity(inputRef) ?? inputRef
 	const page: WikiPageRef = { kind: 'entity', ref }
 	const game = isValidEntityRef(ref) ? findGameEntity(ref) : null
 	const slug = entityKey(ref)
@@ -78,9 +81,14 @@ export async function loadWikiPage(
 	if (!db) return buildView(page, game, NO_SECTIONS, null, 'unavailable', slug, 'entity', modId)
 
 	try {
+		await ensureCanonicalIdentities(db)
+		if (!game) return buildView(page, game, NO_SECTIONS, null, 'none', slug, 'entity', modId)
+		await pinEntityOwnership(db, ref)
+		if (game.kind === 'card') await ensureCardSections(db, { ...game.data, rawId: game.data.id, id: ref.id })
 		const row = await findPageByEntity(db, ref)
 		if (!row) return buildView(page, game, NO_SECTIONS, null, 'none', slug, 'entity', modId)
-		const sections = await readSections(db, row)
+		const allSections = await readSections(db, row)
+		const sections = ref.type === 'card' ? allSections.filter((s) => s.contentType === 'markdown') : allSections
 		return buildView(page, game, sections, row, 'd1', row.slug, row.page_type, row.mod_id)
 	} catch (error) {
 		console.warn('[wiki] D1 read failed', slug, error)
@@ -99,6 +107,7 @@ export async function loadModWikiPage(
 	}
 
 	try {
+		await ensureCanonicalIdentities(db)
 		const row = await findPageByModSlug(db, modId, slug)
 		if (!row) return buildView(page, null, NO_SECTIONS, null, 'none', slug, 'mod', modId)
 		const sections = await readSections(db, row)

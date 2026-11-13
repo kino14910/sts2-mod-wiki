@@ -4,7 +4,7 @@ import { requirePermission, WikiCollaborationError, type MaybeActor } from './ac
 import type { WikiEditStore } from './collaboration-types'
 import { toRevisionView } from './collaboration-view'
 import { publishRevision } from './publish-service'
-import { MAX_EDIT_SUMMARY_LENGTH } from './edit-service'
+import { MAX_EDIT_SUMMARY_LENGTH, normalizeBaseVersion } from './edit-service'
 
 export interface RevisionDiffView {
 	revision: RevisionView
@@ -21,8 +21,8 @@ export async function listSectionHistory(
 ): Promise<RevisionView[]> {
 	const rows = await store.listRevisions(
 		sectionId,
-		Math.min(100, Math.max(1, Math.trunc(limit))),
-		Math.max(0, Math.trunc(offset))
+		Number.isFinite(limit) ? Math.min(100, Math.max(1, Math.trunc(limit))) : 30,
+		Number.isFinite(offset) ? Math.max(0, Math.trunc(offset)) : 0
 	)
 	return rows.map(toRevisionView)
 }
@@ -48,6 +48,7 @@ export async function getRevisionDiff(
 export interface RevertInput {
 	sectionId: string
 	revisionId: string
+	baseVersion: unknown
 	summary?: unknown
 	actor: MaybeActor
 }
@@ -58,6 +59,7 @@ export async function revertToRevision(
 	input: RevertInput
 ): Promise<SectionEditResult> {
 	const actor = requirePermission(input.actor, 'wiki:revision:revert')
+	const baseVersion = normalizeBaseVersion(input.baseVersion)
 	if (!input.sectionId || !input.revisionId)
 		throw new WikiCollaborationError(400, 'sectionId and revisionId are required', 'BAD_INPUT')
 	const summaryValue = typeof input.summary === 'string' ? input.summary : ''
@@ -71,12 +73,14 @@ export async function revertToRevision(
 		throw new WikiCollaborationError(404, 'Revision not found for this section', 'NOT_FOUND')
 	const section = await store.findSection(input.sectionId)
 	if (!section) throw new WikiCollaborationError(404, 'Section not found', 'SECTION_NOT_FOUND')
+	if (section.version !== baseVersion)
+		throw new WikiCollaborationError(409, 'Section changed since rollback was reviewed', 'VERSION_CONFLICT')
 	if (section.currentContent === revision.content)
 		throw new WikiCollaborationError(400, 'Content already matches this revision', 'NO_CHANGES')
 
 	const published = await publishRevision(store, {
 		sectionId: input.sectionId,
-		expectedVersion: section.version,
+		expectedVersion: baseVersion,
 		content: revision.content,
 		summary,
 		editorId: actor.userId,

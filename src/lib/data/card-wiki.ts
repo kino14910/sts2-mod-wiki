@@ -1,5 +1,4 @@
-import navboxRaw from './ironclad-card-navbox.json'
-import type { RelicWikiCell, RelicWikiToken } from '#lib/data/relic-wiki'
+import type { RelicWikiToken } from '#lib/data/relic-wiki'
 import {
 	cardByName,
 	cardHrefByName,
@@ -10,6 +9,8 @@ import {
 	relicImageByName
 } from '#lib/data/wiki-links'
 import { CHARACTER_ASSETS } from '#lib/data/mods'
+import type { ArticleContent } from '#lib/wiki-article'
+import { BASH_EDITORIAL, BASH_CARD_CONTENT } from './card-article-content'
 
 interface CardWikiTocItem {
 	id: string
@@ -18,32 +19,6 @@ interface CardWikiTocItem {
 	indent?: boolean
 	depth?: number
 }
-
-export interface CardWikiNavboxItem {
-	name: string
-	href: string | null
-}
-
-export interface CardWikiNavboxRow {
-	group?: string
-	href?: string
-	items: CardWikiNavboxItem[]
-}
-
-export interface CardWikiNavboxGroup {
-	label: string
-	href: string
-	rows: CardWikiNavboxRow[]
-}
-
-export interface CardWikiNavbox {
-	title: string
-	href: string
-	templateHref: string
-	groups: CardWikiNavboxGroup[]
-}
-
-export const IRONCLAD_CARD_NAVBOX = navboxRaw as CardWikiNavbox
 
 const tokens: Record<string, RelicWikiToken> = {}
 
@@ -109,87 +84,10 @@ export const BASH_WIKI = {
 		{ id: 'Synergies', number: '2.1', label: 'Synergies', indent: true, depth: 1 },
 		{ id: 'Relics', number: '2.1.1', label: 'Relics', indent: true, depth: 2 },
 		{ id: 'Notes', number: '3', label: 'Notes' },
-		{ id: 'Names_in_Other_Languages', number: '4', label: 'Names in Other Languages' },
-		{ id: 'Update_History', number: '5', label: 'Update History' }
+		{ id: 'Update_History', number: '4', label: 'Update History' }
 	] satisfies CardWikiTocItem[],
-	intro: '[[Bash]] is a 2 [[Energy]] cost [[Basic]] [[Attack]] Card for the [[Ironclad]].',
-	obtaining: 'The [[Ironclad]] starts the game with one copy of [[Bash]] in his deck. It is not found in card rewards.',
-	synergiesLead: '[[Vulnerable]] applied by this card:',
-	synergies: [
-		'Increases damage dealt by [[Bully]].',
-		'Grants an additional hit from [[Dismantle]].',
-		'Grants additional [[Strength]] from [[Dominate]].',
-		'Draws 1 (2) card via [[Vicious]].',
-		'Makes enemies deal 50% less damage with [[Colossus]].',
-		'Makes enemies take 25% (50%) more damage with [[Cruelty]].',
-		'Makes enemies take 25% more damage with [[Paper Phrog]].',
-		'Is potentially doubled by [[Unsettling Lamp]].'
-	],
-	relics: ['[[Intimidating Helmet]] grants 4 [[Block]] whenever this card is played.'],
-	notesLead: '[[Archaic Tooth]], if taken from [[Orobas]], transforms [[Bash]] into its [[Ancient]] version [[Break]].',
-	notes: [
-		'If [[Bash]] has already been upgraded and/or [[Enchanted]], [[Break]] will be upgraded and/or [[Enchanted]] by default.'
-	],
-	names: {
-		columns: ['Language', 'Name', 'Meaning/Explanation'],
-		rows: [
-			['Simplified Chinese', '痛击', 'tongji'],
-			['French', 'Heurt', ''],
-			['German', 'Schmettern', ''],
-			['Indonesian', 'Remuk', ''],
-			['Italian', 'Mazzata', ''],
-			['Japanese', '強打', 'Kyouda'],
-			['Korean', '강타', 'gangta'],
-			['Polish', 'Grzmotnięcie', ''],
-			['Brazilian Portuguese', 'Esmagar', ''],
-			['Russian', 'Вмятина', 'Vmjatina'],
-			['Spanish (Spain)', 'Porrazo', ''],
-			['Spanish (Latin America)', 'Mazazo', ''],
-			['Thai', 'ทุบตี', 'thupti'],
-			['Turkish', 'Göçertme', ''],
-			['Internal name', 'BASH', '']
-		].map(([language, name, subtext]) => [
-			{ text: language },
-			{ text: name, subtext },
-			{ text: '' }
-		]) as RelicWikiCell[][]
-	},
-	updateHistory: {
-		columns: ['Type', 'Version', 'Release Date', 'Changes'],
-		rows: [
-			[
-				{ text: 'Pre-release' },
-				{ text: 'V0.55.0' },
-				{ text: 'May 8th, 2025' },
-				{
-					lines: [
-						'Fixed an issue where killing an enemy with an attack that also applied a power to them (like Bash) caused a softlock'
-					]
-				}
-			],
-			[
-				{ text: 'Pre-release' },
-				{ text: 'V0.43.0' },
-				{ text: 'January 30th, 2025' },
-				{
-					lines: [
-						'Added special transformed starter cards for Orobas’ Transcendence blessing:',
-						'Ironclad: Bash -> Break'
-					]
-				}
-			],
-			[
-				{ text: 'Pre-release' },
-				{ text: '2023-04-21' },
-				{ text: 'April 21st, 2023' },
-				{ lines: ['Bug Fixes: Unable to play bash after unrelenting'] }
-			],
-			[
-				{ text: 'Pre-release' },
-				{ text: 'Unknown' },
-				{ text: '—' },
-				{ lines: ['Added Bash to the game'] }
-			]
-		] satisfies RelicWikiCell[][]
-	}
+	...BASH_EDITORIAL
 }
+
+/** Presentation enrichment resolves entity icons separately from the editorial source. */
+export const BASH_CARD_ARTICLE: ArticleContent = { ...BASH_CARD_CONTENT, context: BASH_WIKI.page }

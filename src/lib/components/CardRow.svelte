@@ -3,6 +3,7 @@
 	import { cardHref, colorInfo, isUpgradable, resolveCard, type Card } from '#lib/data/cards'
 	import { colorName, localizedCard, modName, rarityName, typeName } from '#lib/data/localize'
 	import { CHARACTER_ASSETS } from '#lib/data/mods'
+	import { publicEntityId } from '#lib/entities'
 	import { m } from '#lib/paraglide/messages'
 	import CardDescription from './CardDescription.svelte'
 	import CardThumb from './CardThumb.svelte'
@@ -36,6 +37,8 @@
 	class="card-row card-box relative grid grid-cols-[150px_minmax(0,1fr)] items-center gap-3 border border-gray rounded-md bg-list-cell px-6 py-5 max-[640px]:grid-cols-[110px_minmax(0,1fr)] max-[420px]:grid-cols-[84px_minmax(0,1fr)] max-[420px]:gap-2.5 max-[420px]:p-2.5"
 	style:--accent={accent}
 	data-name={localized.name}
+	data-entity-id={publicEntityId({ type: 'card', id: card.id, modId: card.mod })}
+	data-mod-id={card.mod}
 	data-rarity={rarityLabel}
 	data-type={type}
 	data-color={colorLabel}

@@ -6,6 +6,9 @@ declare global {
 		WIKI_SESSION_SECRET?: string;
 		/** Set to '1' to enable the local development subject picker. Never enable in production. */
 		WIKI_DEV_LOGIN?: string;
+		WIKI_PUBLIC_ORIGIN?: string;
+		GITHUB_CLIENT_ID?: string;
+		GITHUB_CLIENT_SECRET?: string;
 	}
 
 	namespace App {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte'
+	import { SvelteSet } from 'svelte/reactivity'
 	import CommentForm from './CommentForm.svelte'
 	import CommentItem from './CommentItem.svelte'
 	import { commentRequestHeaders } from '#lib/comment-identity'
@@ -8,8 +9,10 @@
 
 	let {
 		targetType = 'card',
-		targetId
-	}: { targetType?: CommentTargetType; targetId: string } = $props()
+		targetId,
+		id,
+		headingLevel = 2
+	}: { targetType?: CommentTargetType; targetId: string; id?: string; headingLevel?: 2 | 3 | 4 | 5 | 6 } = $props()
 
 	let items = $state<CommentView[]>([])
 	let page = $state(1)
@@ -38,7 +41,7 @@
 
 	function mergePages(pages: CommentPage[]): CommentView[] {
 		const merged: CommentView[] = []
-		const seen = new Set<string>()
+		const seen = new SvelteSet<string>()
 		for (const result of pages) {
 			for (const comment of result.items) {
 				if (seen.has(comment.id)) continue
@@ -85,7 +88,7 @@
 		try {
 			const result = await requestPage(targetId, page + 1)
 			if (seq !== requestSeq) return
-			const seen = new Set(items.map((item) => item.id))
+			const seen = new SvelteSet(items.map((item) => item.id))
 			items = [...items, ...result.items.filter((item) => !seen.has(item.id))]
 			page = result.page
 			total = result.total
@@ -113,7 +116,7 @@
 		void reload()
 	}
 
-	$effect(() => {
+	function initialize() {
 		const target = targetId
 		void targetType
 		if (!target) return
@@ -125,12 +128,13 @@
 			loaded = false
 			void reload(target)
 		})
-	})
+		return () => { requestSeq++ }
+	}
 </script>
 
-<section class="mt-8 border-t border-line pt-6" aria-label={m.comments_title()}>
+<section {@attach initialize} {id} data-comment-target-type={targetType} data-comment-target-id={targetId} class="mt-8 scroll-mt-24 border-t border-line pt-6" aria-label={m.comments_title()}>
 	<div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-		<h2 class="font-serif text-xl text-gold">{m.comments_title()}</h2>
+		<svelte:element this={`h${headingLevel}`} class="font-serif text-xl text-gold">{m.comments_title()}</svelte:element>
 		{#if loaded && total > 0}
 			<span class="text-[0.78rem] opacity-60">{m.comments_count({ count: total })}</span>
 		{/if}

@@ -1,359 +1,180 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
-import { getPlatformProxy } from 'wrangler'
 import { scanModWiki } from './scan.mjs'
-import {
-	actionForSyncCase,
-	classifySourceState
-} from '../../src/lib/server/wiki/source-sync-service.ts'
+import { classifySourceState, actionForSyncCase } from '../../src/lib/server/wiki/source-sync-service.ts'
+import { publicEntityId } from '../../src/lib/entity-identity.ts'
 
 const projectRoot = path.resolve(fileURLToPath(new URL('../..', import.meta.url)))
-const PERSIST_PATH = '.wrangler/state/v3'
+const sqlLiteral = (v) => v == null ? 'NULL' : typeof v === 'number' ? String(v) : `'${String(v).replaceAll("'", "''")}'`
+const renderSql = (sql, values) => { let index = 0; return `${sql.replace(/\?/g, () => sqlLiteral(values[index++]))};` }
 
-const args = process.argv.slice(2)
-const dryRun = args.includes('--dry-run')
-const assumeFresh = args.includes('--emit-initial')
-const emitIndex = args.indexOf('--emit-sql')
-const emitPath = emitIndex >= 0 ? args[emitIndex + 1] : null
-if (emitIndex >= 0 && !emitPath) {
-	console.error('[mod-wiki] --emit-sql requires an output path')
-	process.exit(1)
-}
-if (assumeFresh && !emitPath) {
-	console.error('[mod-wiki] --emit-initial requires --emit-sql <path>')
-	process.exit(1)
-}
+/** A repeatable import transaction for each section; CLI and real-SQL tests use this path. */
+export async function syncModWiki(db, scan, options = {}) {
+	if (scan.errors.length) throw new Error(`Scan validation failed: ${scan.errors.join('; ')}`)
+	// Callers can bypass the filesystem scanner; validate/normalize the entire batch
+	// before its first write rather than assuming every ScannedModWiki was produced there.
+	const files = scan.files.map((file) => {
+		if (file.entityId == null && file.entityType == null) return { ...file, entityId: null, entityType: null, entityModId: null }
+		if (typeof file.entityId !== 'string' || typeof file.entityType !== 'string' ||
+			(file.entityModId != null && typeof file.entityModId !== 'string')) throw new Error(`Invalid source entity: ${file.sourcePath}`)
+		const separator = file.entityId.indexOf(':')
+		const scope = file.entityModId ?? (separator < 0 ? file.modId : file.entityId.slice(0, separator))
+		const entityId = publicEntityId({ type: file.entityType, id: file.entityId, modId: scope })
+		if (!entityId) throw new Error(`Invalid source entity namespace: ${file.sourcePath}`)
+		return { ...file, entityId, entityModId: scope }
+	})
+	const emitted = [], plan = [], identities = new Set()
+	const read = async (sql, ...params) => options.assumeFresh ? null : db.prepare(sql).bind(...params).first()
+	const all = async (sql, ...params) => options.assumeFresh ? [] : (await db.prepare(sql).bind(...params).all()).results
+	const run = async (statements) => {
+		if (options.dryRun || options.emitSql) {
+			for (const [sql, params] of statements) emitted.push(renderSql(sql, params))
+			return statements.map(() => ({ meta: { changes: 1 } }))
+		}
+		return db.batch(statements.map(([sql, params]) => db.prepare(sql).bind(...params)))
+	}
+	const audit = (action, sectionId, metadata, guardSql, guardParams) => [
+		`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
+		 SELECT ?, NULL, ?, 'mod_wiki', ?, ? WHERE ${guardSql}`,
+		[crypto.randomUUID(), action, sectionId, JSON.stringify(metadata), ...guardParams]
+	]
+	const sourceIdentity = (mod, slug, key) => `${mod}\u0000${slug}\u0000${key}`
+	const preservePath = (sourceId, sourcePath) => [
+		`INSERT OR IGNORE INTO wiki_source_paths (source_path, source_id)
+		 SELECT ?, id FROM wiki_section_sources WHERE id = ?`, [sourcePath, sourceId]
+	]
 
-function sqlLiteral(value) {
-	if (value === null || value === undefined) return 'NULL'
-	if (typeof value === 'number') return String(value)
-	return `'${String(value).replaceAll("'", "''")}'`
-}
+	for (const file of files) {
+		identities.add(sourceIdentity(file.modId, file.pageSlug, file.sectionKey))
+		const page = await read("SELECT id,identity_status FROM wiki_pages WHERE page_type = 'mod' AND mod_id = ? AND slug = ?", file.modId, file.pageSlug)
+		if (page?.identity_status === 'archived') {
+			plan.push({ source: file.sourcePath, case: 'SKIP', reason: 'Legacy entity identity is archived pending attribution review' })
+			continue
+		}
+		const pid = page?.id ?? `modpage:${file.modId}:${file.pageSlug}`
+		const section = await read(`SELECT s.*, COALESCE(r.content, '') AS current_content FROM wiki_sections s
+			LEFT JOIN wiki_revisions r ON r.id = s.current_revision_id WHERE s.page_id = ? AND s.section_key = ?`, pid, file.sectionKey)
+		const sid = section?.id ?? `modsection:${file.modId}:${file.pageSlug}:${file.sectionKey}`
+		const source = section ? await read('SELECT * FROM wiki_section_sources WHERE section_id = ?', sid) : null
+		const srcId = source?.id ?? `modsource:${file.modId}:${file.pageSlug}:${file.sectionKey}`
+		const owner = await read(`SELECT source_id FROM wiki_source_paths WHERE source_path = ?`, file.sourcePath)
+		if ((owner && owner.source_id !== srcId) || (section && !source)) {
+			plan.push({ source: file.sourcePath, case: 'SKIP', reason: owner ? 'Path belongs to another source' : 'Existing community section has no source binding' })
+			continue
+		}
+		const syncCase = classifySourceState({ exists: !!source, baseContent: source?.source_content ?? '',
+			baseHash: source?.source_hash ?? '', currentContent: section?.current_content ?? '', sourceStatus: source?.source_status ?? 'active' },
+			{ content: file.content, hash: file.contentHash })
+		const statements = [], rid = `modrevision:${crypto.randomUUID()}`
+		const revGuard = 'EXISTS (SELECT 1 FROM wiki_revisions WHERE id = ?)'
+		const consistent = `EXISTS (SELECT 1 FROM wiki_sections sec JOIN wiki_section_sources src ON src.section_id = sec.id
+			WHERE sec.id = ? AND sec.version = ? AND src.id = ? AND src.source_hash = ?)`
+		const consistentParams = [sid, section?.version ?? 0, srcId, source?.source_hash ?? '']
+		const snapshot = (guard, params) => [
+			`UPDATE wiki_section_sources SET source_path = ?, source_hash = ?, source_content = ?, source_mod_version = ?,
+			 source_status = 'active', last_synced_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+			 WHERE id = ? AND ${guard}`, [file.sourcePath, file.contentHash, file.content, file.modVersion, srcId, ...params]
+		]
+		if (syncCase === 'NEW') {
+			statements.push(
+				['INSERT OR IGNORE INTO wiki_pages (id, mod_id, entity_type, entity_id, entity_mod_id, slug, page_type) VALUES (?, ?, ?, ?, ?, ?, \'mod\')',
+				 [pid, file.modId, file.entityType, file.entityId, file.entityId ? file.entityModId ?? file.modId : null, file.pageSlug]],
+				["INSERT OR IGNORE INTO wiki_sections (id, page_id, section_key, content_type, sort_order) VALUES (?, ?, ?, 'markdown', ?)",
+				 [sid, pid, file.sectionKey, file.sortOrder]],
+				[`INSERT INTO wiki_revisions (id, section_id, revision_no, parent_revision_id, content, summary, source_type, source_reference)
+				 SELECT ?, id, 1, NULL, ?, 'Initial import from mod wiki', 'mod_seed', ? FROM wiki_sections
+				 WHERE id = ? AND version = 0 AND current_revision_id IS NULL
+				 AND NOT EXISTS (SELECT 1 FROM wiki_revisions WHERE section_id = ?)`, [rid, file.content, file.sourcePath, sid, sid]],
+				[`UPDATE wiki_sections SET current_revision_id = ?, version = 1 WHERE id = ? AND ${revGuard}`, [rid, sid, rid]],
+				[`INSERT INTO wiki_section_sources (id, section_id, source_path, source_hash, source_content, source_mod_version)
+				 SELECT ?, ?, ?, ?, ?, ? WHERE ${revGuard}`, [srcId, sid, file.sourcePath, file.contentHash, file.content, file.modVersion, rid]],
+				preservePath(srcId, file.sourcePath),
+				audit('mod_seed_import', sid, { sourcePath: file.sourcePath, hash: file.contentHash }, revGuard, [rid])
+			)
+		} else {
+			// The source/page/section IDs survive a canonical entity reference update.
+			statements.push([`UPDATE wiki_pages SET entity_type = ?, entity_id = ?, entity_mod_id = ? WHERE id = ? AND page_type = 'mod'`,
+				[file.entityType, file.entityId, file.entityId ? file.entityModId ?? file.modId : null, pid]])
+			// Retain all historic paths and the existing source ID, including after a directory move.
+			statements.push(preservePath(srcId, source.source_path), preservePath(srcId, file.sourcePath))
+			if (syncCase === 'A') {
+				statements.push(
+					[`INSERT INTO wiki_revisions (id, section_id, revision_no, parent_revision_id, content, summary, source_type, source_reference)
+					 SELECT ?, s.id, (SELECT COALESCE(MAX(revision_no), 0) + 1 FROM wiki_revisions WHERE section_id = s.id),
+					 s.current_revision_id, ?, 'Mod upstream update', 'mod_update', ? FROM wiki_sections s
+					 JOIN wiki_revisions r ON r.id = s.current_revision_id JOIN wiki_section_sources src ON src.section_id = s.id
+					 WHERE s.id = ? AND s.version = ? AND src.id = ? AND src.source_hash = ? AND r.content = src.source_content`,
+					 [rid, file.content, file.sourcePath, ...consistentParams]],
+					[`UPDATE wiki_sections SET current_revision_id = ?, version = version + 1,
+					 updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ? AND ${revGuard}`, [rid, sid, rid]],
+					snapshot(revGuard, [rid]),
+					[`UPDATE wiki_source_updates SET status = 'withdrawn', review_note = 'Superseded by automatic upstream publication',
+					 reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE source_id = ? AND status IN ('pending', 'conflict') AND ${revGuard}`, [srcId, rid]],
+					audit('mod_update_publish', sid, { sourcePath: file.sourcePath, hash: file.contentHash, revisionId: rid }, revGuard, [rid])
+				)
+			} else if (syncCase === 'C') {
+				const uid = `modupdate:${crypto.randomUUID()}`
+				statements.push(
+					[`UPDATE wiki_source_updates SET status = 'withdrawn', review_note = 'Superseded by newer upstream content',
+					 reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE source_id = ? AND incoming_hash != ?
+					 AND status IN ('pending', 'conflict') AND ${consistent}`, [srcId, file.contentHash, ...consistentParams]],
+					[`INSERT OR IGNORE INTO wiki_source_updates
+					 (id, source_id, section_id, base_content, current_content, incoming_content, base_hash, incoming_hash, incoming_mod_version, status)
+					 SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, 'conflict' WHERE ${consistent}
+					 AND NOT EXISTS (SELECT 1 FROM wiki_source_updates WHERE source_id = ? AND base_hash = ? AND incoming_hash = ? AND status = 'rejected')`,
+					 [uid, srcId, sid, source.source_content, section.current_content, file.content, source.source_hash, file.contentHash, file.modVersion,
+					 ...consistentParams, srcId, source.source_hash, file.contentHash]],
+					[`UPDATE wiki_section_sources SET source_path = ?, source_status = 'active' WHERE id = ? AND ${consistent}`, [file.sourcePath, srcId, ...consistentParams]],
+					audit('mod_update_conflict', sid, { incomingHash: file.contentHash }, 'EXISTS (SELECT 1 FROM wiki_source_updates WHERE id = ?)', [uid])
+				)
+			} else {
+				// B refreshes metadata/path even when only the file moved. D adopts matching content.
+				statements.push(snapshot(consistent, consistentParams),
+					[`UPDATE wiki_source_updates SET status = 'withdrawn', review_note = 'Upstream matches the published content or baseline',
+					 reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE source_id = ? AND status IN ('pending', 'conflict')
+					 AND EXISTS (SELECT 1 FROM wiki_section_sources WHERE id = ? AND source_hash = ?)`, [srcId, srcId, file.contentHash]])
+			}
+		}
+		const results = await run(statements)
+		const revisionInsertIndex = syncCase === 'NEW' ? 2 : syncCase === 'A' ? 2 : -1
+		const lostRace = revisionInsertIndex >= 0 && !Number(results[revisionInsertIndex].meta?.changes ?? 0)
+		plan.push({ source: file.sourcePath, case: lostRace ? 'RETRY' : syncCase,
+			reason: lostRace ? 'Concurrent change preserved; run sync again' : actionForSyncCase(syncCase).reason })
+	}
 
-function renderSql(sql, params) {
-	let index = 0
-	return `${sql.replace(/\?/g, () => sqlLiteral(params[index++]))};`
-}
-
-async function loadState(db) {
-	const readAll = async (sql) => (await db.prepare(sql).all()).results
-	const [pages, sections, revisions, sources, updates] = await Promise.all([
-		readAll('SELECT * FROM wiki_pages'),
-		readAll('SELECT * FROM wiki_sections'),
-		readAll('SELECT * FROM wiki_revisions'),
-		readAll('SELECT * FROM wiki_section_sources'),
-		readAll("SELECT * FROM wiki_source_updates WHERE status IN ('pending', 'conflict')")
-	])
-	return { pages, sections, revisions, sources, updates }
+	// An absent checkout/mod manifest is not proof that an upstream author deleted a section.
+	const scopedMods = new Set(scan.mods.map((m) => m.id))
+	const sources = await all(`SELECT src.*, s.section_key, p.mod_id, p.slug FROM wiki_section_sources src
+		JOIN wiki_sections s ON s.id = src.section_id JOIN wiki_pages p ON p.id = s.page_id WHERE p.page_type = 'mod'`)
+	for (const source of sources) {
+		if (!scopedMods.has(source.mod_id) || source.source_status === 'deleted' || identities.has(sourceIdentity(source.mod_id, source.slug, source.section_key))) continue
+		await run([
+			["UPDATE wiki_section_sources SET source_status = 'deleted', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ?", [source.id]],
+			["UPDATE wiki_source_updates SET status = 'withdrawn', review_note = 'Upstream section was removed', reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE source_id = ? AND status IN ('pending', 'conflict')", [source.id]],
+			audit('mod_source_deleted', source.section_id, { sourcePath: source.source_path }, '1', [])
+		])
+		plan.push({ source: source.source_path, case: 'E', reason: actionForSyncCase('E').reason })
+	}
+	return { plan, statements: emitted }
 }
 
 async function main() {
+	const args = process.argv.slice(2), emitIndex = args.indexOf('--emit-sql')
+	const emitPath = emitIndex >= 0 ? args[emitIndex + 1] : null
+	if (emitIndex >= 0 && !emitPath) throw new Error('--emit-sql requires an output path')
+	if (args.includes('--emit-initial') && !emitPath) throw new Error('--emit-initial requires --emit-sql')
 	const scan = scanModWiki(projectRoot)
-	if (scan.errors.length) {
-		for (const error of scan.errors) console.error(`[mod-wiki] ${error}`)
-		throw new Error('Scan validation failed; no database writes were performed')
-	}
-
-	const proxy = await getPlatformProxy({ persist: { path: PERSIST_PATH } })
-	const db = proxy.env.DB
-	const emitted = []
-	const plan = []
-
-	const run = async (sql, params = []) => {
-		if (dryRun || emitPath) {
-			if (emitPath) emitted.push(renderSql(sql, params))
-			return { meta: { changes: 1 } }
-		}
-		return db.prepare(sql).bind(...params).run()
-	}
-
+	if (scan.errors.length) throw new Error(scan.errors.join('\n'))
+	const { getPlatformProxy } = await import('wrangler')
+	const proxy = await getPlatformProxy({ persist: { path: '.wrangler/state/v3' } })
 	try {
-		const state = assumeFresh
-			? { pages: [], sections: [], revisions: [], sources: [], updates: [] }
-			: await loadState(db)
-		const pageByKey = new Map(
-			state.pages
-				.filter((row) => row.page_type === 'mod')
-				.map((row) => [`${row.mod_id}\u0000${row.slug}`, row])
-		)
-		const sectionByKey = new Map(
-			state.sections.map((row) => [`${row.page_id}\u0000${row.section_key}`, row])
-		)
-		const revisionById = new Map(state.revisions.map((row) => [row.id, row]))
-		const pageById = new Map(state.pages.map((row) => [row.id, row]))
-		const sourceBySection = new Map(state.sources.map((row) => [row.section_id, row]))
-		const openUpdate = new Map(
-			state.updates.map((row) => [`${row.source_id}\u0000${row.incoming_hash}`, row])
-		)
-
-		const pageId = (modId, slug) => `modpage:${modId}:${slug}`
-		const sectionId = (modId, slug, key) => `modsection:${modId}:${slug}:${key}`
-		const sourceId = (modId, slug, key) => `modsource:${modId}:${slug}:${key}`
-		const revisionId = (sid, no) => `modrevision:${sid}:${no}`
-		const updateId = (sid, hash) => `modupdate:${sid}:${hash}`
-
-		const maxRevisionNo = (sid) =>
-			state.revisions.filter((row) => row.section_id === sid).reduce((max, row) => Math.max(max, row.revision_no), 0)
-
-		const audit = async (action, targetId, metadata) => {
-			await run(
-				'INSERT OR IGNORE INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json) VALUES (?, NULL, ?, ?, ?, ?)',
-				[
-					`modaudit:${action}:${targetId}:${metadata?.hash ?? metadata?.contentHash ?? ''}`,
-					action,
-					'mod_wiki',
-					targetId,
-					JSON.stringify(metadata ?? {})
-				]
-			)
-		}
-
-		const insertRevision = async (sid, no, parent, content, sourceType, sourcePath) => {
-			const rid = revisionId(sid, no)
-			await run(
-				'INSERT OR IGNORE INTO wiki_revisions (id, section_id, revision_no, parent_revision_id, content, summary, editor_id, source_type, source_reference) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)',
-				[
-					rid,
-					sid,
-					no,
-					parent,
-					content,
-					sourceType === 'mod_seed' ? 'Initial import from mod wiki' : 'Mod upstream update',
-					sourceType,
-					sourcePath
-				]
-			)
-			return rid
-		}
-
-		const link = async (sid, expectedVersion, rid) => {
-			const result = await run(
-				"UPDATE wiki_sections SET current_revision_id = ?, version = version + 1, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ? AND version = ? AND (current_revision_id IS NULL OR current_revision_id != ?)",
-				[rid, sid, expectedVersion, rid]
-			)
-			return Number(result.meta?.changes ?? 0)
-		}
-
-		const closeOpenUpdates = async (srcId, reason) => {
-			await run(
-				"UPDATE wiki_source_updates SET status = 'withdrawn', review_note = ?, reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE source_id = ? AND status IN ('pending', 'conflict')",
-				[reason, srcId]
-			)
-		}
-
-		const closeStaleUpdates = async (srcId, currentHash, reason) => {
-			await run(
-				"UPDATE wiki_source_updates SET status = 'withdrawn', review_note = ?, reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE source_id = ? AND incoming_hash != ? AND status IN ('pending', 'conflict')",
-				[reason, srcId, currentHash]
-			)
-		}
-
-		const upsertSource = async (sid, file, status = 'active') => {
-			const id = sourceId(file.modId, file.pageSlug, file.sectionKey)
-			await run(
-				`INSERT OR IGNORE INTO wiki_section_sources (id, section_id, source_path, source_hash, source_content, source_mod_version, source_status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-				[id, sid, file.sourcePath, file.contentHash, file.content, file.modVersion, status]
-			)
-			await run(
-				"UPDATE wiki_section_sources SET source_path = ?, source_hash = ?, source_content = ?, source_mod_version = ?, source_status = ?, last_synced_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ?",
-				[file.sourcePath, file.contentHash, file.content, file.modVersion, status, id]
-			)
-			return id
-		}
-
-		const sourceByIdentity = new Map()
-		for (const source of state.sources) {
-			const section = state.sections.find((row) => row.id === source.section_id)
-			const page = section ? pageById.get(section.page_id) : null
-			if (!page || !section) continue
-			sourceByIdentity.set(`${page.mod_id}\u0000${page.slug}\u0000${section.section_key}`, {
-				source,
-				section,
-				page
-			})
-		}
-
-		const scannedIdentities = new Set()
-
-		for (const file of scan.files) {
-			const identity = `${file.modId}\u0000${file.pageSlug}\u0000${file.sectionKey}`
-			scannedIdentities.add(identity)
-			const existingPage = pageByKey.get(`${file.modId}\u0000${file.pageSlug}`)
-			const pid = existingPage?.id ?? pageId(file.modId, file.pageSlug)
-			const existingSection = sectionByKey.get(`${pid}\u0000${file.sectionKey}`)
-			const sid = existingSection?.id ?? sectionId(file.modId, file.pageSlug, file.sectionKey)
-			const existingSource = sourceBySection.get(sid) ?? sourceByIdentity.get(identity)?.source
-			const pathOwner = state.sources.find(
-				(row) => row.source_path === file.sourcePath && row.id !== existingSource?.id
-			)
-			if (pathOwner) {
-				plan.push({ source: file.sourcePath, case: 'SKIP', reason: 'Source path already bound to another section' })
-				await audit('mod_sync_failed', sid, { sourcePath: file.sourcePath, reason: 'duplicate source path' })
-				continue
-			}
-
-			if (existingSection && !existingSource) {
-				plan.push({ source: file.sourcePath, case: 'SKIP', reason: 'Section exists without a mod source; community content preserved' })
-				await audit('mod_sync_failed', sid, { sourcePath: file.sourcePath, reason: 'orphan section' })
-				continue
-			}
-
-			const currentRevision = existingSection?.current_revision_id
-				? revisionById.get(existingSection.current_revision_id)
-				: null
-			const sourceState = {
-				exists: Boolean(existingSource),
-				baseContent: existingSource?.source_content ?? '',
-				baseHash: existingSource?.source_hash ?? '',
-				currentContent: currentRevision?.content ?? '',
-				sourceStatus: existingSource?.source_status ?? 'active'
-			}
-			const incoming = { content: file.content, hash: file.contentHash }
-			const syncCase = classifySourceState(sourceState, incoming)
-			const action = actionForSyncCase(syncCase)
-			plan.push({ source: file.sourcePath, case: syncCase, reason: action.reason })
-
-			if (syncCase === 'NEW') {
-				if (!existingPage) {
-					await run(
-						'INSERT OR IGNORE INTO wiki_pages (id, mod_id, entity_type, entity_id, slug, page_type) VALUES (?, ?, ?, ?, ?, ?)',
-						[pid, file.modId, file.entityType, file.entityId, file.pageSlug, 'mod']
-					)
-					pageByKey.set(`${file.modId}\u0000${file.pageSlug}`, { id: pid })
-				}
-				if (!existingSection) {
-					await run(
-						'INSERT OR IGNORE INTO wiki_sections (id, page_id, section_key, content_type, sort_order) VALUES (?, ?, ?, ?, ?)',
-						[sid, pid, file.sectionKey, 'markdown', file.sortOrder]
-					)
-					sectionByKey.set(`${pid}\u0000${file.sectionKey}`, {
-						id: sid,
-						version: 0,
-						current_revision_id: null
-					})
-				}
-				const rid = await insertRevision(sid, maxRevisionNo(sid) + 1, null, file.content, 'mod_seed', file.sourcePath)
-				const changes = await link(sid, 0, rid)
-				if (changes === 0) throw new Error(`Failed to link initial revision for ${file.sourcePath}`)
-				await upsertSource(sid, file)
-				await audit('mod_seed_import', sid, { sourcePath: file.sourcePath, hash: file.contentHash, modVersion: file.modVersion })
-				continue
-			}
-
-			if (syncCase === 'A') {
-				const section = existingSection
-				const rid = await insertRevision(
-					sid,
-					maxRevisionNo(sid) + 1,
-					section.current_revision_id,
-					file.content,
-					'mod_update',
-					file.sourcePath
-				)
-				const changes = await link(sid, section.version, rid)
-				if (changes === 0) {
-					// The revision was never published, so removing it does not alter formal history.
-					await run('DELETE FROM wiki_revisions WHERE id = ? AND section_id = ?', [rid, sid])
-					plan.push({ source: file.sourcePath, case: 'C', reason: 'Concurrent publish detected during sync' })
-					await audit('mod_sync_failed', sid, { sourcePath: file.sourcePath, reason: 'version conflict' })
-					continue
-				}
-				await upsertSource(sid, file)
-				await closeOpenUpdates(existingSource.id, 'Superseded by an automatic upstream publish')
-				await audit('mod_update_publish', sid, { sourcePath: file.sourcePath, hash: file.contentHash, revisionId: rid })
-				continue
-			}
-
-			if (syncCase === 'C') {
-				const srcId = existingSource?.id ?? sourceId(file.modId, file.pageSlug, file.sectionKey)
-				const uid = updateId(srcId, file.contentHash)
-				await closeStaleUpdates(srcId, file.contentHash, 'Superseded by a newer upstream version')
-				if (!openUpdate.has(`${srcId}\u0000${file.contentHash}`)) {
-					await run(
-						'INSERT OR IGNORE INTO wiki_source_updates (id, source_id, section_id, base_content, current_content, incoming_content, base_hash, incoming_hash, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-						[
-							uid,
-							srcId,
-							sid,
-							sourceState.baseContent,
-							sourceState.currentContent,
-							file.content,
-							sourceState.baseHash,
-							file.contentHash,
-							'conflict'
-						]
-					)
-					openUpdate.set(`${srcId}\u0000${file.contentHash}`, { id: uid })
-					await audit('mod_update_conflict', sid, { sourcePath: file.sourcePath, baseHash: sourceState.baseHash, hash: file.contentHash })
-				}
-				continue
-			}
-
-			if (syncCase === 'D') {
-				await upsertSource(sid, file)
-				await closeOpenUpdates(existingSource.id, 'Current content already matches the incoming upstream content')
-				await audit('mod_update_noop', sid, { sourcePath: file.sourcePath, hash: file.contentHash })
-				continue
-			}
-
-			if (syncCase === 'B') {
-				const versionChanged = existingSource?.source_mod_version !== file.modVersion
-				const needsReactivation = existingSource?.source_status === 'deleted'
-				await closeStaleUpdates(
-					existingSource.id,
-					file.contentHash,
-					'Upstream returned to the synced baseline'
-				)
-				if (versionChanged || needsReactivation) {
-					await upsertSource(sid, file)
-					await audit(needsReactivation ? 'mod_source_restored' : 'mod_version_change', sid, {
-						sourcePath: file.sourcePath,
-						modVersion: file.modVersion
-					})
-				}
-				continue
-			}
-		}
-
-		await run(
-			`UPDATE wiki_source_updates SET status = 'withdrawn', review_note = 'Published content already matches the incoming upstream content', reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE status IN ('pending', 'conflict') AND EXISTS (SELECT 1 FROM wiki_sections s JOIN wiki_revisions r ON r.id = s.current_revision_id WHERE s.id = wiki_source_updates.section_id AND r.content = wiki_source_updates.incoming_content)`,
-			[]
-		)
-
-		for (const [identity, { source, section }] of sourceByIdentity) {
-			if (scannedIdentities.has(identity) || source.source_status === 'deleted') continue
-			plan.push({ source: source.source_path, case: 'E', reason: actionForSyncCase('E').reason })
-			await run(
-				"UPDATE wiki_section_sources SET source_status = 'deleted', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ?",
-				[source.id]
-			)
-			await audit('mod_source_deleted', section.id, { sourcePath: source.source_path })
-		}
-
-		if (emitPath) {
-			const target = path.resolve(projectRoot, emitPath)
-			fs.writeFileSync(
-				target,
-				[
-					'-- Generated by scripts/mod-wiki/sync.mjs. Apply with wrangler d1 execute --file.',
-					'-- Statements are idempotent; review before applying to a remote database.',
-					...emitted
-				].join('\n'),
-				'utf8'
-			)
-			console.log(`[mod-wiki] wrote ${emitted.length} statements to ${target}`)
-		}
-
-		const counts = plan.reduce((acc, item) => ({ ...acc, [item.case]: (acc[item.case] ?? 0) + 1 }), {})
-		console.log(`[mod-wiki] ${dryRun ? 'dry-run' : emitPath ? 'emit-sql' : 'sync'} complete`, JSON.stringify(counts))
-		for (const item of plan) console.log(`  ${item.case.padEnd(4)} ${item.source} — ${item.reason}`)
-	} finally {
-		await proxy.dispose()
-	}
+		const result = await syncModWiki(proxy.env.DB, scan, { dryRun: args.includes('--dry-run'), emitSql: !!emitPath, assumeFresh: args.includes('--emit-initial') })
+		if (emitPath) fs.writeFileSync(path.resolve(projectRoot, emitPath), ['-- Generated mod wiki synchronization SQL. Apply as one transaction.', ...result.statements].join('\n'), 'utf8')
+		for (const row of result.plan) console.log(`${row.case.padEnd(5)} ${row.source}: ${row.reason}`)
+	} finally { await proxy.dispose() }
 }
 
-main().catch((error) => {
-	console.error(`[mod-wiki] ${error.message}`)
-	process.exitCode = 1
-})
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
+	main().catch((error) => { console.error(`[mod-wiki] ${error.message}`); process.exitCode = 1 })

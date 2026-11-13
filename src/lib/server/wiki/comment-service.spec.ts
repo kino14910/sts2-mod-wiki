@@ -88,6 +88,7 @@ function memoryStore(): MemoryStore {
 			const row = rows.find((item) => item.id === id)
 			if (!row || row.author_token_hash !== tokenHash || row.status !== 'visible') return 0
 			row.status = 'deleted'
+			audits.push({ action: 'comment.delete', targetId: id })
 			return 1
 		},
 		async insertAuditLog(input) {

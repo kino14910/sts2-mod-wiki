@@ -4,6 +4,7 @@ import type { ContentType } from './types'
 
 export interface SectionState {
 	id: string
+	identityArchived?: boolean
 	pageId: string
 	sectionKey: string
 	contentType: ContentType
@@ -68,6 +69,7 @@ export interface ProposalStatusUpdate {
 	publishedRevisionId?: string | null
 	/** Optimistic guard: only update a proposal that is still in this state. */
 	onlyIfStatus?: ProposalStatus
+	audit?: { actorId: string; action: string; metadata?: unknown }
 }
 
 export interface PublishInput {
@@ -87,6 +89,14 @@ export interface PublishInput {
 	reviewNote?: string | null
 	actorId?: string | null
 	action?: string
+	/** Source approval is committed with publication, baseline and review state. */
+	sourceUpdate?: {
+		id: string
+		sourceId: string
+		baseHash: string
+		incomingHash: string
+		modVersion: string | null
+	}
 }
 
 export interface PublishResult {
@@ -104,6 +114,8 @@ export interface WikiEditStore {
 	listProposals(filter: {
 		status?: ProposalStatus[]
 		sectionId?: string | null
+		pageId?: string | null
+		submittedBy?: string | null
 		limit: number
 		offset: number
 	}): Promise<ProposalState[]>

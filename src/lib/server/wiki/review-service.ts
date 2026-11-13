@@ -9,6 +9,8 @@ export const MAX_REVIEW_NOTE_LENGTH = 500
 export interface ListProposalsInput {
 	status?: ProposalStatus[]
 	sectionId?: string | null
+	pageId?: string | null
+	submittedBy?: string | null
 	limit?: number
 	offset?: number
 }
@@ -34,8 +36,10 @@ export async function listProposals(
 	const rows = await store.listProposals({
 		status: input.status,
 		sectionId: input.sectionId ?? null,
+		pageId: input.pageId ?? null,
+		submittedBy: input.submittedBy ?? null,
 		limit: normalizePaging(input.limit, 30, 100),
-		offset: Math.max(0, Math.trunc(input.offset ?? 0))
+		offset: Number.isFinite(input.offset ?? 0) ? Math.max(0, Math.trunc(input.offset ?? 0)) : 0
 	})
 	return rows.map((row) => toProposalView(row))
 }
@@ -78,7 +82,7 @@ export async function reviewProposal(
 
 	const section = await store.findSection(proposal.sectionId)
 	if (!section) throw new WikiCollaborationError(404, 'Section not found', 'SECTION_NOT_FOUND')
-	if (section.version !== proposal.baseVersion)
+	if (input.decision === 'approve' && section.version !== proposal.baseVersion)
 		return markConflict(store, proposal.id, actor.userId, section.version, proposal.baseVersion)
 
 	const now = new Date().toISOString()
@@ -88,18 +92,11 @@ export async function reviewProposal(
 			reviewedBy: actor.userId,
 			reviewNote: note || null,
 			reviewedAt: now,
-			onlyIfStatus: 'pending'
+			onlyIfStatus: 'pending',
+			audit: { actorId: actor.userId, action: 'wiki.proposal.reject', metadata: { sectionId: proposal.sectionId, note } }
 		})
 		if (changes === 0)
 			throw new WikiCollaborationError(409, 'Proposal was reviewed concurrently', 'ALREADY_REVIEWED')
-		await store.insertAuditLog({
-			id: crypto.randomUUID(),
-			actorId: actor.userId,
-			action: 'wiki.proposal.reject',
-			targetType: 'wiki_proposal',
-			targetId: proposal.id,
-			metadata: { sectionId: proposal.sectionId, note }
-		})
 	} else {
 		try {
 			await publishRevision(store, {
@@ -116,8 +113,10 @@ export async function reviewProposal(
 				reviewNote: note || null
 			})
 		} catch (cause) {
-			if (cause instanceof WikiCollaborationError && cause.code === 'VERSION_CONFLICT')
-				return markConflict(store, proposal.id, actor.userId, section.version, proposal.baseVersion)
+			if (cause instanceof WikiCollaborationError && cause.code === 'VERSION_CONFLICT') {
+				const current = await store.findSection(proposal.sectionId)
+				return markConflict(store, proposal.id, actor.userId, current?.version ?? section.version, proposal.baseVersion)
+			}
 			throw cause
 		}
 	}
@@ -134,23 +133,32 @@ async function markConflict(
 	currentVersion: number,
 	baseVersion: number
 ): Promise<ProposalView> {
-	await store.setProposalStatus(proposalId, {
+	const changes = await store.setProposalStatus(proposalId, {
 		status: 'conflict',
 		reviewNote: `Published version changed from ${baseVersion} to ${currentVersion}`,
 		// Status is informational here; the section was not published by this review.
 		reviewedAt: new Date().toISOString(),
 		reviewedBy: reviewerId,
-		onlyIfStatus: 'pending'
+		onlyIfStatus: 'pending',
+		audit: { actorId: reviewerId, action: 'wiki.proposal.conflict', metadata: { currentVersion, baseVersion } }
 	})
-	await store.insertAuditLog({
-		id: crypto.randomUUID(),
-		actorId: reviewerId,
-		action: 'wiki.proposal.conflict',
-		targetType: 'wiki_proposal',
-		targetId: proposalId,
-		metadata: { currentVersion, baseVersion }
-	})
+	if (!changes) throw new WikiCollaborationError(409, 'Proposal was reviewed concurrently', 'ALREADY_REVIEWED')
 	const row = await store.findProposal(proposalId)
 	if (!row) throw new WikiCollaborationError(404, 'Proposal not found', 'NOT_FOUND')
 	return toProposalView(row)
+}
+
+export async function withdrawProposal(store: WikiEditStore, proposalId: string, maybeActor: MaybeActor): Promise<ProposalView> {
+	const actor = requirePermission(maybeActor, 'wiki:proposal:create')
+	const row = await store.findProposal(proposalId)
+	if (!row) throw new WikiCollaborationError(404, 'Proposal not found', 'NOT_FOUND')
+	if (row.submittedBy !== actor.userId) throw new WikiCollaborationError(403, 'Only the author can withdraw this proposal', 'FORBIDDEN')
+	if (row.status !== 'pending' && row.status !== 'conflict')
+		throw new WikiCollaborationError(409, 'Proposal was already resolved', 'ALREADY_REVIEWED')
+	const changed = await store.setProposalStatus(proposalId, {
+		status: 'withdrawn', onlyIfStatus: row.status, reviewedAt: new Date().toISOString(),
+		audit: { actorId: actor.userId, action: 'wiki.proposal.withdraw' }
+	})
+	if (!changed) throw new WikiCollaborationError(409, 'Proposal changed concurrently', 'ALREADY_REVIEWED')
+	return toProposalView({ ...row, status: 'withdrawn' })
 }

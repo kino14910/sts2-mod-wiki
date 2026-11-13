@@ -1,4 +1,5 @@
-import { MOD_POWERS } from './mods';
+import { CARDS, RELICS, POTIONS, MOD_POWERS } from './mods';
+import { publicEntityId, registerPublicEntityRefs } from '../entity-identity.ts';
 import type { MotifName } from './cards';
 
 export type GlossaryKind = 'keyword' | 'power';
@@ -71,11 +72,15 @@ export const ROUTES: Record<GlossaryKind, string> = {
 export const POWER_ROUTE = '/power'
 
 export function powerHref(entry: GlossaryEntry) {
-	return `${POWER_ROUTE}/${encodeURIComponent(entry.id)}`
+	const id = publicEntityId({ type: 'power', id: entry.id, modId: entry.mod ?? 'sts2' })
+	if (id === null) throw new Error(`Invalid power identity: ${entry.id}`)
+	return `${POWER_ROUTE}/${encodeURIComponent(id)}`
 }
 
 export function glossaryHref(entry: GlossaryEntry) {
-	return `${ROUTES[entry.kind]}#${entry.id}`
+	const id = publicEntityId({ type: entry.kind, id: entry.id, modId: entry.mod ?? 'sts2' })
+	if (id === null) throw new Error(`Invalid glossary identity: ${entry.id}`)
+	return `${ROUTES[entry.kind]}#${encodeURIComponent(id).replaceAll('%3A', ':')}`
 }
 
 export function entryHref(entry: GlossaryEntry) {
@@ -143,7 +148,30 @@ export const KEYWORDS: GlossaryEntry[] = [
 
 export const ALL_ENTRIES: GlossaryEntry[] = [...KEYWORDS, ...POWERS];
 
-export const ENTRY_BY_ID = new Map(ALL_ENTRIES.map((entry) => [entry.id, entry]));
+// Initialize before the eager glossary link table or legacy Wiki indexes format URLs.
+// Pure cards/collections modules never import this runtime catalog.
+registerPublicEntityRefs([
+	...CARDS.map((x) => ({ type: 'card' as const, id: x.id, modId: x.mod })),
+	...RELICS.map((x) => ({ type: 'relic' as const, id: x.id, modId: x.mod })),
+	...POTIONS.map((x) => ({ type: 'potion' as const, id: x.id, modId: x.mod })),
+	...ALL_ENTRIES.map((x) => ({ type: x.kind, id: x.id, modId: x.mod ?? 'sts2' }))
+]);
+
+// Compatibility aliases exist only when unique across every glossary kind/Mod.
+// Explicit public IDs are always indexed; bare homonyms never select a last owner.
+export const ENTRY_BY_ID = (() => {
+	const index = new Map<string, GlossaryEntry>();
+	const aliases = new Map<string, GlossaryEntry | null>();
+	for (const entry of ALL_ENTRIES) {
+		const publicId = publicEntityId({ type: entry.kind, id: entry.id, modId: entry.mod ?? 'sts2' });
+		for (const id of new Set([entry.id, publicId, `${entry.mod ?? 'sts2'}:${entry.id}`])) {
+			if (id === null) continue;
+			aliases.set(id, aliases.has(id) ? null : entry);
+		}
+	}
+	for (const [id, entry] of aliases) if (entry) index.set(id, entry);
+	return index;
+})();
 
 export function entriesForKind(kind: GlossaryKind) {
 	return ALL_ENTRIES.filter((entry) => entry.kind === kind);

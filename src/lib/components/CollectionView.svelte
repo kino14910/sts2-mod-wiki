@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { entityHref, publicEntityId } from '#lib/entities';
 	import CharacterFilter from './CharacterFilter.svelte';
 	import FilterButton from './FilterButton.svelte';
 	import FilterPanel from './FilterPanel.svelte';
@@ -109,6 +110,10 @@
 		return `${kind}-${rarityId}`;
 	}
 
+	function entryId(entry: CollectionEntry) {
+		return publicEntityId({ type: entry.kind, id: entry.id, modId: entry.mod })!;
+	}
+
 	function clearAll() {
 		query = '';
 		character = 'all';
@@ -163,10 +168,11 @@
 			<div
 				class="grid grid-cols-[repeat(auto-fill,minmax(21em,1fr))] items-start gap-1.25"
 			>
-				{#each group.entries as entry (entry.id)}
+				{#each group.entries as entry (entryId(entry))}
 					<article
 						class="collection-row group relative grid scroll-mt-[calc(var(--header-height)+16px)] grid-cols-[58px_minmax(0,1fr)] items-start gap-2.75 rounded-[3px] border border-line bg-row px-2.75 py-2.25 transition-[border-color,background-color,box-shadow] duration-160 ease-[ease] hover:border-(--group-accent) hover:bg-surface-2 max-[620px]:grid-cols-[46px_minmax(0,1fr)] max-[620px]:gap-2 max-[620px]:px-2.25 max-[620px]:py-2"
-						id="{kind}-{entry.id}"
+						id="{kind}-{entryId(entry)}"
+						data-entity-id={entryId(entry)}
 					>
 						<span
 							class="mt-px grid size-14.5 place-items-center rounded-sm border border-line-strong bg-black/35 p-1 max-[620px]:size-11"
@@ -210,7 +216,7 @@
 							{#if kind === 'relic'}
 								<a
 									class="mt-1 inline-block text-[0.72rem] text-link hover:text-gold"
-									href={`/relic/${entry.id}`}
+									href={entityHref({ type: 'relic', id: entry.id, modId: entry.mod })}
 								>
 									{m.power_detail_short()} →
 								</a>

@@ -1,77 +1,65 @@
-import { POWERS } from '#lib/data/glossary'
+import { POWERS, powerHref } from '#lib/data/glossary'
 import { CARDS, POTIONS, RELICS } from '#lib/data/mods'
-import type { Card, ColorId, CardType } from '#lib/data/cards'
+import { cardHref, type Card, type ColorId, type CardType } from '#lib/data/cards'
+import { collectionHref } from './collections'
+import { resolvePublicEntityRef } from '../entity-identity.ts'
+import type { EntityType } from '../entities.ts'
 
-const POWER_BY_NAME = new Map<string, (typeof POWERS)[number]>()
-for (const entry of POWERS) POWER_BY_NAME.set(entry.name.trim().toLowerCase(), entry)
+/** Legacy name-only callers may resolve a unique name, never a last-wins homonym. */
+function uniqueNames<T extends { name: string }>(entries: T[]): Map<string, T | null> {
+    const result = new Map<string, T | null>()
+    for (const entry of entries) {
+        const key = entry.name.trim().toLowerCase()
+        result.set(key, result.has(key) ? null : entry)
+    }
+    return result
+}
 
-const POWER_BY_ID = new Map<string, (typeof POWERS)[number]>()
-for (const entry of POWERS) POWER_BY_ID.set(entry.id, entry)
+const POWER_BY_NAME = uniqueNames(POWERS)
+const RELIC_BY_NAME = uniqueNames(RELICS)
+const POTION_BY_NAME = uniqueNames(POTIONS)
+const CARD_BY_NAME = uniqueNames(CARDS)
 
-const RELIC_BY_NAME = new Map<string, (typeof RELICS)[number]>()
-for (const relic of RELICS) RELIC_BY_NAME.set(relic.name.trim().toLowerCase(), relic)
-
-const RELIC_BY_ID = new Map<string, (typeof RELICS)[number]>()
-for (const relic of RELICS) RELIC_BY_ID.set(relic.id, relic)
-
-const POTION_BY_NAME = new Map<string, (typeof POTIONS)[number]>()
-for (const potion of POTIONS) POTION_BY_NAME.set(potion.name.trim().toLowerCase(), potion)
-
-const POTION_BY_ID = new Map<string, (typeof POTIONS)[number]>()
-for (const potion of POTIONS) POTION_BY_ID.set(potion.id, potion)
-
-const CARD_BY_NAME = new Map<string, Card>()
-const CARD_BY_ID = new Map<string, Card>()
-for (const card of CARDS) {
-	CARD_BY_NAME.set(card.name.trim().toLowerCase(), card)
-	CARD_BY_ID.set(card.id, card)
+function byId<T extends { id: string; mod?: string }>(entries: T[], type: EntityType, id: string, modId?: string): T | undefined {
+    const ref = resolvePublicEntityRef({ type, id, modId })
+    return ref ? entries.find(x => x.id === ref.id && (x.mod ?? 'sts2') === ref.modId) : undefined
 }
 
 export function powerIconByName(name: string): string | null {
-	return POWER_BY_NAME.get(name.trim().toLowerCase())?.icon ?? null
+    return POWER_BY_NAME.get(name.trim().toLowerCase())?.icon ?? null
 }
-
-export function powerIconById(id: string): string | null {
-	return POWER_BY_ID.get(id)?.icon ?? null
+export function powerIconById(id: string, modId?: string): string | null {
+    return byId(POWERS, 'power', id, modId)?.icon ?? null
 }
-
 export function relicImageByName(name: string): string | null {
-	return RELIC_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
+    return RELIC_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
 }
-
-export function relicImageById(id: string): string | null {
-	return RELIC_BY_ID.get(id)?.image ?? null
+export function relicImageById(id: string, modId?: string): string | null {
+    return byId(RELICS, 'relic', id, modId)?.image ?? null
 }
-
 export function potionImageByName(name: string): string | null {
-	return POTION_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
+    return POTION_BY_NAME.get(name.trim().toLowerCase())?.image ?? null
 }
-
-export function potionImageById(id: string): string | null {
-	return POTION_BY_ID.get(id)?.image ?? null
+export function potionImageById(id: string, modId?: string): string | null {
+    return byId(POTIONS, 'potion', id, modId)?.image ?? null
 }
-
 export function powerHrefByName(name: string): string | null {
-	const entry = POWER_BY_NAME.get(name.trim().toLowerCase())
-	return entry ? `/power/${encodeURIComponent(entry.id)}` : null
+    const entry = POWER_BY_NAME.get(name.trim().toLowerCase())
+    return entry ? powerHref(entry) : null
 }
-
 export function relicHrefByName(name: string): string | null {
-	const relic = RELIC_BY_NAME.get(name.trim().toLowerCase())
-	return relic ? `/relic/${encodeURIComponent(relic.id)}` : null
+    const entry = RELIC_BY_NAME.get(name.trim().toLowerCase())
+    return entry ? collectionHref(entry) : null
 }
-
 export function cardByName(name: string): Card | undefined {
-	return CARD_BY_NAME.get(name.trim().toLowerCase())
+    return CARD_BY_NAME.get(name.trim().toLowerCase()) ?? undefined
 }
-
-export function cardById(id: string): Card | undefined {
-	return CARD_BY_ID.get(id)
+export function cardById(id: string, modId?: string): Card | undefined {
+    return byId(CARDS, 'card', id, modId)
 }
-
 export function cardHrefByName(name: string): string | null {
-	const card = CARD_BY_NAME.get(name.trim().toLowerCase())
-	return card ? `/cards/${encodeURIComponent(card.id)}` : null
+    const card = cardByName(name)
+    return card ? cardHref(card) : null
 }
 
 const COLOR_PREFIX: Record<ColorId, string> = {
@@ -80,6 +68,7 @@ const COLOR_PREFIX: Record<ColorId, string> = {
 	regent: 'Regent',
 	necrobinder: 'Necrobinder',
 	defect: 'Defect',
+	fool: 'Fool',
 	colorless: 'Colorless'
 }
 

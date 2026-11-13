@@ -35,7 +35,7 @@
 			<SortButton key="color" label={m.filter_character()} bind:sort {onchange} />
 		{/if}
 	{/snippet}
-	<div class="flex flex-wrap gap-1.25 h-9">
+	<div class="flex min-h-9 flex-wrap gap-1.25">
 		{#each displayOptions as option (option.id)}
 			<FilterButton
 				size="lg"

@@ -202,7 +202,6 @@
 	"power_cap": "Cap",
 	"power_group": "Category",
 	"power_internal_id": "Internal ID",
-	"power_other_names": "Names in Other Languages",
 	"power_enemy_only": "Enemy only",
 	"comments_title": "Comments",
 	"comments_count": "{count} comments",

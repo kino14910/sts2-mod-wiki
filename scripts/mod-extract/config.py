@@ -19,6 +19,7 @@ RITSULIB_KIND = {
     'power': 'power',
     'relic': 'relic',
     'potion': 'potion',
+    'character': 'character',
 }
 
 

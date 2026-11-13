@@ -14,14 +14,15 @@ export type { GameTextToken } from './tokenizer'
 export { parseGameTextNodes, isGoldStyle } from './parser'
 export { matchTextEntities } from './entity-matcher'
 
-/** 游戏富文本统一入口：BBCode → AST → 变量 / 实体（仅金色节点） */
+/** Template evaluation precedes the shared BBCode stack; only visible gold text is linked. */
 export function parseGameText(text: string, options: GameTextOptions = {}): GameTextNode[] {
 	const context: EntityMatchContext = {
 		locale: options.locale,
+		modId: options.modId,
 		scope: 'game',
 		strategy: 'game',
 		prefer: options.prefer,
 		current: options.current
 	}
-	return resolveInline(parseGameTextNodes(text, options), options, context)
+	return resolveInline(parseGameTextNodes(text, options, true), options, context)
 }
