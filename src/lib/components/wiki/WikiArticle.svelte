@@ -7,8 +7,13 @@
 	import WikiSection from './WikiSection.svelte'
 	import WikiSectionContent from './WikiSectionContent.svelte'
 
-	let { article, viewer, onChanged }: { article: ArticleView; viewer: WikiViewer; onChanged: () => void | Promise<void> } = $props()
-	let toc = $derived([...articleToc(article.sections), { id: 'Comments', label: m.comments_title(), depth: 0, number: String(article.sections.filter((section) => section.level === 2).length + 1) }])
+	let { article, viewer, onChanged, commentsAnchor = false }: { article: ArticleView; viewer: WikiViewer; onChanged: () => void | Promise<void>; commentsAnchor?: boolean } = $props()
+	let toc = $derived.by(() => {
+		const items = articleToc(article.sections)
+		return commentsAnchor
+			? [...items, { id: 'Comments', label: m.comments_title(), depth: 0, number: String(article.sections.filter((section) => section.level === 2).length + 1) }]
+			: items
+	})
 	let ui = $derived(wikiUi(getLocale()))
 </script>
 

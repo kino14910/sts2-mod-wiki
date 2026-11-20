@@ -144,11 +144,18 @@ describe('comment validation', () => {
 		})
 	})
 
-	it('only accepts the card target type', async () => {
+	it('keeps card and relic discussions separate for the same entity id', async () => {
 		const { store } = memoryStore()
-		await expect(
-			createComment(store, baseInput({ targetType: 'relic' }))
-		).rejects.toMatchObject({ status: 400 })
+		const card = await createComment(store, baseInput({ targetId: 'Shared' }))
+		const relic = await createComment(store, baseInput({ targetType: 'relic', targetId: 'Shared', content: 'Relic tip' }))
+		expect(card.targetType).toBe('card')
+		expect(relic.targetType).toBe('relic')
+
+		const cardPage = await listComments(store, { targetType: 'card', targetId: 'Shared' })
+		const relicPage = await listComments(store, { targetType: 'relic', targetId: 'Shared' })
+		expect(cardPage.items.map((item) => item.content)).toEqual(['Great card'])
+		expect(relicPage.items.map((item) => item.content)).toEqual(['Relic tip'])
+		await expect(createComment(store, baseInput({ targetType: 'page' }))).rejects.toMatchObject({ status: 400 })
 	})
 })
 

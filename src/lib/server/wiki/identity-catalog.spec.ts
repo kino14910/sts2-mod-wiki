@@ -74,7 +74,7 @@ describe('canonical wiki and comment read boundary', () => {
 		const c = setup()
 		c.sql.exec("UPDATE wiki_pages SET entity_id='AbyssOfDeath',slug='card:AbyssOfDeath',mod_id='fgo' WHERE id='page'")
 		const view = await loadWikiPage(c.db, { type: 'card', id: 'fgo:AbyssOfDeath' })
-		expect(view.meta).toMatchObject({ pageId: 'page', key: 'card:fgo:AbyssOfDeath', source: 'd1' })
+		expect(view.meta).toMatchObject({ pageId: 'page', key: 'card:fgo:AbyssOfDeath', source: 'database' })
 		expect(view.sections.find((s) => s.key === 'overview')).toMatchObject({ sectionId: 's1', revisionId: 'r1', content: 'baseline' })
 		expect(await canonicalCommentTarget(c.db, 'card', 'AbyssOfDeath')).toEqual({ targetType: 'card', targetId: 'fgo:AbyssOfDeath' })
 	})

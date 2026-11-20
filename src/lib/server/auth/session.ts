@@ -1,4 +1,6 @@
 import { readSessionCookie, verifySession } from './cookie-session'
+import { getWikiDb, type WikiRuntimeEnv } from '#lib/server/wiki/db'
+import type { WikiDatabase } from '#lib/server/db/types'
 import { findUserBySubject } from './users'
 import type { Role, UserStatus } from './permissions'
 
@@ -11,18 +13,20 @@ export interface AuthSession {
 }
 
 export interface AuthProvider {
-	resolve(request: Request, env: Env | undefined): Promise<AuthSession | null>
+	resolve(
+		request: Request,
+		env: WikiRuntimeEnv | undefined,
+		dbOverride?: WikiDatabase | null
+	): Promise<AuthSession | null>
 }
 
-/**
- * Default provider: a signed cookie identifies the subject, while the role/status always come
- * from the server-side users table. Without WIKI_SESSION_SECRET no session is trusted at all.
- */
-const d1AuthProvider: AuthProvider = {
-	async resolve(request, env) {
+const cookieAuthProvider: AuthProvider = {
+	async resolve(request, env, dbOverride) {
 		const secret = env?.WIKI_SESSION_SECRET
-		const db = env?.DB
-		if (!secret || !db) return null
+		if (!secret) return null
+		let db: WikiDatabase | null
+		try { db = dbOverride === undefined ? getWikiDb() : dbOverride } catch { return null }
+		if (!db) return null
 		const payload = await verifySession(readSessionCookie(request), secret)
 		if (!payload) return null
 		try {
@@ -34,7 +38,7 @@ const d1AuthProvider: AuthProvider = {
 	}
 }
 
-let provider: AuthProvider | null = d1AuthProvider
+let provider: AuthProvider | null = cookieAuthProvider
 
 // Tests (or a future identity provider) can replace the resolver.
 export function setAuthProvider(next: AuthProvider | null): void {
@@ -47,9 +51,10 @@ export function getAuthProvider(): AuthProvider | null {
 
 export async function resolveSession(
 	request: Request,
-	env: Env | undefined
+	env: WikiRuntimeEnv | undefined,
+	dbOverride?: WikiDatabase | null
 ): Promise<AuthSession | null> {
 	if (!provider) return null
-	const session = await provider.resolve(request, env)
+	const session = await provider.resolve(request, env, dbOverride)
 	return session?.status === 'active' ? session : null
 }

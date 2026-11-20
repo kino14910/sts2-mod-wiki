@@ -1,7 +1,7 @@
 import { requirePermission, WikiCollaborationError, type MaybeActor } from './access'
 import { isValidSectionKey } from './validation'
 
-export async function addWikiSection(db: D1Database, actorInput: MaybeActor, input: {
+export async function addWikiSection(db: WikiDatabase, actorInput: MaybeActor, input: {
 	pageId: string; key: unknown; sortOrder?: unknown
 }) {
 	const actor = requirePermission(actorInput, 'wiki:section:manage')

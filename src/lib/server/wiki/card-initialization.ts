@@ -1,7 +1,7 @@
 import { BASH_SECTIONS, CARD_SECTION_KEYS, SEED_SUMMARY } from '#lib/data/wiki-seed'
 
 /** Insert missing sections only. Existing heads, history and source bindings are untouched. */
-export async function ensureCardSections(db: D1Database, input: { id: string; mod?: string; rawId?: string }): Promise<void> {
+export async function ensureCardSections(db: WikiDatabase, input: { id: string; mod?: string; rawId?: string }): Promise<void> {
 	const rawId = input.rawId ?? input.id.slice(input.id.indexOf(':') + 1)
 	const scopedId = `${input.mod ?? 'sts2'}:${rawId}`
 	const stored = await db.prepare(`SELECT entity_id FROM wiki_pages WHERE page_type='entity' AND identity_status='active'
@@ -14,7 +14,7 @@ export async function ensureCardSections(db: D1Database, input: { id: string; mo
 		AND (s.current_revision_id IS NOT NULL OR s.version > 0 OR EXISTS (SELECT 1 FROM wiki_revisions r WHERE r.section_id = s.id))`)
 		.bind(card.id, ...CARD_SECTION_KEYS).first<{ count: number }>()
 	if (Number(existing?.count) === CARD_SECTION_KEYS.length) return
-	const statements: D1PreparedStatement[] = [
+	const statements: WikiStatement[] = [
 		db.prepare(`INSERT OR IGNORE INTO wiki_pages (id, mod_id, entity_type, entity_id, slug, page_type)
 			VALUES (?, ?, 'card', ?, ?, 'entity')`)
 			.bind(`seed:page:card:${card.id}:${crypto.randomUUID()}`, card.mod ?? null, card.id, `card:${card.id}`)

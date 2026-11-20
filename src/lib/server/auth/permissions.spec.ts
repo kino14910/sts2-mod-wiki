@@ -3,10 +3,10 @@ import { can, hasPermission, rolePermissions, type Role } from './permissions'
 
 describe('roles and permissions', () => {
 	it('member can only propose edits', () => {
-		expect(can('member', 'wiki:proposal:create')).toBe(true)
-		expect(can('member', 'wiki:revision:publish')).toBe(false)
-		expect(can('member', 'wiki:proposal:review')).toBe(false)
-		expect(can('member', 'user:role:manage')).toBe(false)
+		expect(can('user', 'wiki:proposal:create')).toBe(true)
+		expect(can('user', 'wiki:revision:publish')).toBe(false)
+		expect(can('user', 'wiki:proposal:review')).toBe(false)
+		expect(can('user', 'user:role:manage')).toBe(false)
 	})
 
 	it('trusted can publish without review', () => {
@@ -22,7 +22,7 @@ describe('roles and permissions', () => {
 
 	it('admin holds every permission', () => {
 		const all = rolePermissions('admin')
-		for (const role of ['member', 'trusted', 'moderator', 'admin'] as Role[]) {
+		for (const role of ['user', 'trusted', 'moderator', 'admin'] as Role[]) {
 			for (const permission of rolePermissions(role)) expect(all).toContain(permission)
 		}
 	})
@@ -55,10 +55,16 @@ describe('roles and permissions', () => {
 		expect(can('moderator', 'wiki:source:sync')).toBe(false)
 	})
 
+	it('only administrators can manage invitation codes', () => {
+		for (const role of ['user', 'trusted', 'moderator'] as Role[])
+			expect(can(role, 'invite:manage')).toBe(false)
+		expect(can('admin', 'invite:manage')).toBe(true)
+	})
+
 	it('admin exclusively handles mod upstream updates', () => {
 		expect(can('admin', 'wiki:source:view')).toBe(true)
 		expect(can('admin', 'wiki:source:review')).toBe(true)
 		expect(can('admin', 'wiki:source:sync')).toBe(true)
-		expect(hasPermission({ role: 'member', status: 'active' }, 'wiki:source:sync')).toBe(false)
+		expect(hasPermission({ role: 'user', status: 'active' }, 'wiki:source:sync')).toBe(false)
 	})
 })

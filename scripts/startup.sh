@@ -8,7 +8,7 @@
 #                                  pull images, recreate
 #                                  backend+frontend, wait for health, nginx
 #                                  reload - even when the commit didn't change.
-#                                  No Cloudflare purge and no warm crawl:
+#                                  No CDN purge and no warm crawl:
 #                                  the edge stays warm across deploys.
 #   ./tools/startup.sh rollback    put the previous images back (the ones
 #                                  running before the last deploy) without
@@ -18,7 +18,7 @@
 #                                  just pull images + recreate backend and
 #                                  frontend in place, wait for their
 #                                  healthchecks, reload nginx. No reset to
-#                                  origin/main, no CF purge, no
+#                                  origin/main, no CDN purge, no
 #                                  warm crawl.
 #
 # The autodeploy script (installed via

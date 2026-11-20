@@ -6,14 +6,14 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "wrangler dev .svelte-kit/cloudflare/_worker.js --port 4173",
+		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
-		"gen": "wrangler types",
+		"db:migrate": "node scripts/db-migrate.mjs",
 		"gen:thumbs": "python scripts/gen_card_thumbs.py",
 		"mod:extract": "python scripts/mod-extract/import_build.py --mod fgo",
 		"mod:import": "python scripts/mod-extract/import_build.py",
@@ -21,8 +21,6 @@
 		"test:import": "python -m unittest discover -s scripts/mod-extract -p test_*.py",
 		"data:audit-vanilla": "python scripts/mod-extract/audit_vanilla.py",
 		"db:seed-sql": "node scripts/gen-wiki-seed-sql.mjs",
-		"db:migrate:local": "wrangler d1 migrations apply sts2-mod-wiki --local",
-		"db:migrate:remote": "wrangler d1 migrations apply sts2-mod-wiki --remote",
 		"mod-wiki:scan": "node --experimental-strip-types scripts/mod-wiki/scan.mjs",
 		"mod-wiki:sync": "node --experimental-strip-types scripts/mod-wiki/sync.mjs"
 	},
@@ -31,7 +29,7 @@
 		"@inlang/paraglide-js": "^2.18.2",
 		"@neoconfetti/svelte": "^2.2.2",
 		"@playwright/test": "^1.60.0",
-		"@sveltejs/adapter-cloudflare": "^8.0.0",
+		"@sveltejs/adapter-vercel": "^7.0.5",
 		"@sveltejs/enhanced-img": "^1.0.0",
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
@@ -39,6 +37,7 @@
 		"@tailwindcss/typography": "^0.5.19",
 		"@tailwindcss/vite": "^4.3.0",
 		"@types/node": "^26.6.6",
+		"@types/pg": "^8.15.5",
 		"@vitest/browser-playwright": "^4.1.8",
 		"playwright": "^1.60.0",
 		"svelte": "^5.57.1",
@@ -47,8 +46,7 @@
 		"typescript": "^6.0.3",
 		"vite": "^8.3.0",
 		"vitest": "^4.1.8",
-		"vitest-browser-svelte": "^2.1.1",
-		"wrangler": "^4.97.0"
+		"vitest-browser-svelte": "^2.1.1"
 	},
 	"imports": {
 		"#lib": "./src/lib/index.js",
@@ -58,6 +56,10 @@
 		"@fontsource-variable/inter": "^5.3.0",
 		"@fontsource/cinzel": "^5.3.0",
 		"@fontsource/kreon": "^5.3.0",
+		"@neon/config": "^1.14.4",
+		"@neon/env": "^2.1.7",
+		"@vercel/functions": "^3.11.3",
+		"pg": "^8.16.3",
 		"virtua": "^0.54.2"
 	}
 }

@@ -3,7 +3,7 @@ import { getSourceUpdateDetail, resolveSourceUpdate } from './source-update-serv
 import { sqliteDb, seedSection } from './testing/sqlite-db'
 
 const admin = { userId: 'u-admin', username: 'Admin', role: 'admin', status: 'active' } as const
-const member = { userId: 'u-member', username: 'Member', role: 'member', status: 'active' } as const
+const member = { userId: 'u-member', username: 'Member', role: 'user', status: 'active' } as const
 const connections: ReturnType<typeof sqliteDb>[] = []
 afterEach(() => { for (const c of connections.splice(0)) c.close() })
 function setup() {

@@ -22,7 +22,7 @@ export function canonicalWikiEntity(ref: ScopedEntityRef) {
 }
 
 /** Pin first-use bare ownership before later catalog changes can reuse the same raw ID. */
-export async function pinEntityOwnership(db: D1Database, ref: ScopedEntityRef) {
+export async function pinEntityOwnership(db: WikiDatabase, ref: ScopedEntityRef) {
 	const resolved = resolvePublicEntityRef(ref)
 	if (!resolved) return
 	const catalog = currentIdentityCatalog()
@@ -41,7 +41,7 @@ export async function pinEntityOwnership(db: D1Database, ref: ScopedEntityRef) {
 	])
 }
 
-export async function canonicalCommentTarget(db: D1Database, type: unknown, inputId: unknown) {
+export async function canonicalCommentTarget(db: WikiDatabase, type: unknown, inputId: unknown) {
 	const target = normalizeCommentTarget(type, inputId)
 	await ensureCanonicalIdentities(db)
 	if (target.targetType !== 'card') return target
@@ -59,8 +59,8 @@ export async function canonicalCommentTarget(db: D1Database, type: unknown, inpu
 	return { ...target, targetId: scopedId }
 }
 
-const pending = new WeakMap<D1Database, { catalog: string; promise: Promise<void> }>()
-export async function ensureCanonicalIdentities(db: D1Database): Promise<void> {
+const pending = new WeakMap<WikiDatabase, { catalog: string; promise: Promise<void> }>()
+export async function ensureCanonicalIdentities(db: WikiDatabase): Promise<void> {
 	const catalog = currentIdentityCatalog()
 	const signature = JSON.stringify(catalog)
 	let entry = pending.get(db)

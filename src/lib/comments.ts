@@ -1,7 +1,7 @@
 // Shared between server validation and client components; keep this module free of server imports.
 
-/** 'card' = anonymous card tips; 'wiki_section' = discussion attached to one wiki block. */
-export type CommentTargetType = 'card' | 'wiki_section'
+/** Entity discussions live at the bottom of card/relic pages; wiki_section is legacy data. */
+export type CommentTargetType = 'card' | 'relic' | 'wiki_section'
 export type CommentStatus = 'visible' | 'deleted'
 
 export const MAX_COMMENT_LENGTH = 2000

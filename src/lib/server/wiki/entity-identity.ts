@@ -15,7 +15,7 @@ export async function identityCatalogHash(catalog: readonly CatalogIdentity[]): 
 }
 
 /** All remapping, quarantine metadata and audit records commit in one transaction. */
-export async function migrateEntityIdentities(db: D1Database, catalog: readonly CatalogIdentity[]) {
+export async function migrateEntityIdentities(db: WikiDatabase, catalog: readonly CatalogIdentity[]) {
 	const hash = await identityCatalogHash(catalog)
 	if (await db.prepare(`SELECT 1 AS present FROM wiki_identity_current c JOIN wiki_identity_data_epoch e ON e.id=c.id
 		WHERE c.id=1 AND c.catalog_hash=? AND c.data_epoch=e.version`).bind(hash).first()) return
@@ -39,7 +39,7 @@ export async function migrateEntityIdentities(db: D1Database, catalog: readonly 
 	for (const p of pages) if (isEntityType(p.entity_type) && !p.entity_id.includes(':'))
 		legacy.set(`${p.entity_type}:${p.entity_id}`, { type: p.entity_type, id: p.entity_id })
 	for (const c of comments) if (!c.target_id.includes(':')) legacy.set(`card:${c.target_id}`, { type: 'card', id: c.target_id })
-	const statements: D1PreparedStatement[] = []
+	const statements: WikiStatement[] = []
 	for (const [key, ref] of legacy) {
 		const candidates = (groups.get(key) ?? []).sort((a, b) => a.modId.localeCompare(b.modId))
 		const prior = previousMappings.get(key)

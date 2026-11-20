@@ -10,6 +10,7 @@
 	import WikiNavbox from '#lib/components/WikiNavbox.svelte'
 	import WikiTable from '#lib/components/WikiTable.svelte'
 	import WikiToc from '#lib/components/WikiToc.svelte'
+	import CommentList from '#lib/components/wiki/comments/CommentList.svelte'
 	import {
 		collectionCharacterName,
 		collectionRarityName,
@@ -167,6 +168,7 @@
 					</aside>
 				</div>
 			{/if}
+			<CommentList id="Comments" targetType="relic" targetId={data.entityRef.id} />
 		</div>
 	</section>
 </div>

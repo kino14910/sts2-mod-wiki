@@ -8,7 +8,7 @@ import { sqliteDb, seedSection } from './testing/sqlite-db'
 import { createWikiEditStore } from './collaboration-repository'
 import { submitSectionEdit } from './edit-service'
 
-const member = { userId: 'u-member', authSubject: 'member', username: 'Member', role: 'member', status: 'active' } as const
+const member = { userId: 'u-member', authSubject: 'member', username: 'Member', role: 'user', status: 'active' } as const
 const reviewer = { userId: 'u-mod', authSubject: 'moderator', username: 'Moderator', role: 'moderator', status: 'active' } as const
 const admin = { userId: 'u-admin', authSubject: 'admin', username: 'Admin', role: 'admin', status: 'active' } as const
 const connections: ReturnType<typeof sqliteDb>[] = []

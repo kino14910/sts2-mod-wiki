@@ -439,13 +439,16 @@ svg {
 		text-underline-offset: 3px;
 	}
 	
+	/* 清掉 @tailwindcss/forms 的 :focus ring；键盘 :focus-visible 的 outline 由上方全局规则保留 */
+	input:not([type='checkbox']):not([type='radio']):focus,
+	select:focus,
+	textarea:focus,
 	input[type='checkbox']:focus,
 	input[type='radio']:focus {
 		outline: none;
 		outline-offset: 0;
 		box-shadow: none;
 		--tw-ring-offset-shadow: 0 0 #0000;
-		--tw-ring-shadow: 0 0 #0000;
 		--tw-ring-shadow: 0 0 #0000;
 	}
 }

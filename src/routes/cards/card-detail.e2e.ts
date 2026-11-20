@@ -2,8 +2,8 @@ import { randomUUID } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { test, expect, type BrowserContext, type Page } from '@playwright/test'
 
-// The webServer owns an isolated D1 store and pre-provisions these test-only subjects.
-// No mocked HTTP responses and no access to the user's default .wrangler database.
+// The webServer owns an isolated Postgres test database and pre-provisions these test-only subjects.
+// No mocked HTTP responses and no access to the developer's primary database.
 const baseURL = process.env.WIKI_E2E_BASE_URL ?? 'http://localhost:4173'
 test.use({ baseURL })
 test.describe.configure({ mode: 'serial' })
@@ -111,6 +111,23 @@ test('mobile header keeps account, languages, menu and account panel inside the 
 	await page.screenshot({ path: 'output/playwright/bash-mobile-final.png', fullPage: true })
 })
 
+test('registration requires a QQ email and an invitation code', async ({ context }) => {
+	const retired = await context.request.post(`${baseURL}/api/auth/register/code`, {
+		headers: { origin: new URL(baseURL).origin },
+		data: { email: 'reader@qq.com', password: 'password123' }
+	})
+	expect(retired.status()).toBe(410)
+
+	for (const email of ['reader@example.com', 'reader@qq.com']) {
+		const response = await context.request.post(`${baseURL}/api/auth/register`, {
+			headers: { origin: new URL(baseURL).origin },
+			data: { email, password: 'password123', inviteCode: 'INVALIDINVALIDINVALID' }
+		})
+		expect(response.status(), email).toBe(400)
+		expect((await response.json()).message).toContain(email === 'reader@qq.com' ? 'invitation' : '@qq.com')
+	}
+})
+
 test('imported Fgo card loads decoded art and renders English and Chinese base and upgraded descriptions', async ({ page, context }) => {
 	// Read the actual import output, without importing the UI renderer or mocking HTTP.
 	// Fingerprints, asset paths and values can change when the DLL/PCK is reimported.
@@ -163,7 +180,7 @@ test('imported Fgo card loads decoded art and renders English and Chinese base a
 
 test('real TeslaCoil cards have isolated canonical pages, publication, history, comments and list upgrade state', async ({ page, context }) => {
 	await locale(context)
-	await login(context, 'e2e-moderator')
+	await login(context, 'e2e-moderator@qq.com')
 	const errors: string[] = []
 	page.on('pageerror', (error) => errors.push(error.message))
 	const ambiguous = await page.request.get('/cards/TeslaCoil', { maxRedirects: 0 })
@@ -283,14 +300,12 @@ test('member proposal, moderator approval, visible publication, history diff and
 	await page.goto('/cards/Bash')
 	const original = await head(page, 'notes')
 	const marker = `E2E proposal ${randomUUID()}`
-	await page.locator('#community-account').click()
-	await page.getByRole('textbox', { name: 'Account', exact: true }).fill('e2e-member')
-	await page.getByRole('textbox', { name: 'Display name' }).fill('e2e-member')
-	await page.locator('#community-account-panel').getByRole('button', { name: 'Sign in', exact: true }).click()
+	await login(context, 'e2e-member@qq.com')
+	await page.reload()
 	await expect(page.locator('#community-account')).toHaveText(/E2E member|e2e-member/)
 	const reviewer = await browser.newContext({ baseURL })
 	await locale(reviewer)
-	await login(reviewer, 'e2e-moderator')
+	await login(reviewer, 'e2e-moderator@qq.com')
 	const reviewPage = await reviewer.newPage()
 	try {
 		await section(page, 'notes').getByRole('button', { name: 'Edit: Notes', exact: true }).click()
@@ -331,9 +346,9 @@ test('member proposal, moderator approval, visible publication, history diff and
 	}
 })
 
-test('trusted publication preserves a concurrent draft on 409; section discussions and card comments stay separate', async ({ page, context, browser }) => {
+test('trusted publication preserves a concurrent draft on 409', async ({ page, context, browser }) => {
 	await locale(context)
-	await login(context, 'e2e-trusted')
+	await login(context, 'e2e-trusted@qq.com')
 	await page.goto('/cards/Bash')
 	const original = await head(page, 'obtaining')
 	const tag = randomUUID()
@@ -341,10 +356,8 @@ test('trusted publication preserves a concurrent draft on 409; section discussio
 	const draft = `E2E draft ${tag}`
 	const moderator = await browser.newContext({ baseURL })
 	await locale(moderator)
-	await login(moderator, 'e2e-moderator')
+	await login(moderator, 'e2e-moderator@qq.com')
 	const other = await moderator.newPage()
-	const commentIds: string[] = []
-	let commentToken: string | null = null
 	let completed = false
 	try {
 		await section(page, 'obtaining').getByRole('button', { name: 'Edit: Obtaining Bash' }).click()
@@ -362,39 +375,9 @@ test('trusted publication preserves a concurrent draft on 409; section discussio
 		await expect(section(page, 'obtaining').locator('.wiki-section-content')).toHaveText(draft)
 		await page.reload()
 		await expect(section(page, 'obtaining').locator('.wiki-section-content')).toHaveText(draft)
-		await section(page, 'obtaining').getByRole('button', { name: 'Discussion', exact: true }).click()
-		const discussion = page.locator('#Obtaining_Bash-discussion')
-		await discussion.locator('input[name="authorName"]').fill('E2E reader')
-		await discussion.locator('textarea[name="content"]').fill(`Section discussion ${tag}`)
-		const commentCreated = page.waitForResponse((response) => new URL(response.url()).pathname === '/api/comments' && response.request().method() === 'POST')
-		await discussion.getByRole('button', { name: /post|submit/i }).click()
-		const comment = await (await commentCreated).json()
-		commentIds.push(comment.id)
-		commentToken = await page.evaluate(() => localStorage.getItem('sts2.wiki.comment.token'))
-		await expect(discussion).toContainText(`Section discussion ${tag}`)
-		await expect(page.locator('#Comments')).not.toContainText(`Section discussion ${tag}`)
-		// The article's visible text disappears while editing; identity must survive that transition.
-		const commentNode = discussion.locator(`[data-comment-id="${comment.id}"]`)
-		await commentNode.getByRole('button', { name: /^Edit$/ }).click()
-		await commentNode.locator('textarea').fill(`Edited discussion ${tag}`)
-		await commentNode.getByRole('button', { name: /^Save$/ }).click()
-		await expect(discussion).toContainText(`Edited discussion ${tag}`)
-		page.once('dialog', (dialog) => dialog.accept())
-		await commentNode.getByRole('button', { name: /^Delete$/ }).click()
-		await expect(discussion).not.toContainText(`Edited discussion ${tag}`)
-		commentIds.length = 0
 		completed = true
 	} finally {
 		const cleanupErrors: unknown[] = []
-		try {
-			// API cleanup retains the captured anonymous ownership token if the page has closed.
-			for (const id of commentIds) {
-				const response = await moderator.request.delete(`${baseURL}/api/comments/${encodeURIComponent(id)}`, {
-					headers: { origin: new URL(baseURL).origin, ...(commentToken ? { 'x-comment-token': commentToken } : {}) }
-				})
-				expect(response.status()).toBe(200)
-			}
-		} catch (error) { cleanupErrors.push(error) }
 		try {
 			await other.goto('/cards/Bash')
 			await restore(other, 'obtaining', original)

@@ -4,7 +4,7 @@ node_modules
 .output
 .vercel
 .netlify
-.wrangler
+.neon
 /.svelte-kit
 /build
 output
@@ -40,3 +40,4 @@ __pycache__/
 *.pyc
 output/playwright/
 .playwright-cli/
+.neon

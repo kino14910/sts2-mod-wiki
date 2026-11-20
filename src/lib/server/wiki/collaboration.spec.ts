@@ -26,7 +26,7 @@ const NAMES: Record<string, string> = {
 }
 
 const actor = (role: Role, userId?: string): Actor => ({
-	userId: userId ?? `u-${role}`,
+	userId: userId ?? (role === 'user' ? 'u-member' : `u-${role}`),
 	username: NAMES[`u-${role}`] ?? role,
 	role,
 	status: 'active'
@@ -203,7 +203,7 @@ describe('server-side permissions', () => {
 		const db = memoryStore(section('s1'))
 		const result = await submitSectionEdit(
 			db.store,
-			editInput('s1', 1, 'line one\nline TWO', actor('member'))
+			editInput('s1', 1, 'line one\nline TWO', actor('user'))
 		)
 		expect(result.kind).toBe('proposed')
 		expect(result.revisionId).toBeNull()
@@ -215,8 +215,8 @@ describe('server-side permissions', () => {
 	})
 
 	it('member cannot use the direct publish permission', () => {
-		expect(hasPermission(actor('member'), 'wiki:revision:publish')).toBe(false)
-		expect(hasPermission(actor('member'), 'wiki:proposal:create')).toBe(true)
+		expect(hasPermission(actor('user'), 'wiki:revision:publish')).toBe(false)
+		expect(hasPermission(actor('user'), 'wiki:proposal:create')).toBe(true)
 	})
 
 	it('trusted publishes immediately and records the editor', async () => {
@@ -249,8 +249,8 @@ describe('server-side permissions', () => {
 		).rejects.toMatchObject({ status: 403 })
 		await expect(
 			submitSectionEdit(db.store, {
-				...editInput('s1', 1, 'x', actor('member')),
-				actor: { ...actor('member'), role: '__hacker__' as Role }
+				...editInput('s1', 1, 'x', actor('user')),
+				actor: { ...actor('user'), role: '__hacker__' as Role }
 			})
 		).rejects.toMatchObject({ status: 403 })
 		expect(db.revisions).toHaveLength(1)
@@ -260,13 +260,13 @@ describe('server-side permissions', () => {
 		const db = memoryStore(section('s1'))
 		const proposal = await submitSectionEdit(
 			db.store,
-			editInput('s1', 1, 'new content', actor('member'))
+			editInput('s1', 1, 'new content', actor('user'))
 		)
 		await expect(
 			reviewProposal(db.store, {
 				proposalId: proposal.proposalId!,
 				decision: 'approve',
-				actor: actor('member')
+				actor: actor('user')
 			})
 		).rejects.toMatchObject({ status: 403 })
 		await expect(
@@ -274,7 +274,7 @@ describe('server-side permissions', () => {
 				sectionId: 's1',
 				revisionId: 'rev-s1-1',
 				baseVersion: 1,
-				actor: actor('member')
+				actor: actor('user')
 			})
 		).rejects.toMatchObject({ status: 403 })
 	})
@@ -344,7 +344,7 @@ describe('moderation', () => {
 	async function pendingProposal(db: Memory) {
 		const result = await submitSectionEdit(
 			db.store,
-			editInput('s1', 1, 'line one\nline THREE', actor('member'))
+			editInput('s1', 1, 'line one\nline THREE', actor('user'))
 		)
 		return result.proposalId!
 	}

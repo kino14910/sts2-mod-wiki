@@ -7,14 +7,17 @@
 	import WikiNavbox from '#lib/components/WikiNavbox.svelte'
 	import CommentList from '#lib/components/wiki/comments/CommentList.svelte'
 	import { buildCardNavbox } from '#lib/data/card-navbox'
-	import { BASH_CARD_ARTICLE } from '#lib/data/card-wiki'
+	import { BASH_CARD_ARTICLE, BASH_CARD_ARTICLE_ZH } from '#lib/data/card-wiki'
+	import { localizedBashSection } from '#lib/data/card-article-content.zh'
 	import { localizedCard, colorName, rarityName, typeName, modName, localizedKeyword } from '#lib/data/localize'
 	import { composeWikiArticle, type ArticleContent, type ArticleListItem } from '#lib/wiki-article'
 	import { cardTextToPlain } from '#lib/text/card-text'
+	import { getLocale } from '#lib/paraglide/runtime'
 	import { m } from '#lib/paraglide/messages'
 	import type { PageProps } from './$types'
 
 	let { data }: PageProps = $props()
+	let isZh = $derived(getLocale() === 'zhs')
 	let card = $derived(localizedCard(data.card))
 	let isBash = $derived(card.mod === 'sts2' && card.id === 'Bash')
 	let colorLabel = $derived(colorName(card.color))
@@ -24,7 +27,7 @@
 	let costLabel = $derived(card.cost === null ? m.unplayable() : String(card.cost))
 	let generatedSummary = $derived(isBash ? '' : m.card_summary({ name: card.name, rarity: rarityLabel, type: typeLabel, color: colorLabel, cost: costLabel }))
 	let fallback = $derived.by((): ArticleContent => {
-		if (isBash) return BASH_CARD_ARTICLE
+		if (isBash) return isZh ? BASH_CARD_ARTICLE_ZH : BASH_CARD_ARTICLE
 		const notes: ArticleListItem[] = [
 			{ text: `${m.card_cost()}: ${costLabel}` },
 			{ text: `${m.card_from_label()}: ${modLabel}` }
@@ -42,7 +45,10 @@
 			]
 		}
 	})
-	let article = $derived(composeWikiArticle(fallback, data.wikiSections))
+	let published = $derived(isBash && isZh
+		? data.wikiSections.map((section) => localizedBashSection(section, 'zhs'))
+		: data.wikiSections)
+	let article = $derived(composeWikiArticle(fallback, published))
 	let metaText = $derived(cardTextToPlain(card.text, { variables: card.variables }))
 	let navbox = $derived(buildCardNavbox(data.card))
 	const refresh = () => refreshAll()
@@ -59,7 +65,7 @@
 	<div class="grid items-start gap-x-6 gap-y-5 lg:grid-cols-[minmax(0,1fr)_300px]">
 		<div class="min-w-0 max-lg:order-2">
 			{#if generatedSummary}<p class="mb-3 text-[0.9rem] leading-[1.6]">{generatedSummary}</p>{/if}
-			<WikiArticle {article} viewer={data.viewer} onChanged={refresh} />
+			<WikiArticle {article} viewer={data.viewer} onChanged={refresh} commentsAnchor />
 		</div>
 		<CardInfoBox {card} />
 	</div>

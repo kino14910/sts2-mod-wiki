@@ -5,7 +5,7 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
-import adapter from '@sveltejs/adapter-cloudflare';
+import adapter from '@sveltejs/adapter-vercel';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import type { Plugin } from 'vite';
@@ -245,7 +245,7 @@ export default defineConfig({
 					throw new Error(message)
 				}
 			},
-			adapter: adapter()
+			adapter: adapter({ runtime: 'nodejs22.x' })
 		})
 	],
 	test: {

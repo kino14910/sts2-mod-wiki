@@ -2,7 +2,7 @@ import { DatabaseSync } from 'node:sqlite'
 import { readFileSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-/** Executes the production SQL, with immediate foreign keys and transactional D1 batches. */
+/** Executes the production SQL, with immediate foreign keys and transactional database batches. */
 export function sqliteDb(options: { migrations?: boolean } = {}) {
 	const sql = new DatabaseSync(':memory:')
 	sql.exec('PRAGMA foreign_keys = ON')
@@ -42,12 +42,12 @@ export function sqliteDb(options: { migrations?: boolean } = {}) {
 	if (options.migrations !== false)
 		for (const file of readdirSync(resolve('migrations')).filter((name) => name.endsWith('.sql')).sort())
 			sql.exec(readFileSync(resolve('migrations', file), 'utf8'))
-	return { db: db as unknown as D1Database, sql, state, close: () => sql.close() }
+	return { db: db as unknown as WikiDatabase, sql, state, close: () => sql.close() }
 }
 
 export function seedSection(sql: DatabaseSync) {
-	sql.exec(`INSERT INTO users (id, auth_subject, username, role) VALUES ('u-admin', 'admin', 'Admin', 'admin'),
-		('u-member', 'member', 'Member', 'member'), ('u-mod', 'moderator', 'Moderator', 'moderator');
+	sql.exec(`INSERT INTO users (id, auth_subject, username, email, role) VALUES ('u-admin', 'admin', 'Admin', 'admin@qq.com', 'admin'),
+		('u-member', 'member', 'Member', 'member@qq.com', 'member'), ('u-mod', 'moderator', 'Moderator', 'moderator@qq.com', 'moderator');
 		INSERT INTO wiki_pages (id, entity_type, entity_id, slug) VALUES ('page', 'card', 'Bash', 'card:Bash');
 		INSERT INTO wiki_sections (id, page_id, section_key) VALUES ('s1', 'page', 'overview');
 		INSERT INTO wiki_revisions (id, section_id, revision_no, content) VALUES ('r1', 's1', 1, 'baseline');

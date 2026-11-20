@@ -43,12 +43,12 @@ export function summarizeSource(row: SourceOverviewRow): SourceSummary {
 	}
 }
 
-export async function getSourceOverview(db: D1Database): Promise<SourceSummary[]> {
+export async function getSourceOverview(db: WikiDatabase): Promise<SourceSummary[]> {
 	const rows = await listSourceOverviewRows(db)
 	return rows.map(summarizeSource)
 }
 
-export async function getSourceUpdates(db: D1Database): Promise<SourceUpdateSummary[]> {
+export async function getSourceUpdates(db: WikiDatabase): Promise<SourceUpdateSummary[]> {
 	const rows = await listSourceUpdates(db)
 	return rows.map((row) => ({
 		id: row.id,

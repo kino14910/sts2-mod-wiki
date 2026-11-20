@@ -1,6 +1,6 @@
 import { requirePermission, WikiCollaborationError, type MaybeActor } from './access'
 
-export async function moderateComment(db: D1Database, actorInput: MaybeActor, id: string, input: {
+export async function moderateComment(db: WikiDatabase, actorInput: MaybeActor, id: string, input: {
 	status: unknown; reason?: unknown
 }) {
 	const actor = requirePermission(actorInput, 'comment:moderate')

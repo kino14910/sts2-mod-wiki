@@ -167,13 +167,16 @@ async function main() {
 	if (args.includes('--emit-initial') && !emitPath) throw new Error('--emit-initial requires --emit-sql')
 	const scan = scanModWiki(projectRoot)
 	if (scan.errors.length) throw new Error(scan.errors.join('\n'))
-	const { getPlatformProxy } = await import('wrangler')
-	const proxy = await getPlatformProxy({ persist: { path: '.wrangler/state/v3' } })
+	const connectionString = process.env.DATABASE_URL
+	if (!connectionString) throw new Error('DATABASE_URL is not configured')
+	const { Pool } = await import('pg')
+	const { createPostgresDatabase } = await import('../../src/lib/server/db/postgres.ts')
+	const pool = new Pool({ connectionString })
 	try {
-		const result = await syncModWiki(proxy.env.DB, scan, { dryRun: args.includes('--dry-run'), emitSql: !!emitPath, assumeFresh: args.includes('--emit-initial') })
+		const result = await syncModWiki(createPostgresDatabase(pool), scan, { dryRun: args.includes('--dry-run'), emitSql: !!emitPath, assumeFresh: args.includes('--emit-initial') })
 		if (emitPath) fs.writeFileSync(path.resolve(projectRoot, emitPath), ['-- Generated mod wiki synchronization SQL. Apply as one transaction.', ...result.statements].join('\n'), 'utf8')
 		for (const row of result.plan) console.log(`${row.case.padEnd(5)} ${row.source}: ${row.reason}`)
-	} finally { await proxy.dispose() }
+	} finally { await pool.end() }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))

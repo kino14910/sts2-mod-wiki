@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit'
 import { WikiCollaborationError, type MaybeActor } from './access'
 import { hasPermission } from '#lib/server/auth/permissions'
 
-export function collaborationDb(locals: App.Locals): D1Database {
+export function collaborationDb(locals: App.Locals): WikiDatabase {
 	if (!locals.wikiDb) error(503, 'Wiki database unavailable')
 	return locals.wikiDb
 }

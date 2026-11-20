@@ -10,7 +10,7 @@ import { ensureCardSections } from './card-initialization'
 
 const connections: ReturnType<typeof sqliteDb>[] = []
 const admin = { userId: 'u-admin', username: 'Admin', role: 'admin', status: 'active' } as const
-const member = { userId: 'u-member', username: 'Member', role: 'member', status: 'active' } as const
+const member = { userId: 'u-member', username: 'Member', role: 'user', status: 'active' } as const
 function setup() { const c = sqliteDb(); connections.push(c); seedSection(c.sql); return { ...c, store: createWikiEditStore(c.db) } }
 afterEach(() => { for (const c of connections.splice(0)) c.close() })
 const publication = (content: string, version = 1) => ({ sectionId: 's1', expectedVersion: version, content, summary: '', editorId: admin.userId, sourceType: 'community' as const, sourceReference: null, actorId: admin.userId })

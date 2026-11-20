@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { afterNavigate, goto } from '$app/navigation'
+	import { browser } from '$app/env'
 	import { page } from '$app/state'
 	import CardFilters from '#lib/components/CardFilters.svelte'
 	import CardRow from '#lib/components/CardRow.svelte'
@@ -26,7 +27,8 @@
 	import { cardTextToPlain } from '#lib/text/card-text'
 	import { WindowVirtualizer } from 'virtua/svelte'
 	
-	const searchParams = page.url.searchParams
+	// 预渲染 / SSR 阶段禁止读取 url.searchParams；查询参数只在浏览器端生效
+	const searchParams = browser ? page.url.searchParams : new URLSearchParams()
 
     let query = $state(searchParams.get('q') ?? '')
     let color = $state(searchParams.get('color') ?? 'all')

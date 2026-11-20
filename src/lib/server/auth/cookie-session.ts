@@ -1,5 +1,5 @@
 // Signed, stateless session cookies. The cookie only carries an auth subject; the role is
-// always read from D1, so a client can never promote itself by editing the token.
+// always read from database, so a client can never promote itself by editing the token.
 export const SESSION_COOKIE = 'sts2_wiki_session'
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7
 

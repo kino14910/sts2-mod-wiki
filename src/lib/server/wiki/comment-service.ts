@@ -15,7 +15,7 @@ export const COMMENT_RATE_LIMIT_WINDOW_MS = 60_000
 export const COMMENT_RATE_LIMIT_PER_TOKEN = 5
 export const COMMENT_RATE_LIMIT_PER_IP = 20
 
-const TARGET_TYPES: readonly CommentTargetType[] = ['card', 'wiki_section']
+const TARGET_TYPES: readonly CommentTargetType[] = ['card', 'relic', 'wiki_section']
 const TOKEN_PATTERN = /^[A-Za-z0-9_-]{16,128}$/
 const FORBIDDEN_MARKUP = /<\s*\/?\s*(script|style|iframe|object|embed|link|meta)\b|javascript:/i
 const CONTROL_CHARS = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/

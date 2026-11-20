@@ -7,6 +7,7 @@ import { escapeRegExp } from './glossary'
 import { KEYWORD_LOCALES, MOD_CONTENT_LOCALES } from './mods'
 import { GLOSSARY_ZH } from './zh'
 import { KEYWORD_ALIASES, POWER_ALIASES } from './wiki-aliases'
+import { canAutoLinkAt } from './entity-link-policy'
 
 export type GameEntityType = GameEntity['kind']
 
@@ -392,6 +393,23 @@ function hasBoundary(text: string, start: number, end: number, value: string): b
 	return true
 }
 
+/** Wiki 散文中普通英文名词大小写敏感：小写出现不应当成专有实体名 */
+function canonicalCase(name: string, candidates: readonly EntityNameEntry[]): boolean {
+	if (!/[A-Za-z]/.test(name)) return true
+	return candidates.some((entry) => entry.name === name)
+}
+
+const URL_PATTERN = /https?:\/\/\S+/gi
+
+function urlRanges(text: string): Array<[number, number]> {
+	const ranges: Array<[number, number]> = []
+	for (const match of text.matchAll(URL_PATTERN)) {
+		const start = match.index ?? 0
+		ranges.push([start, start + match[0].length])
+	}
+	return ranges
+}
+
 /** 单一扫描器：GameText / WikiText 共用，仅策略与可见范围不同 */
 export function scanEntityNames(
 	text: string,
@@ -400,7 +418,7 @@ export function scanEntityNames(
 	const index = getEntityNameIndex(context.locale ?? getLocale())
 	const scope = context.scope ?? 'game'
 	const pattern = scope === 'wiki' ? index.wikiPattern : index.pattern
-	const blocked = variableRanges(text)
+	const blocked = [...variableRanges(text), ...urlRanges(text)]
 	const result: ScannedEntityMatch[] = []
 
 	// pattern 是跨渲染共享的缓存实例，同步遍历前必须重置游标
@@ -415,6 +433,8 @@ export function scanEntityNames(
 			!match[0] ||
 			resolution.status === 'none' ||
 			!hasBoundary(text, start, end, match[0]) ||
+			!canAutoLinkAt(match[0], text, start, end) ||
+			(context.strategy === 'wiki' && !canonicalCase(match[0], candidates)) ||
 			blocked.some(([from, to]) => start >= from && start < to)
 		) {
 			pattern.lastIndex = start + 1

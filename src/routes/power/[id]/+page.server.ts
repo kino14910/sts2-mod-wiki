@@ -3,7 +3,7 @@ import { loadWikiPage } from '#lib/server/wiki/page-service'
 import { resolveEntityRoute } from '#lib/entity-route'
 import type { PageServerLoad } from './$types'
 
-/** Legacy D1 revisions may still carry the old inline source / interaction lists. */
+/** Legacy database revisions may still carry the old inline source / interaction lists. */
 function narrativeOnly(page: WikiPage): WikiPage {
 	const { title, stackType, text, order, effectsImmune } = page
 	return { title, stackType, text, order, effectsImmune }

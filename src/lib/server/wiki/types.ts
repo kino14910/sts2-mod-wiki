@@ -10,7 +10,7 @@ import type {
 } from '#lib/entities'
 
 export type ContentType = 'markdown' | 'table' | 'structured'
-export type WikiSource = 'd1' | 'unavailable' | 'none'
+export type WikiSource = 'database' | 'unavailable' | 'none'
 export type SourceStatus = 'active' | 'deleted'
 export type { SourceUpdateStatus }
 
@@ -147,7 +147,7 @@ export interface WikiSectionView {
 	sourceType: RevisionSourceType | null
 	sourceReference: string | null
 	updatedAt: string | null
-	source: 'd1'
+	source: 'database'
 }
 
 export interface WikiPageMeta {

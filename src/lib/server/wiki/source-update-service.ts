@@ -34,7 +34,7 @@ export interface SourceUpdateDetail {
 }
 
 export async function getSourceUpdateDetail(
-	db: D1Database,
+	db: WikiDatabase,
 	id: string
 ): Promise<SourceUpdateDetail | null> {
 	const row = await findSourceUpdateById(db, id)
@@ -82,7 +82,7 @@ export interface ResolveSourceUpdateInput {
  * Rejection keeps both the published content and the old source snapshot untouched.
  */
 export async function resolveSourceUpdate(
-	db: D1Database,
+	db: WikiDatabase,
 	input: ResolveSourceUpdateInput
 ): Promise<SourceUpdateDetail> {
 	const actor = requirePermission(input.actor, 'wiki:source:review')

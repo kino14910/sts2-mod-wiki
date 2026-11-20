@@ -5,7 +5,7 @@ PRAGMA foreign_keys = ON;
 -- SQLite cannot alter a CHECK constraint in place, so the table is expanded via rename + copy.
 -- DATA MIGRATION: every existing row is copied verbatim; the original table is KEPT as
 -- `comments_card_legacy` as a recovery snapshot. Nothing is dropped and no history is deleted.
--- Migrations are applied once by wrangler; do not re-run this file manually against a migrated DB.
+-- Historical SQLite migration; do not apply it to Postgres. Use `pnpm db:migrate` instead.
 
 ALTER TABLE comments RENAME TO comments_card_legacy;
 

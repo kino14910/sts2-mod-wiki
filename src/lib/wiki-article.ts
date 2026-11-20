@@ -255,20 +255,22 @@ export function articleToc(sections: ArticleSectionContent[]) {
 
 const UI = {
 	eng: {
-		edit: 'Edit', copy: 'Copy section link', copied: 'Link copied', copyFailed: 'Copy this link', history: 'History', discussion: 'Discussion',
-		close: 'Close', signIn: 'Sign in', signOut: 'Sign out', account: 'Community account', unavailable: 'Sign-in is not configured on this site.',
-		development: 'Local development sign-in', subject: 'Account', username: 'Display name', error: 'The request failed. Please try again.',
+		edit: 'Edit', copy: 'Copy section link', copied: 'Link copied', copyFailed: 'Copy this link', history: 'History',
+		close: 'Close', signIn: 'Sign in', signOut: 'Sign out', account: 'Community account',
+		qqEmail: 'QQ email', emailHint: 'Only @qq.com addresses are accepted.', emailInvalid: 'Enter a valid @qq.com email address.', password: 'Password', passwordShort: 'Password must be at least 8 characters.', inviteCode: 'Invitation code', inviteHint: 'Registration requires an invitation code from an administrator.', inviteInvalid: 'Enter your invitation code.', username: 'Display name', createAccount: 'Create account', register: 'Register', haveAccount: 'Already have an account? Sign in', error: 'The request failed. Please try again.',
+		admin: 'Admin', adminUsers: 'Users', adminInvites: 'Invitation codes', adminSearch: 'Search name or email', adminRole: 'Role', adminStatus: 'Status', adminJoined: 'Joined', adminToTrusted: 'Set trusted', adminToUser: 'Set user', adminRoleConfirm: 'Change this user role?', adminGenerate: 'Generate', adminCount: 'Count', adminUses: 'Uses per code', adminDays: 'Valid for (days)', adminCopy: 'Copy', adminCopied: 'Copied', adminRevoke: 'Revoke', adminRevokeConfirm: 'Revoke this invitation code?', adminStatusLabel: 'Status', adminUsage: 'Usage', adminNoUsers: 'No users found.', adminNoInvites: 'No invitation codes yet.', adminNewCodes: 'New codes (shown once)', adminLoadFailed: 'Could not load data.', adminSaved: 'Saved.',
 		conflict: 'This section changed while you were editing. Your draft has been kept.', reload: 'Load latest version', compare: 'Compare with latest',
 		readOnly: 'This section is available for reading. Editing is not available yet.', show: 'show', hide: 'hide', overview: 'Overview',
-		sessionExpired: 'Your session has expired. Sign in again to submit this draft.', review: 'Review changes', refresh: 'Refresh', summary: 'Edit summary', github: 'Continue with GitHub', withdraw: 'Withdraw proposal', withdrawn: 'Proposal withdrawn', rebase: 'Keep draft and use latest version'
+		sessionExpired: 'Your session has expired. Sign in again to submit this draft.', review: 'Review changes', refresh: 'Refresh', summary: 'Edit summary', withdraw: 'Withdraw proposal', withdrawn: 'Proposal withdrawn', rebase: 'Keep draft and use latest version'
 	},
 	zhs: {
-		edit: '编辑', copy: '复制章节链接', copied: '链接已复制', copyFailed: '请复制此链接', history: '历史', discussion: '讨论',
-		close: '关闭', signIn: '登录', signOut: '退出登录', account: '社区账户', unavailable: '本站尚未配置登录方式。',
-		development: '本地开发登录', subject: '账户', username: '显示名称', error: '请求失败，请重试。',
+		edit: '编辑', copy: '复制章节链接', copied: '链接已复制', copyFailed: '请复制此链接', history: '历史',
+		close: '关闭', signIn: '登录', signOut: '退出登录', account: '社区账户',
+		qqEmail: 'QQ 邮箱', emailHint: '仅支持 @qq.com 邮箱。', emailInvalid: '请输入有效的 @qq.com 邮箱地址。', password: '密码', passwordShort: '密码至少 8 位。', inviteCode: '邀请码', inviteHint: '注册需要管理员提供的邀请码。', inviteInvalid: '请输入邀请码。', username: '显示名称', createAccount: '注册账号', register: '注册', haveAccount: '已有账号？登录', error: '请求失败，请重试。',
+		admin: '管理后台', adminUsers: '用户管理', adminInvites: '邀请码管理', adminSearch: '搜索名称或邮箱', adminRole: '角色', adminStatus: '状态', adminJoined: '注册时间', adminToTrusted: '设为可信用户', adminToUser: '设为普通用户', adminRoleConfirm: '确认修改该用户角色？', adminGenerate: '生成', adminCount: '数量', adminUses: '每码使用次数', adminDays: '有效期（天）', adminCopy: '复制', adminCopied: '已复制', adminRevoke: '撤销', adminRevokeConfirm: '确认撤销该邀请码？', adminStatusLabel: '状态', adminUsage: '使用记录', adminNoUsers: '未找到用户。', adminNoInvites: '暂无邀请码。', adminNewCodes: '新邀请码（仅显示一次）', adminLoadFailed: '加载失败。', adminSaved: '已保存。',
 		conflict: '编辑期间此章节已更新，草稿已保留。', reload: '载入最新版本', compare: '与最新版本比较',
 		readOnly: '此章节可供阅读，暂未开放编辑。', show: '显示', hide: '隐藏', overview: '概述',
-		sessionExpired: '登录已失效，请重新登录后提交草稿。', review: '审核修改', refresh: '刷新', summary: '编辑摘要', github: '使用 GitHub 登录', withdraw: '撤回提案', withdrawn: '提案已撤回', rebase: '保留草稿并采用最新版本'
+		sessionExpired: '登录已失效，请重新登录后提交草稿。', review: '审核修改', refresh: '刷新', summary: '编辑摘要', withdraw: '撤回提案', withdrawn: '提案已撤回', rebase: '保留草稿并采用最新版本'
 	}
 } as const
 

@@ -32,7 +32,7 @@ export function composeSections(
 			sourceType: revision?.source_type ?? null,
 			sourceReference: revision?.source_reference ?? null,
 			updatedAt: revision?.created_at ?? row.updated_at,
-			source: 'd1'
+			source: 'database'
 		}
 	})
 }

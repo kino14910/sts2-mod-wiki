@@ -47,7 +47,7 @@ function fakeDb(linkedVersion: number | null = 4) {
 	}
 
 	return {
-		db: db as unknown as D1Database,
+		db: db as unknown as WikiDatabase,
 		batchCalls,
 		runCalls,
 		firstCalls,
@@ -73,7 +73,7 @@ const input = (overrides: Partial<PublishInput> = {}): PublishInput => ({
 	...overrides
 })
 
-describe('D1 publish transaction', () => {
+describe('database publish transaction', () => {
 	it('guards every statement with the section version', async () => {
 		const fake = fakeDb(4)
 		const result = await createWikiEditStore(fake.db).publish(input())
@@ -121,7 +121,7 @@ describe('D1 publish transaction', () => {
 		).toBe(false)
 	})
 
-	it('aliases D1 columns to the camelCase store contract', async () => {
+	it('aliases database columns to the camelCase store contract', async () => {
 		const fake = fakeDb(4)
 		const store = createWikiEditStore(fake.db)
 		await store.findSection('s1')
@@ -139,7 +139,7 @@ describe('D1 publish transaction', () => {
 		expect(fake.firstCalls[1]?.sql).toContain('AS editorName')
 	})
 
-	it('never binds undefined values to D1', async () => {
+	it('never binds undefined values to database', async () => {
 		const fake = fakeDb(4)
 		await createWikiEditStore(fake.db).publish(
 			input({ actorId: undefined, reviewNote: undefined })

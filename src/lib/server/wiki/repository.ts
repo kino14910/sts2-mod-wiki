@@ -70,7 +70,7 @@ export interface SourceUpdateInsert {
 }
 
 export async function findPageByEntity(
-	db: D1Database,
+	db: WikiDatabase,
 	ref: EntityRef
 ): Promise<WikiPageRow | null> {
 	const resolved = resolvePublicEntityRef(ref)
@@ -86,7 +86,7 @@ export async function findPageByEntity(
 }
 
 export async function findPageByModSlug(
-	db: D1Database,
+	db: WikiDatabase,
 	modId: string,
 	slug: string
 ): Promise<WikiPageRow | null> {
@@ -100,7 +100,7 @@ export async function findPageByModSlug(
 }
 
 export async function listSectionsByPage(
-	db: D1Database,
+	db: WikiDatabase,
 	pageId: string
 ): Promise<WikiSectionRow[]> {
 	const { results } = await db
@@ -113,7 +113,7 @@ export async function listSectionsByPage(
 }
 
 export async function findSectionByKey(
-	db: D1Database,
+	db: WikiDatabase,
 	pageId: string,
 	sectionKey: string
 ): Promise<WikiSectionRow | null> {
@@ -126,7 +126,7 @@ export async function findSectionByKey(
 }
 
 export async function findRevisionsByIds(
-	db: D1Database,
+	db: WikiDatabase,
 	ids: string[]
 ): Promise<Map<string, WikiRevisionRow>> {
 	if (ids.length === 0) return new Map()
@@ -139,7 +139,7 @@ export async function findRevisionsByIds(
 }
 
 export async function listRevisionsBySection(
-	db: D1Database,
+	db: WikiDatabase,
 	sectionId: string,
 	limit = 50,
 	offset = 0
@@ -153,7 +153,7 @@ export async function listRevisionsBySection(
 	return results
 }
 
-export async function maxRevisionNo(db: D1Database, sectionId: string): Promise<number> {
+export async function maxRevisionNo(db: WikiDatabase, sectionId: string): Promise<number> {
 	const row = await db
 		.prepare('SELECT COALESCE(MAX(revision_no), 0) AS value FROM wiki_revisions WHERE section_id = ?')
 		.bind(sectionId)
@@ -161,7 +161,7 @@ export async function maxRevisionNo(db: D1Database, sectionId: string): Promise<
 	return Number(row?.value ?? 0)
 }
 
-export async function insertPage(db: D1Database, input: PageInsert): Promise<void> {
+export async function insertPage(db: WikiDatabase, input: PageInsert): Promise<void> {
 	await db
 		.prepare(
 			'INSERT INTO wiki_pages (id, mod_id, entity_type, entity_id, slug, page_type) VALUES (?, ?, ?, ?, ?, ?)'
@@ -178,7 +178,7 @@ export async function insertPage(db: D1Database, input: PageInsert): Promise<voi
 }
 
 export async function insertSection(
-	db: D1Database,
+	db: WikiDatabase,
 	input: {
 		id: string
 		pageId: string
@@ -195,7 +195,7 @@ export async function insertSection(
 		.run()
 }
 
-export async function insertRevision(db: D1Database, input: RevisionInsert): Promise<void> {
+export async function insertRevision(db: WikiDatabase, input: RevisionInsert): Promise<void> {
 	await db
 		.prepare(
 			'INSERT INTO wiki_revisions (id, section_id, revision_no, parent_revision_id, content, summary, editor_id, source_type, source_reference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
@@ -214,9 +214,9 @@ export async function insertRevision(db: D1Database, input: RevisionInsert): Pro
 		.run()
 }
 
-// A conditional UPDATE that affects zero rows is not an error in D1, so callers must inspect `changes`.
+// A conditional UPDATE that affects zero rows is not an error in database, so callers must inspect `changes`.
 export async function linkCurrentRevision(
-	db: D1Database,
+	db: WikiDatabase,
 	sectionId: string,
 	expectedVersion: number,
 	revisionId: string
@@ -241,7 +241,7 @@ export interface SourceOverviewRow extends WikiSectionSourceRow {
 }
 
 export async function listSourceOverviewRows(
-	db: D1Database
+	db: WikiDatabase
 ): Promise<SourceOverviewRow[]> {
 	const { results } = await db
 		.prepare(
@@ -260,7 +260,7 @@ export async function listSourceOverviewRows(
 }
 
 export async function findSourceByPath(
-	db: D1Database,
+	db: WikiDatabase,
 	sourcePath: string
 ): Promise<WikiSectionSourceRow | null> {
 	return db
@@ -270,7 +270,7 @@ export async function findSourceByPath(
 }
 
 export async function findSourceBySection(
-	db: D1Database,
+	db: WikiDatabase,
 	sectionId: string
 ): Promise<WikiSectionSourceRow | null> {
 	return db
@@ -279,14 +279,14 @@ export async function findSourceBySection(
 		.first<WikiSectionSourceRow>()
 }
 
-export async function listSources(db: D1Database): Promise<WikiSectionSourceRow[]> {
+export async function listSources(db: WikiDatabase): Promise<WikiSectionSourceRow[]> {
 	const { results } = await db
 		.prepare(`SELECT ${SOURCE_COLUMNS} FROM wiki_section_sources ORDER BY source_path`)
 		.all<WikiSectionSourceRow>()
 	return results
 }
 
-export async function insertSource(db: D1Database, input: SourceInsert): Promise<void> {
+export async function insertSource(db: WikiDatabase, input: SourceInsert): Promise<void> {
 	await db
 		.prepare(
 			'INSERT INTO wiki_section_sources (id, section_id, source_path, source_hash, source_content, source_mod_version) VALUES (?, ?, ?, ?, ?, ?)'
@@ -303,7 +303,7 @@ export async function insertSource(db: D1Database, input: SourceInsert): Promise
 }
 
 export async function updateSourceSync(
-	db: D1Database,
+	db: WikiDatabase,
 	id: string,
 	input: {
 		hash: string
@@ -321,7 +321,7 @@ export async function updateSourceSync(
 }
 
 export async function findOpenSourceUpdate(
-	db: D1Database,
+	db: WikiDatabase,
 	sourceId: string,
 	incomingHash: string
 ): Promise<WikiSourceUpdateRow | null> {
@@ -334,7 +334,7 @@ export async function findOpenSourceUpdate(
 }
 
 export async function insertSourceUpdate(
-	db: D1Database,
+	db: WikiDatabase,
 	input: SourceUpdateInsert
 ): Promise<void> {
 	await db
@@ -356,7 +356,7 @@ export async function insertSourceUpdate(
 }
 
 export async function findSourceUpdateById(
-	db: D1Database,
+	db: WikiDatabase,
 	id: string
 ): Promise<WikiSourceUpdateRow | null> {
 	return db
@@ -366,7 +366,7 @@ export async function findSourceUpdateById(
 }
 
 export async function setSourceUpdateReview(
-	db: D1Database,
+	db: WikiDatabase,
 	id: string,
 	input: {
 		status: SourceUpdateStatus
@@ -387,7 +387,7 @@ export async function setSourceUpdateReview(
 }
 
 export async function listSourceUpdates(
-	db: D1Database,
+	db: WikiDatabase,
 	limit = 50
 ): Promise<WikiSourceUpdateRow[]> {
 	const { results } = await db
@@ -400,7 +400,7 @@ export async function listSourceUpdates(
 }
 
 export async function insertAuditLog(
-	db: D1Database,
+	db: WikiDatabase,
 	input: {
 		id: string
 		actorId: string | null
@@ -425,7 +425,7 @@ export async function insertAuditLog(
 		.run()
 }
 
-async function countRows(db: D1Database, sql: string, ...params: unknown[]): Promise<number> {
+async function countRows(db: WikiDatabase, sql: string, ...params: unknown[]): Promise<number> {
 	const row = await db
 		.prepare(sql)
 		.bind(...params)
@@ -433,7 +433,7 @@ async function countRows(db: D1Database, sql: string, ...params: unknown[]): Pro
 	return Number(row?.value ?? 0)
 }
 
-export function createCommentStore(db: D1Database): CommentStore {
+export function createCommentStore(db: WikiDatabase): CommentStore {
 	return {
 		async listTopLevel({ targetType, targetId, limit, offset }): Promise<CommentRow[]> {
 			const { results } = await db

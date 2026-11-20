@@ -11,7 +11,7 @@ import type {
 	WikiEditStore
 } from './collaboration-types'
 
-// D1 returns raw column names, so every column is aliased to the camelCase store contract.
+// database returns raw column names, so every column is aliased to the camelCase store contract.
 const SECTION_SELECT = `
 	SELECT s.id AS id, s.page_id AS pageId, s.section_key AS sectionKey,
 		s.content_type AS contentType, s.sort_order AS sortOrder, s.version AS version,
@@ -44,17 +44,17 @@ const PROPOSAL_JOINS = `
 	LEFT JOIN users su ON su.id = p.submitted_by
 	LEFT JOIN users ru ON ru.id = p.reviewed_by`
 
-function statement(db: D1Database, sql: string, params: unknown[]): D1PreparedStatement {
-	// D1 rejects `undefined` bind values (unlike better-sqlite3); optional fields must be NULL.
-	return db.prepare(sql).bind(...params.map((value) => (value === undefined ? null : value))) as D1PreparedStatement
+function statement(db: WikiDatabase, sql: string, params: unknown[]): WikiStatement {
+	// database rejects `undefined` bind values (unlike better-sqlite3); optional fields must be NULL.
+	return db.prepare(sql).bind(...params.map((value) => (value === undefined ? null : value))) as WikiStatement
 }
 
 /**
- * D1 implementation of the collaboration store. Publishing uses a single `batch` (one
+ * database implementation of the collaboration store. Publishing uses a single `batch` (one
  * transaction): every statement is guarded by the section version, so a concurrent publish
  * turns the whole batch into a no-op instead of partially writing history.
  */
-export function createWikiEditStore(db: D1Database): WikiEditStore {
+export function createWikiEditStore(db: WikiDatabase): WikiEditStore {
 	return {
 		async findSection(sectionId): Promise<SectionState | null> {
 			return db
@@ -210,7 +210,7 @@ export function createWikiEditStore(db: D1Database): WikiEditStore {
 				guardParams.push(input.sourceUpdate.id, input.sourceUpdate.sourceId, input.sectionId,
 					input.sourceUpdate.baseHash, input.sourceUpdate.incomingHash)
 			}
-			const statements: D1PreparedStatement[] = [
+			const statements: WikiStatement[] = [
 				// 1. Only create the revision when the caller still holds the expected version.
 				statement(
 					db,

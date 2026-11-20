@@ -21,6 +21,62 @@ describe('non-destructive collaboration migrations', () => {
 		expect(c.sql.prepare("SELECT status FROM comments_authenticated_legacy WHERE id='parent'").get()?.status).toBe('hidden')
 		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
 	})
+	it('widens comment targets to relics without losing replies or revision history', () => {
+		const c = sqliteDb({ migrations: false }); connections.push(c)
+		for (const name of ['0001_wiki_foundation', '0003_comments_anonymous', '0004_wiki_collaboration', '0005_collaboration_integrity', '0006_entity_identity', '0007_identity_data_epoch'])
+			c.sql.exec(migration(name))
+		c.sql.exec(`INSERT INTO comments (id,target_type,target_id,author_name,author_token_hash,content)
+				VALUES ('parent','card','Bash','Alice','token-hash','Original'),
+				('reply','card','Bash','Bob','other-hash','Reply');
+			UPDATE comments SET parent_id='parent' WHERE id='reply'`)
+		c.sql.exec(migration('0012_relic_comment_target'))
+		expect(c.sql.prepare('SELECT id,parent_id,content FROM comments ORDER BY id').all()).toEqual([
+			{ id: 'parent', parent_id: null, content: 'Original' },
+			{ id: 'reply', parent_id: 'parent', content: 'Reply' }
+		])
+		c.sql.exec("INSERT INTO comments (id,target_type,target_id,author_name,author_token_hash,content) VALUES ('relic','relic','PaperFrog','Alice','token-hash','Relic tip')")
+		c.sql.exec("UPDATE comments SET content='Edited tip' WHERE id='relic'")
+		expect(c.sql.prepare("SELECT comment_id,content FROM comment_revisions WHERE comment_id='relic' ORDER BY created_at").all())
+			.toEqual([{ comment_id: 'relic', content: 'Relic tip' }, { comment_id: 'relic', content: 'Edited tip' }])
+		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
+	})
+	it('adds QQ email and password columns without changing existing accounts', () => {
+		const c = sqliteDb({ migrations: false }); connections.push(c)
+		c.sql.exec(migration('0001_wiki_foundation'))
+		c.sql.exec("INSERT INTO users (id,auth_subject,username,role) VALUES ('alice','alice','Alice','admin')")
+		c.sql.exec(migration('0008_user_email')); c.sql.exec(migration('0009_email_password'))
+		expect(c.sql.prepare('SELECT id,auth_subject,role,email,password_hash FROM users').get()).toEqual({
+			id: 'alice', auth_subject: 'alice', role: 'admin', email: null, password_hash: null
+		})
+		c.sql.exec("INSERT INTO users (id,auth_subject,username,email,password_hash) VALUES ('bob','bob@qq.com','Bob','bob@qq.com','pbkdf2$hash')")
+		expect(c.sql.prepare("SELECT email,password_hash FROM users WHERE id='bob'").get()).toEqual({
+			email: 'bob@qq.com', password_hash: 'pbkdf2$hash'
+		})
+		expect(() => c.sql.exec("INSERT INTO users (id,auth_subject,username,email) VALUES ('clone','clone@qq.com','Clone','bob@qq.com')")).toThrow()
+		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
+	})
+	it('creates the email verification code table', () => {
+		const c = sqliteDb({ migrations: false }); connections.push(c)
+		c.sql.exec(migration('0001_wiki_foundation')); c.sql.exec(migration('0010_email_verification'))
+		c.sql.exec("INSERT INTO auth_email_codes (id,email,code_hash,expires_at,created_at) VALUES ('code','alice@qq.com','digest',1000,500)")
+		expect(c.sql.prepare('SELECT email,code_hash,attempts,consumed_at FROM auth_email_codes').get()).toEqual({
+			email: 'alice@qq.com', code_hash: 'digest', attempts: 0, consumed_at: null
+		})
+		expect(c.sql.prepare("SELECT name FROM sqlite_master WHERE type='index' AND name='idx_auth_email_codes_email_created'").get()).toBeDefined()
+		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
+	})
+	it('adds invite and rate limit tables without rewriting existing accounts', () => {
+		const c = sqliteDb({ migrations: false }); connections.push(c)
+		c.sql.exec(migration('0001_wiki_foundation'))
+		c.sql.exec("INSERT INTO users (id,auth_subject,username,role) VALUES ('alice','alice@qq.com','Alice','member')")
+		c.sql.exec(migration('0011_invite_registration'))
+		expect(c.sql.prepare('SELECT role FROM users WHERE id = ?').get('alice')).toEqual({ role: 'member' })
+		expect(c.sql.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('auth_invite_codes','auth_rate_limits') ORDER BY name").all().map((r) => r.name))
+			.toEqual(['auth_invite_codes', 'auth_rate_limits'])
+		c.sql.exec("INSERT INTO auth_invite_codes (id,code_hash,created_by,created_at,expires_at,max_uses) VALUES ('inv','hash','alice',1000,2000,1)")
+		expect(() => c.sql.exec("INSERT INTO auth_invite_codes (id,code_hash,created_by,created_at,expires_at,max_uses) VALUES ('dup','hash','alice',1000,2000,1)")).toThrow()
+		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
+	})
 	it('upgrades databases which already applied the original 0003 and preserves anonymous ownership', () => {
 		const c = sqliteDb({ migrations: false }); connections.push(c)
 		c.sql.exec(migration('0001_wiki_foundation'))

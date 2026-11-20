@@ -28,7 +28,7 @@ import type {
 const NO_SECTIONS: WikiSectionView[] = []
 
 async function readSections(
-	db: D1Database,
+	db: WikiDatabase,
 	page: WikiPageRow
 ): Promise<WikiSectionView[]> {
 	const rows = await listSectionsByPage(db, page.id)
@@ -69,7 +69,7 @@ function buildView(
 }
 
 export async function loadWikiPage(
-	db: D1Database | null,
+	db: WikiDatabase | null,
 	inputRef: EntityRef
 ): Promise<WikiPageView> {
 	const ref = canonicalWikiEntity(inputRef) ?? inputRef
@@ -89,15 +89,15 @@ export async function loadWikiPage(
 		if (!row) return buildView(page, game, NO_SECTIONS, null, 'none', slug, 'entity', modId)
 		const allSections = await readSections(db, row)
 		const sections = ref.type === 'card' ? allSections.filter((s) => s.contentType === 'markdown') : allSections
-		return buildView(page, game, sections, row, 'd1', row.slug, row.page_type, row.mod_id)
+		return buildView(page, game, sections, row, 'database', row.slug, row.page_type, row.mod_id)
 	} catch (error) {
-		console.warn('[wiki] D1 read failed', slug, error)
+		console.warn('[wiki] database read failed', slug, error)
 		return buildView(page, game, NO_SECTIONS, null, 'unavailable', slug, 'entity', modId)
 	}
 }
 
 export async function loadModWikiPage(
-	db: D1Database | null,
+	db: WikiDatabase | null,
 	modId: string,
 	slug: string
 ): Promise<WikiPageView> {
@@ -111,9 +111,9 @@ export async function loadModWikiPage(
 		const row = await findPageByModSlug(db, modId, slug)
 		if (!row) return buildView(page, null, NO_SECTIONS, null, 'none', slug, 'mod', modId)
 		const sections = await readSections(db, row)
-		return buildView(page, null, sections, row, 'd1', row.slug, row.page_type, row.mod_id)
+		return buildView(page, null, sections, row, 'database', row.slug, row.page_type, row.mod_id)
 	} catch (error) {
-		console.warn('[wiki] D1 read failed', modPageKey(page), error)
+		console.warn('[wiki] database read failed', modPageKey(page), error)
 		return buildView(page, null, NO_SECTIONS, null, 'unavailable', slug, 'mod', modId)
 	}
 }

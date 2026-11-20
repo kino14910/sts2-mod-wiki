@@ -10,7 +10,7 @@ import {
 } from './bbcode'
 import { findExplicitIcons, resolveExplicitIcon, UPGRADED_PATTERN } from './game-text/icon-syntax'
 import type { IconRef } from '#lib/data/icon-registry'
-import { findGameEntity, type ScopedEntityRef } from '#lib/data/entities'
+import { findGameEntity, scopedEntityKey, type ScopedEntityRef } from '#lib/data/entities'
 import {
 	WIKI_ENTITY_PREFERENCE,
 	getEntityNameIndex,
@@ -196,12 +196,6 @@ function entryForRef(name: string, ref: ScopedEntityRef, locale: string): WikiEn
 	)
 }
 
-/** 普通英文名词大小写敏感：小写出现不应当成专有实体名 */
-function canonicalCase(name: string, candidates: readonly EntityNameEntry[]) {
-	if (!/[A-Za-z]/.test(name)) return true
-	return candidates.some((entry) => entry.name === name)
-}
-
 function splitTooltipTerms(value: string): WikiNode[] {
 	if (!TOOLTIP_PATTERN || !value) return [{ type: 'text', value }]
 	const nodes: WikiNode[] = []
@@ -238,7 +232,6 @@ function matchVisibleText(value: string, options: WikiTextOptions): WikiNode[] {
 	const nodes: WikiNode[] = []
 	let cursor = 0
 	for (const match of matches) {
-		if (!canonicalCase(match.name, match.candidates)) continue
 		if (match.start > cursor) {
 			nodes.push(...splitTooltipTerms(value.slice(cursor, match.start)))
 		}
@@ -407,15 +400,33 @@ function styleOf(name: string, arg: string | null): WikiStyle {
 	return {}
 }
 
+/**
+ * 数据与词条表在构建后不可变，AST 节点也不被渲染修改：
+ * 相同输入直接复用解析结果，避免每次页面访问重复扫描。FIFO 限容防长尾正文撑爆内存。
+ */
+const PARSE_CACHE_LIMIT = 512
+const parseCache = new Map<string, WikiNode[]>()
+
 /** Wiki 正文 AST：BBCode 结构 + 可见文本节点上的实体 / 图标 / 歧义节点 */
 export function parseWikiText(text: string, options: WikiTextOptions = {}): WikiNode[] {
+	const locale = options.locale ?? getLocale()
+	const key = JSON.stringify([
+		text,
+		locale,
+		options.modId ?? null,
+		options.current ? scopedEntityKey(options.current) : null
+	])
+	const cached = parseCache.get(key)
+	if (cached) return cached
+	const resolved: WikiTextOptions = { ...options, locale }
+
 	const root: WikiNode[] = []
 	const stack: Array<{ name: string; children: WikiNode[] }> = []
 	const current = () => (stack.length ? stack[stack.length - 1].children : root)
 
 	for (const segment of tokenizeSegments(text)) {
 		if (segment.kind === 'text') {
-			current().push(...tokenizeInline(segment.value, options))
+			current().push(...tokenizeInline(segment.value, resolved))
 			continue
 		}
 		if (segment.kind === 'break') {
@@ -443,5 +454,11 @@ export function parseWikiText(text: string, options: WikiTextOptions = {}): Wiki
 		current().push(tag)
 		stack.push({ name: tag.name, children: tag.children })
 	}
+
+	if (parseCache.size >= PARSE_CACHE_LIMIT) {
+		const oldest = parseCache.keys().next().value
+		if (oldest !== undefined) parseCache.delete(oldest)
+	}
+	parseCache.set(key, root)
 	return root
 }

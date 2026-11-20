@@ -1,5 +1,15 @@
-export type Role = 'member' | 'trusted' | 'moderator' | 'admin'
+export type Role = 'user' | 'trusted' | 'moderator' | 'admin'
+/** Legacy `member` is the stored form of the public `user` role. */
+export type DbRole = 'member' | Role
 export type UserStatus = 'active' | 'suspended'
+
+export function toPublicRole(role: DbRole): Role {
+	return role === 'member' ? 'user' : role
+}
+
+export function toDbRole(role: Role): DbRole {
+	return role === 'user' ? 'member' : role
+}
 
 export type Permission =
 	| 'wiki:proposal:create'
@@ -14,9 +24,10 @@ export type Permission =
 	| 'comment:moderate'
 	| 'user:role:manage'
 	| 'user:status:manage'
+	| 'invite:manage'
 
-const MEMBER: readonly Permission[] = ['wiki:proposal:create', 'comment:create']
-const TRUSTED: readonly Permission[] = [...MEMBER, 'wiki:revision:publish']
+const USER: readonly Permission[] = ['wiki:proposal:create', 'comment:create']
+const TRUSTED: readonly Permission[] = [...USER, 'wiki:revision:publish']
 const MODERATOR: readonly Permission[] = [
 	...TRUSTED,
 	'wiki:proposal:review',
@@ -30,11 +41,12 @@ const ADMIN: readonly Permission[] = [
 	'wiki:source:review',
 	'wiki:source:sync',
 	'user:role:manage',
-	'user:status:manage'
+	'user:status:manage',
+	'invite:manage'
 ]
 
 export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
-	member: MEMBER,
+	user: USER,
 	trusted: TRUSTED,
 	moderator: MODERATOR,
 	admin: ADMIN

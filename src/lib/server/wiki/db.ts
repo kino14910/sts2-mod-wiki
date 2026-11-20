@@ -1,16 +1,39 @@
-import { env } from 'cloudflare:workers'
+import { DATABASE_URL, WIKI_DEV_LOGIN, WIKI_SESSION_SECRET } from '$app/env/private'
+import { attachDatabasePool } from '@vercel/functions'
+import { Pool } from 'pg'
+import { createPostgresDatabase } from '#lib/server/db/postgres'
+import type { WikiDatabase } from '#lib/server/db/types'
 
-// adapter-cloudflare 8 exposes bindings through cloudflare:workers in Workers; platform.env only exists in the dev emulator.
-export function getPlatformEnv(platform?: Readonly<App.Platform>): Env | undefined {
-	if (platform?.env) return platform.env
-	try {
-		void env.DB
-		return env
-	} catch {
-		return undefined
+export interface WikiRuntimeEnv {
+	WIKI_SESSION_SECRET?: string
+	WIKI_DEV_LOGIN?: string
+}
+
+let pool: Pool | null = null
+
+export function getRuntimeEnv(): WikiRuntimeEnv | undefined {
+	if (!WIKI_SESSION_SECRET) return undefined
+	return {
+		WIKI_SESSION_SECRET,
+		WIKI_DEV_LOGIN: WIKI_DEV_LOGIN || undefined
 	}
 }
 
-export function getWikiDb(platform?: Readonly<App.Platform>): D1Database | null {
-	return getPlatformEnv(platform)?.DB ?? null
+function getPool(): Pool | null {
+	if (!DATABASE_URL) return null
+	if (!pool) {
+		pool = new Pool({
+			connectionString: DATABASE_URL,
+			max: 5,
+			idleTimeoutMillis: 10_000,
+			connectionTimeoutMillis: 5_000
+		})
+		attachDatabasePool(pool)
+	}
+	return pool
+}
+
+export function getWikiDb(): WikiDatabase | null {
+	const activePool = getPool()
+	return activePool ? createPostgresDatabase(activePool) : null
 }

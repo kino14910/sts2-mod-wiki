@@ -24,7 +24,7 @@ declare module '*.mjs' {
 	}
 
 	export function scanModWiki(root?: string): ScannedModWiki
-	export function syncModWiki(db: D1Database, scan: ScannedModWiki, options?: {
+	export function syncModWiki(db: WikiDatabase, scan: ScannedModWiki, options?: {
 		dryRun?: boolean; emitSql?: boolean; assumeFresh?: boolean
 	}): Promise<{ plan: { source: string; case: string; reason: string }[]; statements: string[] }>
 }

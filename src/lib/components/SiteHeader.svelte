@@ -1,72 +1,114 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import { refreshAll } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { page } from '$app/state';
-	import { getLocale, setLocale } from '#lib/paraglide/runtime';
-	import { m } from '#lib/paraglide/messages';
-	import { wikiUi } from '#lib/wiki-article';
-	import type { WikiViewer } from '#lib/wiki-collaboration';
+	import { resolve } from '$app/paths'
+	import { refreshAll } from '$app/navigation'
+	import { isAllowedEmail } from '#lib/email-domain'
+	import { onMount } from 'svelte'
+	import { page } from '$app/state'
+	import { getLocale, setLocale } from '#lib/paraglide/runtime'
+	import { m } from '#lib/paraglide/messages'
+	import { wikiUi } from '#lib/wiki-article'
+	import type { WikiViewer } from '#lib/wiki-collaboration'
 
-	let open = $state(false);
-	let accountOpen = $state(false);
-	let viewer = $state<WikiViewer>({ session: null, permissions: [] });
-	let subject = $state('');
-	let username = $state('');
-	let authBusy = $state(false);
-	let authError = $state('');
-	let ui = $derived(wikiUi(getLocale()));
-	let auth = $derived((page.data as { wikiAuth?: { developmentLogin: boolean; githubLogin: boolean } }).wikiAuth);
-	let githubLogin = $derived(auth?.githubLogin ?? page.data.auth?.provider === 'github');
-	let currentViewer = $derived((page.data as { viewer?: WikiViewer }).viewer ?? viewer);
-	let returnTo = $derived(page.url.pathname + page.url.search + page.url.hash);
-	onMount(() => { void refreshSession(); });
+	let open = $state(false)
+	let accountOpen = $state(false)
+	let viewer = $state<WikiViewer>({ session: null, permissions: [] })
+	let email = $state('')
+	let password = $state('')
+	let username = $state('')
+	let inviteCode = $state('')
+	let authMode = $state<'login' | 'register'>('login')
+	let authBusy = $state(false)
+	let authError = $state('')
+	let authNotice = $state('')
+	let ui = $derived(wikiUi(getLocale()))
+	let currentViewer = $derived((page.data as { viewer?: WikiViewer }).viewer ?? viewer)
+	onMount(() => { void refreshSession() })
+
 	async function refreshSession() {
 		try {
-			const response = await fetch(resolve('/api/auth/session'), { cache: 'no-store' });
-			if (response.ok) viewer = await response.json() as WikiViewer;
+			const response = await fetch(resolve('/api/auth/session'), { cache: 'no-store' })
+			if (response.ok) viewer = await response.json() as WikiViewer
 		} catch { /* Reading remains available without an authentication server. */ }
 	}
-	async function authenticate(event?: SubmitEvent) {
-		event?.preventDefault();
-		if (authBusy) return;
-		authBusy = true;
-		authError = '';
-		try {
-			const signingOut = Boolean(currentViewer.session);
-			const response = await fetch(resolve('/api/auth/session'), {
-				method: signingOut ? 'DELETE' : 'POST',
-				headers: { 'content-type': 'application/json' },
-				...(signingOut ? {} : { body: JSON.stringify({ subject, username }) })
-			});
-			const body = await response.json().catch(() => null) as (WikiViewer & { message?: string }) | null;
-			if (!response.ok) throw new Error(body?.message ?? ui.error);
-			viewer = signingOut ? { session: null, permissions: [] } : body!;
-			await refreshAll();
-			accountOpen = false;
-		} catch (cause) { authError = cause instanceof Error ? cause.message : ui.error; }
-		finally { authBusy = false; }
-	}
-	const locale = getLocale();
 
-	const links = [
+	function validateCredentials(requireInvite = false) {
+		if (!isAllowedEmail(email)) { authError = ui.emailInvalid; return false }
+		if (password.length < 8) { authError = ui.passwordShort; return false }
+		if (requireInvite && !inviteCode.trim()) { authError = ui.inviteInvalid; return false }
+		return true
+	}
+
+	async function submitCredentials(
+		path: '/api/auth/login' | '/api/auth/register', body: Record<string, string>, requireInvite = false
+	) {
+		if (authBusy || !validateCredentials(requireInvite)) return
+		authBusy = true
+		authError = ''
+		authNotice = ''
+		try {
+			const response = await fetch(resolve(path), {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify(body)
+			})
+			const result = await response.json().catch(() => null) as (WikiViewer & { message?: string }) | null
+			if (!response.ok) throw new Error(result?.message ?? ui.error)
+			viewer = result!
+			await refreshAll()
+			accountOpen = false
+			authMode = 'login'
+			password = ''
+			inviteCode = ''
+		} catch (cause) { authError = cause instanceof Error ? cause.message : ui.error }
+		finally { authBusy = false }
+	}
+
+	function authenticate(event?: SubmitEvent) {
+		event?.preventDefault()
+		void submitCredentials('/api/auth/login', { email, password })
+	}
+
+	function register(event?: SubmitEvent) {
+		event?.preventDefault()
+		void submitCredentials('/api/auth/register', { email, password, username, inviteCode }, true)
+	}
+
+	async function signOut() {
+		if (authBusy) return
+		authBusy = true
+		authError = ''
+		try {
+			const response = await fetch(resolve('/api/auth/session'), { method: 'DELETE' })
+			if (!response.ok) throw new Error(ui.error)
+			viewer = { session: null, permissions: [] }
+			await refreshAll()
+			accountOpen = false
+		} catch (cause) { authError = cause instanceof Error ? cause.message : ui.error }
+		finally { authBusy = false }
+	}
+	const locale = getLocale()
+
+	const baseLinks = [
 		{ href: resolve('/cards'), label: m.nav_cards() },
 		{ href: resolve('/keywords'), label: m.nav_keywords() },
 		{ href: resolve('/powers'), label: m.nav_powers() },
 		{ href: resolve('/relics'), label: m.nav_relics() },
 		{ href: resolve('/potions'), label: m.nav_potions() },
 		{ href: resolve('/tools'), label: m.nav_tools() }
-	];
+	]
+	let links = $derived(currentViewer.permissions.includes('user:role:manage')
+		? [...baseLinks, { href: resolve('/admin'), label: ui.admin }]
+		: baseLinks)
 
-	let pathname = $derived(page.url.pathname);
+	let pathname = $derived(page.url.pathname)
 
 	function active(href: string) {
-		const target = new URL(href, page.url.href).pathname;
-		return pathname === target || pathname.startsWith(`${target}/`);
+		const target = new URL(href, page.url.href).pathname
+		return pathname === target || pathname.startsWith(`${target}/`)
 	}
 
 	function changeLocale(next: 'eng' | 'zhs') {
-		if (next !== locale) setLocale(next);
+		if (next !== locale) setLocale(next)
 	}
 </script>
 
@@ -115,17 +157,25 @@
 				<div id="community-account-panel" class="absolute right-0 top-full z-70 mt-2 w-[min(19rem,calc(100vw-1.5rem))] space-y-3 rounded border border-line bg-surface p-4 shadow-xl max-[620px]:fixed max-[620px]:right-3 max-[620px]:top-(--header-height)" role="region" aria-label={ui.account}>
 					{#if currentViewer.session}
 						<p class="break-words text-sm">{currentViewer.session.username}</p>
-						<button class="text-sm text-link" type="button" disabled={authBusy} onclick={() => authenticate()}>{ui.signOut}</button>
+						<button class="text-sm text-link" type="button" disabled={authBusy} onclick={signOut}>{ui.signOut}</button>
 					{:else}
-						{#if githubLogin}<a class="block text-sm text-link hover:underline" href={`${resolve('/api/auth/login')}?returnTo=${encodeURIComponent(returnTo)}`}>{ui.github}</a>{/if}
-						{#if auth?.developmentLogin}
-							<form class="space-y-3" onsubmit={authenticate}>
-								<p class="text-xs text-muted">{ui.development}</p>
-								<label class="block text-xs">{ui.subject}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="subject" bind:value={subject} required maxlength="64" pattern="[a-zA-Z0-9._@\-]+" autocomplete="username" /></label>
+						<form class="space-y-3" onsubmit={authMode === 'login' ? authenticate : register}>
+							{#if authMode === 'register'}
 								<label class="block text-xs">{ui.username}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="username" bind:value={username} maxlength="64" autocomplete="nickname" /></label>
-								<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={authBusy}>{ui.signIn}</button>
-							</form>
-						{:else if !githubLogin}<p class="text-xs text-muted">{ui.unavailable}</p>{/if}
+							{/if}
+							<label class="block text-xs">{ui.qqEmail}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="email" type="email" bind:value={email} required maxlength="64" pattern="[^@\s]+@[qQ]{2}\.com" title={ui.emailHint} autocomplete="email" /></label>
+							<p class="text-xs text-muted">{ui.emailHint}</p>
+							<label class="block text-xs">{ui.password}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="password" type="password" bind:value={password} required minlength="8" maxlength="128" autocomplete={authMode === 'login' ? 'current-password' : 'new-password'} /></label>
+							{#if authMode === 'register'}
+								<label class="block text-xs">{ui.inviteCode}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2 font-mono" name="inviteCode" bind:value={inviteCode} required maxlength="64" autocomplete="off" /></label>
+								<p class="text-xs text-muted">{ui.inviteHint}</p>
+							{/if}
+							<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={authBusy}>{authMode === 'login' ? ui.signIn : ui.register}</button>
+						</form>
+						{#if authNotice}<p role="status" class="text-xs text-green-300">{authNotice}</p>{/if}
+						<button type="button" class="text-xs text-link" onclick={() => { authMode = authMode === 'login' ? 'register' : 'login'; authError = ''; authNotice = ''; inviteCode = '' }}>
+							{authMode === 'login' ? ui.createAccount : ui.haveAccount}
+						</button>
 					{/if}
 					{#if authError}<p role="alert" class="text-xs text-red-300">{authError}</p>{/if}
 					<button type="button" class="text-xs text-link" onclick={() => (accountOpen = false)}>{ui.close}</button>

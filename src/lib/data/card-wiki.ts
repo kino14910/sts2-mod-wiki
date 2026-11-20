@@ -11,6 +11,7 @@ import {
 import { CHARACTER_ASSETS } from '#lib/data/mods'
 import type { ArticleContent } from '#lib/wiki-article'
 import { BASH_EDITORIAL, BASH_CARD_CONTENT } from './card-article-content'
+import { BASH_CARD_CONTENT_ZH } from './card-article-content.zh'
 
 interface CardWikiTocItem {
 	id: string
@@ -91,3 +92,23 @@ export const BASH_WIKI = {
 
 /** Presentation enrichment resolves entity icons separately from the editorial source. */
 export const BASH_CARD_ARTICLE: ArticleContent = { ...BASH_CARD_CONTENT, context: BASH_WIKI.page }
+
+const ZH_TOKEN_LABELS: Record<string, string> = {
+	Bash: '痛击', Break: '破击', Bully: '欺凌', Dismantle: '拆卸', Dominate: '主宰',
+	Vicious: '凶恶', Colossus: '巨像', Cruelty: '残酷', Vulnerable: '易伤',
+	Strength: '力量', Block: '格挡', 'Paper Phrog': '纸蛙', 'Unsettling Lamp': '不安油灯',
+	'Intimidating Helmet': '骇人头盔', 'Archaic Tooth': '古老牙齿', Ironclad: '铁甲战士',
+	Orobas: '欧洛巴斯', Basic: '基础', Attack: '攻击', Ancient: '远古', Enchanted: '附魔'
+}
+
+const zhTokens: Record<string, RelicWikiToken> = Object.fromEntries(
+	Object.entries(tokens).map(([name, token]) => [
+		name,
+		{ ...token, text: ZH_TOKEN_LABELS[name] ?? token.text }
+	])
+)
+
+export const BASH_CARD_ARTICLE_ZH: ArticleContent = {
+	...BASH_CARD_CONTENT_ZH,
+	context: { tokens: zhTokens, tooltips: BASH_WIKI.page.tooltips }
+}
