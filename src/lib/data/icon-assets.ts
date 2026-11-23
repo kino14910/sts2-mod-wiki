@@ -1,11 +1,11 @@
 export const BASE_MOD_ID = 'sts2'
 
 export const NAMED_ICONS: Record<string, string> = {
-	'energy/card': 'images/colorless_energy_icon.png',
-	'star/card': 'images/star_icon.png',
-	'energy/collection': 'images/ui/energy_colorless.png',
-	'star/collection': 'images/ui/star.png',
-	'energy/collection/necrobinder': 'images/ui/energy_necrobinder.png'
+	'energy/card': 'images/colorless_energy_icon.webp',
+	'star/card': 'images/star_icon.webp',
+	'energy/collection': 'images/ui/energy_colorless.webp',
+	'star/collection': 'images/ui/star.webp',
+	'energy/collection/necrobinder': 'images/ui/energy_necrobinder.webp'
 }
 
 export function modAsset(modId: string, filePath: string) {

@@ -49,7 +49,8 @@ function collectCardArt(modsDir: string, excluded: ReadonlySet<string> = new Set
 				const key = path.parse(file.name).name.toLowerCase().replace(/[^a-z0-9]/g, '');
 				const rel = path.relative(cardsImgDir, full).split(path.sep).join('/');
 				const url = `/mods/${entry.name}/images/cards/${rel}`;
-				put(ext === '.png' ? imageMap : thumbMap, key, url);
+				put(imageMap, key, url);
+				if (ext === '.webp') put(thumbMap, key, url);
 			}
 		};
 		walk(cardsImgDir);

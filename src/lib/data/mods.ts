@@ -402,4 +402,4 @@ export const CHARACTER_ICONS: Record<string, string> = Object.fromEntries(
 );
 
 /** 无色（其他角色）筛选图标，供卡牌页使用 */
-export const COLORLESS_ICON = resolveAsset(BASE_MOD_ID, 'images/energy_colorless.png');
+export const COLORLESS_ICON = resolveAsset(BASE_MOD_ID, 'images/energy_colorless.webp');

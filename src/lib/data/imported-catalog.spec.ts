@@ -16,7 +16,7 @@ describe('real imported catalog integration', () => {
 			expect(assets.char).toMatch(/^\/imported\/fgo\/[a-f0-9]{64}\//);
 			expect(Object.keys(assets.cardFrame ?? {}).sort(), pool).toEqual(Object.keys(oldAssets.cardFrame).sort());
 			for (const [type, oldPath] of Object.entries(oldAssets.cardFrame)) {
-				expect(assets.cardFrame?.[type as CardType]).toBe(bundle.assetBase + oldPath);
+				expect(assets.cardFrame?.[type as CardType]).toBe(bundle.assetBase + oldPath.replace(/\.png$/, '.webp'));
 			}
 		}
 		expect(CHARACTER_ASSETS.noble.cardFrame).toEqual({});

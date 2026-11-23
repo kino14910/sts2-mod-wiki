@@ -186,7 +186,7 @@
 			]
 		},
 		"tooltips": {
-			"lightning": "<div class=\"wiki-tip\"><strong>Lightning</strong><br/>A Type of <b>Orb</b>.<br/><b>Passive</b>: Deal 3 (+ <img src=\"/mods/sts2/images/wiki/relic/icon_focus_22px.png\" alt=\"\" /> Focus) damage to a random enemy.<br/><b>Evoke</b>: Deals 8 (+ <img src=\"/mods/sts2/images/wiki/relic/icon_focus_22px.png\" alt=\"\" /> Focus) damage to a random enemy.</div>",
+			"lightning": "<div class=\"wiki-tip\"><strong>Lightning</strong><br/>A Type of <b>Orb</b>.<br/><b>Passive</b>: Deal 3 (+ <img src=\"/mods/sts2/images/wiki/relic/icon_focus_22px.webp\" alt=\"\" /> Focus) damage to a random enemy.<br/><b>Evoke</b>: Deals 8 (+ <img src=\"/mods/sts2/images/wiki/relic/icon_focus_22px.webp\" alt=\"\" /> Focus) damage to a random enemy.</div>",
 			"channel": "<div class=\"wiki-tip\"><strong>Channel</strong><br/>Channeling an Orb puts it into your first empty slot. If you have no empty slots, your first Orb is automatically Evoked to make room.</div>"
 		},
 		"tokens": {
