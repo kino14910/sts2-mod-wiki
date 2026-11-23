@@ -57,7 +57,7 @@ Configured mods are imported directly from DLL/PCK build artifacts:
 pnpm mod:import --mod fgo --build "D:/Steam/steamapps/common/Slay the Spire 2/mods/Fgo"
 ```
 
-See [docs/build-import.md](docs/build-import.md) for prerequisites, data boundaries, validation, incremental imports and snapshots. Generated mod data, parsed evidence, presentation configuration and community content are separate. The existing vanilla offline dataset remains under `static/mods/sts2`; imported mods no longer load manually maintained data from `static/mods/{modid}`.
+See [docs/build-import.md](docs/build-import.md) for prerequisites, data boundaries, validation, incremental imports and snapshots. Generated mod data, parsed evidence, presentation configuration and community content are separate. The full vanilla offline dataset is committed under `static/mods/sts2` because the build reads its manifest and serves its icons from there; imported mods no longer load manually maintained data from `static/mods/{modid}`.
 
 The active normalized bundle (`generated/mods/fgo/bundle.json`) and its referenced asset directory (`static/imported/fgo/<fingerprint>/`) are committed so Vercel can build without the source DLL/PCK. After re-importing, stage the new bundle and the fingerprint directory named by `bundle.assetBase`; remove the previous fingerprint directory once no longer needed.
 

@@ -16,7 +16,7 @@
 
 `virtual:mods` 在构建时消费标准化 bundle。兼容现有公共实体 ID 的逻辑文件键不代表实际读取 `static/mods/{mod}`；已配置构建导入的 Mod 会完全跳过该手工目录。原版游戏的现有离线数据仍由独立适配器读取，未假称本次重建了完整原版数据集。
 
-Vercel 构建不接触原始 DLL/PCK；仓库提交当前 `generated/mods/{mod}/bundle.json` 及其 `assetBase` 指向的 `static/imported/{mod}/{fingerprint}/` 资源目录。重新导入后需把新指纹目录和 bundle 一起提交，并移除不再引用的旧指纹目录，否则构建会因校验失败而中止。
+Vercel 构建不接触原始 DLL/PCK；仓库提交当前 `generated/mods/{mod}/bundle.json` 及其 `assetBase` 指向的 `static/imported/{mod}/{fingerprint}/` 资源目录。原版数据 `static/mods/sts2/` 也完整提交：构建从其 manifest 读取角色配色、能量图标与卡框配置，线上静态资源同样来自该目录。重新导入后需把新指纹目录和 bundle 一起提交，并移除不再引用的旧指纹目录，否则构建会因校验失败而中止。
 
 ## 运行
 
