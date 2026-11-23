@@ -59,6 +59,8 @@ pnpm mod:import --mod fgo --build "D:/Steam/steamapps/common/Slay the Spire 2/mo
 
 See [docs/build-import.md](docs/build-import.md) for prerequisites, data boundaries, validation, incremental imports and snapshots. Generated mod data, parsed evidence, presentation configuration and community content are separate. The existing vanilla offline dataset remains under `static/mods/sts2`; imported mods no longer load manually maintained data from `static/mods/{modid}`.
 
+The active normalized bundle (`generated/mods/fgo/bundle.json`) and its referenced asset directory (`static/imported/fgo/<fingerprint>/`) are committed so Vercel can build without the source DLL/PCK. After re-importing, stage the new bundle and the fingerprint directory named by `bundle.assetBase`; remove the previous fingerprint directory once no longer needed.
+
 See [docs/mod-manifest.md](docs/mod-manifest.md) for entity ID and localization conventions. Run `pnpm db:migrate` before testing community features locally.
 
 See [the implementation review](docs/review-2026-11-13.md), [community collaboration](docs/wiki-collaboration.md), and [public entity identities](docs/public-entity-identity.md) for architecture, authentication, non-destructive history migration, and known data limitations. `pnpm data:audit-vanilla` compares the legacy vanilla catalog with the installed game without rewriting either input.
