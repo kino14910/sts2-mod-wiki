@@ -67,6 +67,7 @@ export interface WikiViewer {
 	session: {
 		userId: string
 		username: string
+		avatarUrl: string | null
 		role: 'user' | 'trusted' | 'moderator' | 'admin'
 		status: 'active' | 'suspended'
 	} | null

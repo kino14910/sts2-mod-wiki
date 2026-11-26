@@ -8,6 +8,7 @@ export interface AuthSession {
 	userId: string
 	authSubject: string
 	username: string
+	avatarUrl: string | null
 	role: Role
 	status: UserStatus
 }

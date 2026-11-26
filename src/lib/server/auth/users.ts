@@ -28,10 +28,14 @@ export function isDbRole(value: unknown): value is DbRole {
 
 function toSession(row: UserRow | null): AuthSession | null {
 	if (!row || row.status !== 'active' || !isDbRole(row.role) || !isAllowedEmail(row.email)) return null
+	const qqNumber = /^([0-9]+)@qq\.com$/i.exec(row.email)?.[1]
 	return {
 		userId: row.id,
 		authSubject: row.auth_subject,
 		username: row.username,
+		avatarUrl: qqNumber
+			? `https://q.qlogo.cn/headimg_dl?dst_uin=${qqNumber}&spec=640&img_type=webp`
+			: null,
 		role: toPublicRole(row.role),
 		status: row.status
 	}

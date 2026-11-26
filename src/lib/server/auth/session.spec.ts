@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { sessionCookie, signSession } from './cookie-session'
 import { resolveSession } from './session'
+import { publicSession } from './public-session'
 import type { UserRow } from './users'
 
 const SECRET = 'session-smoke-secret'
@@ -48,7 +49,33 @@ describe('default cookie auth provider', () => {
 	it('resolves an active user from a signed cookie', async () => {
 		const token = await signSession('alice', SECRET)
 		const session = await resolveSession(requestWith(token), env, fakeDb(member))
-		expect(session).toMatchObject({ userId: 'u-1', role: 'user', username: 'Alice' })
+		expect(session).toMatchObject({ userId: 'u-1', role: 'user', username: 'Alice', avatarUrl: null })
+	})
+
+	it('projects the avatar from the database email without exposing the email or subject', async () => {
+		const token = await signSession(member.auth_subject, SECRET)
+		const session = await resolveSession(requestWith(token), env, fakeDb({ ...member, email: '00123456@QQ.COM' }))
+		expect(publicSession(session)).toEqual({
+			userId: 'u-1',
+			username: 'Alice',
+			avatarUrl: 'https://q.qlogo.cn/headimg_dl?dst_uin=00123456&spec=640&img_type=webp',
+			role: 'user',
+			status: 'active'
+		})
+	})
+
+	it.each(['alice@qq.com', '123+4@qq.com', '１２３@qq.com'])(
+		'does not derive an avatar from the subject or display name when the email is %s',
+		async (email) => {
+			const user = { ...member, auth_subject: '123456@qq.com', username: '654321@qq.com', email }
+			const token = await signSession(user.auth_subject, SECRET)
+			const session = await resolveSession(requestWith(token), env, fakeDb(user))
+			expect(publicSession(session)).toMatchObject({ avatarUrl: null })
+		}
+	)
+
+	it('projects an unauthenticated session as null', () => {
+		expect(publicSession(null)).toBeNull()
 	})
 
 	it('takes the role from the database, never from a forged cookie payload', async () => {
