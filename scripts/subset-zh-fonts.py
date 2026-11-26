@@ -4,7 +4,7 @@
   Regular -> notoSansMonoCJKsc-Regular（界面 / 正文）
   Bold    -> SourceHanSerifSC-Bold（加粗强调）
   Italic  -> SourceHanSerifSC-Medium
-这里按同一映射裁出三份 woff2，放进 static/fonts/zh/。
+这里按同一映射裁出三份 woff2，并从 Regular 另裁一份卡牌标题字体，放进 static/fonts/zhs/。
 
 用法：
   python scripts/subset-zh-fonts.py [--game "D:/sts-fgoMod/Slay the Spire 2"] [--all-common]
@@ -13,6 +13,7 @@
 
 import argparse
 import io
+import json
 import pathlib
 import sys
 
@@ -20,9 +21,15 @@ from fontTools.subset import Options, Subsetter
 from fontTools.ttLib import TTFont
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SCAN_DIRS = [ROOT / 'src', ROOT / 'static' / 'localization']
+SCAN_DIRS = [
+    ROOT / 'src',
+    ROOT / 'static' / 'localization',
+    ROOT / 'static' / 'mods',
+    ROOT / 'generated' / 'mods',
+]
 SCAN_SUFFIXES = {'.ts', '.js', '.svelte', '.json', '.css', '.html'}
-OUT_DIR = ROOT / 'static' / 'fonts' / 'zh'
+OUT_DIR = ROOT / 'static' / 'fonts' / 'zhs'
+ASCII_CHARS = ''.join(chr(code) for code in range(0x20, 0x7F))
 
 FACES = [
     ('noto_sans_mono_cjk_sc_regular', 'NotoSansMonoCJKsc-Regular.otf'),
@@ -36,6 +43,51 @@ CJK_RANGES = [(0x3000, 0x303F), (0x4E00, 0x9FFF), (0xFF00, 0xFFEF)]
 def is_cjk(ch: str) -> bool:
     code = ord(ch)
     return any(lo <= code <= hi for lo, hi in CJK_RANGES)
+
+
+def add_text_chars(chars: set[str], value: object) -> None:
+    if isinstance(value, str):
+        chars.update(value)
+    elif isinstance(value, dict):
+        for item in value.values():
+            add_text_chars(chars, item)
+    elif isinstance(value, list):
+        for item in value:
+            add_text_chars(chars, item)
+
+
+def add_card_title_chars(chars: set[str], data: object) -> None:
+    if not isinstance(data, dict):
+        return
+    for key, value in data.items():
+        if key.endswith('.title'):
+            add_text_chars(chars, value)
+
+
+def collect_game_title_chars() -> set[str]:
+    chars = set(ASCII_CHARS)
+    for directory in (ROOT / 'static' / 'localization', ROOT / 'static' / 'mods'):
+        if not directory.is_dir():
+            continue
+        for path in directory.rglob('cards.json'):
+            try:
+                add_card_title_chars(chars, json.loads(path.read_text(encoding='utf-8')))
+            except (UnicodeDecodeError, OSError, json.JSONDecodeError):
+                continue
+    generated = ROOT / 'generated' / 'mods'
+    if generated.is_dir():
+        for path in generated.rglob('bundle.json'):
+            try:
+                bundle = json.loads(path.read_text(encoding='utf-8'))
+            except (UnicodeDecodeError, OSError, json.JSONDecodeError):
+                continue
+            localization = bundle.get('localization', {})
+            if not isinstance(localization, dict):
+                continue
+            for name, table in localization.items():
+                if name.endswith('cards.json'):
+                    add_card_title_chars(chars, table)
+    return chars
 
 
 def collect_chars() -> set[str]:
@@ -89,9 +141,11 @@ def main() -> int:
         return 1
 
     chars = collect_chars()
+    title_chars = collect_game_title_chars() | chars
     if args.all_common:
         chars |= gb2312_level1()
-    print(f'字集：{len(chars)} 个字符')
+        title_chars |= chars
+    print(f'字集：{len(chars)} 个字符，卡牌标题字集：{len(title_chars)} 个字符')
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     total = 0
@@ -103,6 +157,18 @@ def main() -> int:
         size = subset(source, chars, OUT_DIR / f'{stem}.woff2')
         total += size
         print(f'  {stem:32s} {size / 1024:7.1f} KB')
+
+    game_title_source = game_fonts / 'NotoSansMonoCJKsc-Regular.otf'
+    if game_title_source.is_file():
+        size = subset(
+            game_title_source,
+            title_chars,
+            OUT_DIR / 'noto_sans_mono_cjk_sc_game.woff2',
+        )
+        total += size
+        print(f'  {"noto_sans_mono_cjk_sc_game":32s} {size / 1024:7.1f} KB')
+    else:
+        print(f'跳过（缺失）：{game_title_source}', file=sys.stderr)
     print(f'合计 {total / 1024:.1f} KB -> {OUT_DIR.relative_to(ROOT)}')
     return 0
 

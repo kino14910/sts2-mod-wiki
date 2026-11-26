@@ -5,7 +5,9 @@
 	import { frameTintFilterId } from '#lib/frame-tint';
 	import GameText from '#lib/components/GameText.svelte';
 	import type { GameTextOptions } from '#lib/text/game-text';
+	import type { Attachment } from 'svelte/attachments'
 	import { cardUiImage } from '#lib/data/card-images'
+	import { getLocale } from '#lib/paraglide/runtime'
 
 	const FRAMES: Record<'attack' | 'skill' | 'power' | 'quest', string> = {
 		attack: '/images/card_frames/attack.png',
@@ -40,6 +42,65 @@
 	status: 'Skill',
 	curse: 'Skill'
 };
+
+	const TITLE_BOX_WIDTH = 210
+	const TITLE_MIN_FONT_SIZE = 8
+	const TITLE_MAX_FONT_SIZE = 26
+	const TITLE_ZH_GLYPH_SCALE = 0.95
+
+	function titleFontFamily(useZhFont: boolean) {
+		return useZhFont ? '"Noto Sans Mono CJK SC Game"' : '"Kreon"'
+	}
+
+	function titleTextWidth(
+		ctx: CanvasRenderingContext2D,
+		text: string,
+		fontSize: number,
+		useZhFont: boolean
+	) {
+		ctx.font = `${fontSize}px ${titleFontFamily(useZhFont)}`
+		const spacing = useZhFont ? 0 : Math.max(0, [...text].length - 1)
+		return ctx.measureText(text).width * (useZhFont ? TITLE_ZH_GLYPH_SCALE : 1) + spacing
+	}
+
+	function fittedTitleFontSize(ctx: CanvasRenderingContext2D, text: string, useZhFont: boolean) {
+		let min = TITLE_MIN_FONT_SIZE
+		let max = TITLE_MAX_FONT_SIZE
+		if (titleTextWidth(ctx, text, max, useZhFont) <= TITLE_BOX_WIDTH) return max
+		while (min <= max) {
+			const middle = min + Math.floor((max - min) / 2)
+			if (
+				middle === TITLE_MAX_FONT_SIZE ||
+				titleTextWidth(ctx, text, middle, useZhFont) > TITLE_BOX_WIDTH
+			) {
+				max = middle - 1
+			} else {
+				min = middle + 1
+			}
+		}
+		return Math.min(min, max)
+	}
+
+	function cardTitleAutoSize(text: string, useZhFont: boolean): Attachment<HTMLElement> {
+		return (node) => {
+			const ctx = document.createElement('canvas').getContext('2d')
+			let disposed = false
+			const apply = (fontSize: number) => {
+				if (disposed) return
+				const visualSize = fontSize * (useZhFont ? TITLE_ZH_GLYPH_SCALE : 1)
+				node.style.setProperty('--title-font-size', `${visualSize / 3}cqw`)
+			}
+			if (ctx !== null) apply(fittedTitleFontSize(ctx, text, useZhFont))
+			document.fonts
+				.load(`${TITLE_MAX_FONT_SIZE}px ${titleFontFamily(useZhFont)}`, text)
+				.then(() => {
+					if (ctx !== null) apply(fittedTitleFontSize(ctx, text, useZhFont))
+				})
+			return () => {
+				disposed = true
+			}
+		}
+	}
 
 	// 原版把诅咒 / 状态 / 任务当作独立稀有度，这里按卡牌类型补上
 	const TYPE_TITLE_OUTLINE: Partial<Record<CardType, string>> = {
@@ -79,7 +140,9 @@
 	let portraitBorderSrc = $derived(
 		`/images/card_portrait_borders/${PORTRAIT_BORDER_TYPE[card.type]}-${bannerRarity}.png`
 	);
-	let titleOutline = $derived(TYPE_TITLE_OUTLINE[card.type] ?? rarityInfo(card.rarity).outline);
+	let titleOutline = $derived(
+		upgraded ? '#1b6131' : (TYPE_TITLE_OUTLINE[card.type] ?? rarityInfo(card.rarity).outline)
+	);
 	let characterAssets = $derived(CHARACTER_ASSETS[card.color]);
 	let frameSrc = $derived.by<string | null>(() => {
 		const frames = characterAssets?.cardFrame;
@@ -106,6 +169,8 @@
 		matchEntities: false
 	}));
 	let keywordLines = $derived(keywordPlacement(card.keywords));
+	let useZhFont = $derived(getLocale() === 'zhs')
+	let titleText = $derived(upgraded ? card.name.replace(/\+$/, '') : card.name)
 
 	const keywordOptions: GameTextOptions = { sizeUnit: 'cqw', matchEntities: false };
 </script>
@@ -165,7 +230,10 @@
 	{/if}
 	{@render uiImage(bannerSrc, 'title-banner')}
 	{#if showText}
-		<span class={['thumb-name', { 'is-upgraded': upgraded }]}>{card.name}</span>
+		<span
+			class={['thumb-name', { 'is-zh': useZhFont, 'is-upgraded': upgraded }]}
+			{@attach cardTitleAutoSize(titleText, useZhFont)}
+		>{titleText}</span>
 	{/if}
 
 	{#if showText}
@@ -340,7 +408,7 @@
 	.thumb-name {
 		position: absolute;
 		left: 15%;
-		top: 1%;
+		top: 1.659%;
 		z-index: 5;
 		display: flex;
 		align-items: center;
@@ -349,18 +417,23 @@
 		height: 12.796%;
 		overflow: hidden;
 		font-family: var(--font-display);
-		font-size: clamp(7px, 8.667cqw, 26px);
+		font-size: var(--title-font-size, 8.667cqw);
 		font-weight: 400;
-		/* 原版标题用 kreon_regular + spacing_glyph=1（26px 下即 1px） */
-		letter-spacing: 0.0385em;
-		line-height: 1.05;
+		letter-spacing: 0.333cqw;
+		line-height: 1;
 		color: #fff6e2;
 		text-align: center;
-		text-wrap: balance;
-		/* 原版标题 26px + outline_size 12：描边按字级等比，外侧约 2px */
-		-webkit-text-stroke: 0.16em var(--title-outline);
+		white-space: nowrap;
+		/* Godot outline_size=12 向外扩展；CSS 描边居中，故用 24px（300px 卡宽下为 8cqw） */
+		-webkit-text-stroke: 8cqw var(--title-outline);
 		paint-order: stroke fill;
+		filter: drop-shadow(0.667cqw 0.667cqw 0 rgba(0, 0, 0, 0.188235));
 		pointer-events: none;
+	}
+
+	.thumb-name.is-zh {
+		font-family: 'Noto Sans Mono CJK SC Game', var(--font-sans);
+		letter-spacing: 0;
 	}
 
 	.thumb-name.is-upgraded {
