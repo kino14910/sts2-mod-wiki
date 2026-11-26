@@ -8,12 +8,10 @@
 	let {
 		card,
 		upgraded = false,
-		variant = 'article',
 		class: className = ''
 	}: {
 		card: CardView
 		upgraded?: boolean
-		variant?: 'article' | 'face'
 		class?: string
 	} = $props()
 
@@ -35,8 +33,6 @@
 <div
 	class={[
 		'card-desc max-w-[82ch] [font-family:var(--font-game,var(--font-display))] text-[1.125rem] leading-[1.2] text-(--cream,#fff6e2) text-pretty',
-		variant === 'face' &&
-			'card-desc-face max-w-none text-[clamp(9px,5.9cqw,16px)] font-[350] leading-[1.15] tracking-[-0.01rem] text-[oldlace] text-center [text-shadow:2px_1px_0_oklch(0.3_0.02_112)]',
 		className
 	]}
 >
@@ -58,27 +54,19 @@
 		vertical-align: -0.15em;
 	}
 
-	.card-desc-face :global(.wiki-icon-link) {
-		display: none;
-	}
-
-	.card-desc-face :global(a.wiki-card-link) {
-		color: inherit;
-	}
-
 	.card-desc :global(.custom-tooltip) {
 		width: max-content;
 		max-width: 16dvw;
 	}
 
 	@media (max-width: 640px) {
-		.card-desc:not(.card-desc-face) {
+		.card-desc {
 			font-size: 1rem;
 		}
 	}
 
 	@media (max-width: 420px) {
-		.card-desc:not(.card-desc-face) {
+		.card-desc {
 			font-size: 0.95rem;
 		}
 	}

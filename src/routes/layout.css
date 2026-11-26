@@ -49,6 +49,23 @@
 	--ease-brand: var(--ease);
 }
 
+/* 卡面使用游戏自带 Kreon；Fontsource 的 400 字重是内部命名不同的替代版本。 */
+@font-face {
+	font-family: 'Kreon Game';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/kreon_regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Kreon Game';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('/fonts/kreon_bold.ttf') format('truetype');
+}
+
 /* 中文：原版 Kreon / Inter 都没有中文字形，由 ZhsFontPathSet 换成
    Regular -> Noto Sans Mono CJK SC、Bold/Italic -> Source Han Serif SC。
    这里直接取游戏 fonts/zhs/ 的同款 OTF，用 scripts/subset-zh-fonts.py 按站点字集裁剪成 woff2。 */
@@ -67,6 +84,23 @@
 	font-weight: 400;
 	font-display: swap;
 	src: url('/fonts/zhs/noto_sans_mono_cjk_sc_game.woff2') format('woff2');
+}
+
+/* RichTextLabel 的 Bold / Italic 字体槽同属中文替换链 */
+@font-face {
+	font-family: 'Noto Sans Mono CJK SC Game';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('/fonts/zhs/source_han_serif_sc_bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Source Han Serif SC Game Medium';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/zhs/source_han_serif_sc_medium.woff2') format('woff2');
 }
 
 @font-face {

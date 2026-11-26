@@ -74,7 +74,7 @@
 			</div>
 			<hr class="entip-rule" />
 			<div class="entip-desc">
-				<CardDescription card={cardView} variant="article" />
+				<CardDescription card={cardView} />
 			</div>
 		</div>
 		{#if art}

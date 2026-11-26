@@ -38,11 +38,25 @@ FACES = [
 ]
 
 CJK_RANGES = [(0x3000, 0x303F), (0x4E00, 0x9FFF), (0xFF00, 0xFFEF)]
+# 卡牌文本里的中文标点常见于这些码位，缺字会退回系统字体导致字形不一致
+SYMBOL_RANGES = [
+    (0x00B7, 0x00B7),
+    (0x00D7, 0x00D7),
+    (0x2000, 0x206F),
+    (0x2100, 0x218F),
+    (0x2190, 0x21FF),
+    (0x2200, 0x22FF),
+]
 
 
 def is_cjk(ch: str) -> bool:
     code = ord(ch)
     return any(lo <= code <= hi for lo, hi in CJK_RANGES)
+
+
+def is_text_char(ch: str) -> bool:
+    code = ord(ch)
+    return is_cjk(ch) or any(lo <= code <= hi for lo, hi in SYMBOL_RANGES)
 
 
 def add_text_chars(chars: set[str], value: object) -> None:
@@ -96,7 +110,7 @@ def collect_chars() -> set[str]:
         for path in directory.rglob('*'):
             if path.is_file() and path.suffix in SCAN_SUFFIXES:
                 try:
-                    chars |= {c for c in path.read_text(encoding='utf-8') if is_cjk(c)}
+                    chars |= {c for c in path.read_text(encoding='utf-8') if is_text_char(c)}
                 except (UnicodeDecodeError, OSError):
                     continue
     return chars
@@ -140,7 +154,7 @@ def main() -> int:
         print(f'找不到原版字体目录：{game_fonts}', file=sys.stderr)
         return 1
 
-    chars = collect_chars()
+    chars = collect_chars() | set(ASCII_CHARS)
     title_chars = collect_game_title_chars() | chars
     if args.all_common:
         chars |= gb2312_level1()

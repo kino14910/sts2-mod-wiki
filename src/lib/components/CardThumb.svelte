@@ -46,10 +46,12 @@
 	const TITLE_BOX_WIDTH = 210
 	const TITLE_MIN_FONT_SIZE = 8
 	const TITLE_MAX_FONT_SIZE = 26
+	const DESC_MIN_FONT_SIZE = 12
+	const DESC_MAX_FONT_SIZE = 21
 	const TITLE_ZH_GLYPH_SCALE = 0.95
 
 	function titleFontFamily(useZhFont: boolean) {
-		return useZhFont ? '"Noto Sans Mono CJK SC Game"' : '"Kreon"'
+		return useZhFont ? '"Noto Sans Mono CJK SC Game"' : '"Kreon Game"'
 	}
 
 	function titleTextWidth(
@@ -98,6 +100,62 @@
 				})
 			return () => {
 				disposed = true
+			}
+		}
+	}
+
+	function cardDescriptionAutoSize(): Attachment<HTMLElement> {
+		return (node) => {
+			let disposed = false
+			let frame = 0
+
+			const fit = () => {
+				if (disposed) return
+				const text = node.querySelector<HTMLElement>('.desc-text')
+				if (!text || node.clientWidth === 0 || node.clientHeight === 0) return
+
+				const fits = (fontSize: number) => {
+					node.style.setProperty('--desc-font-size', `${fontSize / 3}cqw`)
+					return (
+						text.scrollHeight <= node.clientHeight + 0.5 &&
+						text.scrollWidth <= node.clientWidth + 0.5
+					)
+				}
+
+				if (fits(DESC_MAX_FONT_SIZE)) return
+
+				let min = DESC_MIN_FONT_SIZE
+				let max = DESC_MAX_FONT_SIZE
+				let best = DESC_MIN_FONT_SIZE
+				while (min <= max) {
+					const middle = min + Math.floor((max - min) / 2)
+					if (fits(middle)) {
+						best = middle
+						min = middle + 1
+					} else {
+						max = middle - 1
+					}
+				}
+				node.style.setProperty('--desc-font-size', `${best / 3}cqw`)
+			}
+
+			const schedule = () => {
+				cancelAnimationFrame(frame)
+				frame = requestAnimationFrame(fit)
+			}
+
+			const resizeObserver = new ResizeObserver(schedule)
+			resizeObserver.observe(node)
+			const mutationObserver = new MutationObserver(schedule)
+			mutationObserver.observe(node, { childList: true, characterData: true, subtree: true })
+			document.fonts.ready.then(schedule)
+			schedule()
+
+			return () => {
+				disposed = true
+				cancelAnimationFrame(frame)
+				resizeObserver.disconnect()
+				mutationObserver.disconnect()
 			}
 		}
 	}
@@ -189,7 +247,7 @@
 {/snippet}
 
 <div
-	class={['card-thumb', className, { 'is-full-art': fullArt }]}
+	class={['card-thumb', className, { 'is-full-art': fullArt, 'is-zh': useZhFont }]}
 	style:--accent={accent}
 	style:--title-outline={titleOutline}
 	style:--energy-outline={energyOutline}
@@ -237,7 +295,7 @@
 	{/if}
 
 	{#if showText}
-		<div class="desc">
+		<div class="desc" {@attach cardDescriptionAutoSize()}>
 			<div class="desc-text">
 				{#each keywordLines.before as line (line)}
 					{@render keywordLine(line)}
@@ -251,12 +309,12 @@
 	{/if}
 
 	<span class={['cost', { 'is-x': card.cost === 'X', 'is-empty': card.cost === null }]}>
-		{showText ? cost : ''}
+		{#if showText}<span class="cost-value">{cost}</span>{/if}
 	</span>
 
 	{#if card.secondEnergy !== undefined && card.secondEnergy !== null}
 		<span class={['energy-star', { 'is-x': card.secondEnergy === 'X' }]}>
-			{showText ? (card.secondEnergy === 'X' ? 'X' : card.secondEnergy) : ''}
+			{#if showText}<span class="energy-star-value">{card.secondEnergy === 'X' ? 'X' : card.secondEnergy}</span>{/if}
 		</span>
 	{/if}
 
@@ -268,11 +326,18 @@
 
 <style>
 	.card-thumb {
+		--font-card: 'Kreon Game', var(--font-display);
+
 		container-type: inline-size;
 		position: relative;
 		display: block;
 		width: 100%;
 		aspect-ratio: 598 / 844;
+	}
+
+	.card-thumb.is-zh {
+		--font-card: 'Noto Sans Mono CJK SC Game', serif;
+		--font-italic: 'Source Han Serif SC Game Medium', serif;
 	}
 
 	/* picture 包裹层用 contents 让内部 img 仍按 .card-thumb / .art-window 定位与铺满 */
@@ -383,20 +448,24 @@
 		width: 21.333%;
 		height: 15.165%;
 		background: var(--cost-image, none) center / 100% 100% no-repeat;
-		font-family: var(--font-display);
+		font-family: var(--font-card);
 		font-size: clamp(7px, 10.667cqw, 32px);
 		font-weight: 700;
 		line-height: 1;
 		color: #fff6e2;
-		/* 原版费用 32px + outline_size 16：描边按字级等比，外侧约 2px */
-		-webkit-text-stroke: 0.16em var(--energy-outline);
+		/* 原版 EnergyLabel outline_size 16，Godot 实际半径 = 16/4 = 4px：居中描边总宽 8px */
+		-webkit-text-stroke: 0.25em var(--energy-outline);
 		paint-order: stroke fill;
+		text-shadow: 0.667cqw 0.667cqw 0 rgba(0, 0, 0, 0.188);
+	}
+
+	/* EnergyLabel 文本框相对图标中心下移 2px */
+	.cost-value {
+		transform: translateY(0.667cqw);
 	}
 
 	.cost.is-x {
-		font-family: var(--font-sans);
-		font-style: italic;
-		font-size: clamp(6px, 7.333cqw, 22px);
+		font-family: var(--font-card);
 	}
 
 	.cost.is-empty {
@@ -416,7 +485,7 @@
 		width: 70%;
 		height: 12.796%;
 		overflow: hidden;
-		font-family: var(--font-display);
+		font-family: 'Kreon Game', Georgia, 'Times New Roman', serif;
 		font-size: var(--title-font-size, 8.667cqw);
 		font-weight: 400;
 		letter-spacing: 0.333cqw;
@@ -424,16 +493,37 @@
 		color: #fff6e2;
 		text-align: center;
 		white-space: nowrap;
-		/* Godot outline_size=12 向外扩展；CSS 描边居中，故用 24px（300px 卡宽下为 8cqw） */
-		-webkit-text-stroke: 8cqw var(--title-outline);
+		/* CSS 描边居中；2cqw 对应 Godot 在 300px 卡宽下的可见外轮廓 */
+		-webkit-text-stroke: 2cqw var(--title-outline);
 		paint-order: stroke fill;
 		filter: drop-shadow(0.667cqw 0.667cqw 0 rgba(0, 0, 0, 0.188235));
+		/* Chromium 行盒居中比 Godot 低约 2px；中文再叠加字体 baseline_offset -0.05 */
+		transform: translateY(-0.667cqw);
 		pointer-events: none;
 	}
 
 	.thumb-name.is-zh {
-		font-family: 'Noto Sans Mono CJK SC Game', var(--font-sans);
+		font-family: 'Noto Sans Mono CJK SC Game', 'Noto Sans Mono CJK SC', sans-serif;
 		letter-spacing: 0;
+		transform: translateY(calc(-0.667cqw - 0.078em));
+	}
+
+	.card-thumb.is-zh .cost {
+		font-size: calc(clamp(7px, 10.667cqw, 32px) * 0.95);
+	}
+
+	/* 中文主题字体 baseline_offset=-0.05，按字体高度 1.48em 折算成 em */
+	.card-thumb.is-zh .cost-value {
+		transform: translateY(calc(0.667cqw - 0.078em));
+	}
+
+	.card-thumb.is-zh .energy-star-value,
+	.card-thumb.is-zh .thumb-type {
+		transform: translateY(-0.078em);
+	}
+
+	.card-thumb.is-zh .energy-star {
+		font-size: calc(clamp(5px, 7.333cqw, 22px) * 0.95);
 	}
 
 	.thumb-name.is-upgraded {
@@ -450,9 +540,9 @@
 		width: 81%;
 		height: 32.227%;
 		overflow: hidden;
-		font-family: var(--font-display);
+		font-family: var(--font-card);
 		/* 原版 DescriptionLabel：21px、MinFontSize 12，卡片宽 300 时 1px = 1/3cqw */
-		font-size: clamp(5px, 7cqw, 21px);
+		font-size: var(--desc-font-size, 7cqw);
 		font-weight: 400;
 		line-height: 1.2;
 		color: #fff6e2;
@@ -462,9 +552,21 @@
 		pointer-events: none;
 	}
 
+	.card-thumb.is-zh .desc {
+		font-size: calc(var(--desc-font-size, 7cqw) * 0.95);
+	}
+
+	.card-thumb.is-zh .desc-text {
+		/* 中文字体行高 1.48em，原版 line_separation=-3（1 游戏像素 = 1/3 cqw） */
+		line-height: calc(1.48 * var(--desc-font-size, 7cqw) - 1cqw);
+		transform: translateY(-0.078em);
+	}
+
 	.desc-text {
 		width: 100%;
 		overflow-wrap: break-word;
+		/* Kreon 行高 1.26em，同样扣掉 line_separation=-3 */
+		line-height: calc(1.26 * var(--desc-font-size, 7cqw) - 1cqw);
 	}
 
 	.desc-body {
@@ -505,12 +607,16 @@
 
 	.thumb-type {
 		position: relative;
-		font-family: var(--font-display);
+		font-family: var(--font-card);
 		font-size: clamp(5px, 5.333cqw, 16px);
 		font-weight: 700;
 		line-height: 1;
 		color: rgba(0, 0, 0, 0.753);
 		white-space: nowrap;
+	}
+
+	.card-thumb.is-zh .thumb-type {
+		font-size: calc(clamp(5px, 5.333cqw, 16px) * 0.95);
 	}
 
 	.energy-star {
@@ -523,18 +629,19 @@
 		width: 19.333%;
 		height: 13.744%;
 		background: var(--star-image, none) center / 100% 100% no-repeat;
-		font-family: var(--font-display);
+		font-family: var(--font-card);
 		font-size: clamp(5px, 7.333cqw, 22px);
 		font-weight: 700;
 		line-height: 1;
 		color: #fff6e2;
-		-webkit-text-stroke: 0.16em #1a5e6b;
+		/* 原版 StarLabel outline_size 12，22px 字号下外扩约 3px */
+		-webkit-text-stroke: 0.273em #1a5e6b;
 		paint-order: stroke fill;
+		text-shadow: 0.667cqw 0.667cqw 0 rgba(0, 0, 0, 0.188);
 	}
 
 	.energy-star.is-x {
-		font-family: var(--font-sans);
-		font-style: italic;
-		font-size: clamp(5px, 6.667cqw, 20px);
+		font-family: var(--font-card);
+		font-size: clamp(5px, 7.333cqw, 22px);
 	}
 </style>
