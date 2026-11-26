@@ -6,7 +6,7 @@
     "tags": [
       "Heal"
     ],
-    "image": "images/potions/ambergris.png"
+    "image": "images/potions/ambergris.webp"
   },
   {
     "id": "Ashwater",
@@ -15,14 +15,14 @@
     "tags": [
       "Exhaust"
     ],
-    "image": "images/potions/ashwater.png"
+    "image": "images/potions/ashwater.webp"
   },
   {
     "id": "AttackPotion",
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/attack_potion.png"
+    "image": "images/potions/attack_potion.webp"
   },
   {
     "id": "BeetleJuice",
@@ -32,7 +32,7 @@
       "Shrink",
       "(Potion)"
     ],
-    "image": "images/potions/beetle_juice.png",
+    "image": "images/potions/beetle_juice.webp",
     "variables": {
       "DamageDecrease": 30,
       "Repeat": 4
@@ -45,7 +45,7 @@
     "tags": [
       "Upgrade"
     ],
-    "image": "images/potions/blessing_of_the_forge.png"
+    "image": "images/potions/blessing_of_the_forge.webp"
   },
   {
     "id": "BlockPotion",
@@ -54,7 +54,7 @@
     "tags": [
       "Block"
     ],
-    "image": "images/potions/block_potion.png",
+    "image": "images/potions/block_potion.webp",
     "variables": {
       "Block": "12"
     }
@@ -64,7 +64,7 @@
     "rarity": "common",
     "character": "ironclad",
     "tags": [],
-    "image": "images/potions/blood_potion.png",
+    "image": "images/potions/blood_potion.webp",
     "variables": {
       "HealPercent": "20"
     }
@@ -76,7 +76,7 @@
     "tags": [
       "Summon"
     ],
-    "image": "images/potions/bone_brew.png",
+    "image": "images/potions/bone_brew.webp",
     "variables": {
       "Summon": "15"
     }
@@ -86,7 +86,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/bottled_potential.png",
+    "image": "images/potions/bottled_potential.webp",
     "variables": {
       "Cards": "5"
     }
@@ -96,7 +96,7 @@
     "rarity": "uncommon",
     "character": "any",
     "tags": [],
-    "image": "images/potions/bottled_song.png"
+    "image": "images/potions/bottled_song.webp"
   },
   {
     "id": "Clarity",
@@ -106,7 +106,7 @@
       "Clarity",
       "Draw"
     ],
-    "image": "images/potions/clarity.png",
+    "image": "images/potions/clarity.webp",
     "variables": {
       "Cards": 1,
       "ClarityPower": 3
@@ -117,7 +117,7 @@
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/colorless_potion.png"
+    "image": "images/potions/colorless_potion.webp"
   },
   {
     "id": "CosmicConcoction",
@@ -126,7 +126,7 @@
     "tags": [
       "Upgrade"
     ],
-    "image": "images/potions/cosmic_concoction.png",
+    "image": "images/potions/cosmic_concoction.webp",
     "variables": {
       "Cards": "3"
     }
@@ -136,7 +136,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/crystalline_euphoria.png",
+    "image": "images/potions/crystalline_euphoria.webp",
     "variables": {
       "Cards": 3
     }
@@ -149,7 +149,7 @@
       "Shiv",
       "Upgrade"
     ],
-    "image": "images/potions/cunning_potion.png",
+    "image": "images/potions/cunning_potion.webp",
     "variables": {
       "Cards": "3"
     }
@@ -162,7 +162,7 @@
       "Draw",
       "Energy"
     ],
-    "image": "images/potions/cure_all.png",
+    "image": "images/potions/cure_all.webp",
     "variables": {
       "Energy": 1,
       "Cards": 2
@@ -175,7 +175,7 @@
     "tags": [
       "Dexterity"
     ],
-    "image": "images/potions/dexterity_potion.png",
+    "image": "images/potions/dexterity_potion.webp",
     "variables": {
       "DexterityPower": "2"
     }
@@ -185,7 +185,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/distilled_chaos.png",
+    "image": "images/potions/distilled_chaos.webp",
     "variables": {
       "Repeat": "3"
     }
@@ -195,7 +195,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/droplet_of_precognition.png"
+    "image": "images/potions/droplet_of_precognition.webp"
   },
   {
     "id": "Duplicator",
@@ -204,7 +204,7 @@
     "tags": [
       "Duplication"
     ],
-    "image": "images/potions/duplicator.png"
+    "image": "images/potions/duplicator.webp"
   },
   {
     "id": "EnergyPotion",
@@ -213,7 +213,7 @@
     "tags": [
       "Energy"
     ],
-    "image": "images/potions/energy_potion.png",
+    "image": "images/potions/energy_potion.webp",
     "variables": {
       "Energy": 2
     }
@@ -223,7 +223,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/entropic_brew.png"
+    "image": "images/potions/entropic_brew.webp"
   },
   {
     "id": "EssenceOfDarkness",
@@ -233,14 +233,14 @@
       "Channel",
       "Dark"
     ],
-    "image": "images/potions/essence_of_darkness.png"
+    "image": "images/potions/essence_of_darkness.webp"
   },
   {
     "id": "ExplosiveAmpoule",
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/explosive_ampoule.png",
+    "image": "images/potions/explosive_ampoule.webp",
     "variables": {
       "Damage": "10"
     }
@@ -250,14 +250,14 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/fairy_in_a_bottle.png"
+    "image": "images/potions/fairy_in_a_bottle.webp"
   },
   {
     "id": "FirePotion",
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/fire_potion.png",
+    "image": "images/potions/fire_potion.webp",
     "variables": {
       "Damage": "20"
     }
@@ -271,7 +271,7 @@
       "Potion",
       "Strength"
     ],
-    "image": "images/potions/flex_potion.png",
+    "image": "images/potions/flex_potion.webp",
     "variables": {
       "StrengthPower": "5"
     }
@@ -283,7 +283,7 @@
     "tags": [
       "Focus"
     ],
-    "image": "images/potions/focus_potion.png",
+    "image": "images/potions/focus_potion.webp",
     "variables": {
       "FocusPower": "2"
     }
@@ -296,14 +296,14 @@
       "Block",
       "Block"
     ],
-    "image": "images/potions/fortifier.png"
+    "image": "images/potions/fortifier.webp"
   },
   {
     "id": "FoulPotion",
     "rarity": "special",
     "character": "any",
     "tags": [],
-    "image": "images/potions/foul_potion.png",
+    "image": "images/potions/foul_potion.webp",
     "variables": {
       "Damage": 12,
       "Gold": 100
@@ -314,7 +314,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/fruit_juice.png",
+    "image": "images/potions/fruit_juice.webp",
     "variables": {
       "MaxHp": "5"
     }
@@ -327,7 +327,7 @@
       "Dexterity",
       "Strength"
     ],
-    "image": "images/potions/fysh_oil.png",
+    "image": "images/potions/fysh_oil.webp",
     "variables": {
       "StrengthPower": "1",
       "DexterityPower": "1"
@@ -338,7 +338,7 @@
     "rarity": "uncommon",
     "character": "any",
     "tags": [],
-    "image": "images/potions/gamblers_brew.png"
+    "image": "images/potions/gamblers_brew.webp"
   },
   {
     "id": "GhostInAJar",
@@ -347,7 +347,7 @@
     "tags": [
       "Intangible"
     ],
-    "image": "images/potions/ghost_in_a_jar.png"
+    "image": "images/potions/ghost_in_a_jar.webp"
   },
   {
     "id": "GigantificationPotion",
@@ -356,7 +356,7 @@
     "tags": [
       "Gigantification"
     ],
-    "image": "images/potions/gigantification_potion.png"
+    "image": "images/potions/gigantification_potion.webp"
   },
   {
     "id": "GlowwaterPotion",
@@ -366,7 +366,7 @@
       "Draw",
       "Exhaust"
     ],
-    "image": "images/potions/glowwater_potion.png",
+    "image": "images/potions/glowwater_potion.webp",
     "variables": {
       "Cards": "10"
     }
@@ -378,7 +378,7 @@
     "tags": [
       "Plating"
     ],
-    "image": "images/potions/heart_of_iron.png",
+    "image": "images/potions/heart_of_iron.webp",
     "variables": {
       "PlatingPower": "7"
     }
@@ -390,7 +390,7 @@
     "tags": [
       "Forge"
     ],
-    "image": "images/potions/kings_courage.png",
+    "image": "images/potions/kings_courage.webp",
     "variables": {
       "Forge": "15"
     }
@@ -402,7 +402,7 @@
     "tags": [
       "Thorns"
     ],
-    "image": "images/potions/liquid_bronze.png",
+    "image": "images/potions/liquid_bronze.webp",
     "variables": {
       "ThornsPower": "3"
     }
@@ -412,7 +412,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/liquid_memories.png"
+    "image": "images/potions/liquid_memories.webp"
   },
   {
     "id": "LuckyTonic",
@@ -421,7 +421,7 @@
     "tags": [
       "Buffer"
     ],
-    "image": "images/potions/lucky_tonic.png",
+    "image": "images/potions/lucky_tonic.webp",
     "variables": {
       "BufferPower": "1"
     }
@@ -433,7 +433,7 @@
     "tags": [
       "Ritual"
     ],
-    "image": "images/potions/mazaleths_gift.png",
+    "image": "images/potions/mazaleths_gift.webp",
     "variables": {
       "RitualPower": "1"
     }
@@ -443,7 +443,7 @@
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/orobic_acid.png"
+    "image": "images/potions/orobic_acid.webp"
   },
   {
     "id": "PoisonPotion",
@@ -452,7 +452,7 @@
     "tags": [
       "Poison"
     ],
-    "image": "images/potions/poison_potion.png",
+    "image": "images/potions/poison_potion.webp",
     "variables": {
       "PoisonPower": "6"
     }
@@ -465,7 +465,7 @@
       "Vulnerable",
       "Weak"
     ],
-    "image": "images/potions/potion_of_binding.png",
+    "image": "images/potions/potion_of_binding.webp",
     "variables": {
       "WeakPower": "1",
       "VulnerablePower": "1"
@@ -476,7 +476,7 @@
     "rarity": "uncommon",
     "character": "defect",
     "tags": [],
-    "image": "images/potions/potion_of_capacity.png",
+    "image": "images/potions/potion_of_capacity.webp",
     "variables": {
       "Repeat": "2"
     }
@@ -488,7 +488,7 @@
     "tags": [
       "Doom"
     ],
-    "image": "images/potions/potion_of_doom.png",
+    "image": "images/potions/potion_of_doom.webp",
     "variables": {
       "DoomPower": "33"
     }
@@ -498,7 +498,7 @@
     "rarity": "special",
     "character": "any",
     "tags": [],
-    "image": "images/potions/potion_shaped_rock.png",
+    "image": "images/potions/potion_shaped_rock.webp",
     "variables": {
       "Damage": 15
     }
@@ -508,7 +508,7 @@
     "rarity": "rare",
     "character": "necrobinder",
     "tags": [],
-    "image": "images/potions/pot_of_ghouls.png",
+    "image": "images/potions/pot_of_ghouls.webp",
     "variables": {
       "Cards": "2"
     }
@@ -520,7 +520,7 @@
     "tags": [
       "Demise"
     ],
-    "image": "images/potions/powdered_demise.png",
+    "image": "images/potions/powdered_demise.webp",
     "variables": {
       "Demise": "9"
     }
@@ -530,14 +530,14 @@
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/power_potion.png"
+    "image": "images/potions/power_potion.webp"
   },
   {
     "id": "PrecisionPotion",
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/precision_potion.png",
+    "image": "images/potions/precision_potion.webp",
     "variables": {
       "AimPower": 21
     }
@@ -550,7 +550,7 @@
       "Energy",
       "Radiance"
     ],
-    "image": "images/potions/radiant_tincture.png",
+    "image": "images/potions/radiant_tincture.webp",
     "variables": {
       "Energy": 1,
       "RadiancePower": 3
@@ -563,7 +563,7 @@
     "tags": [
       "Regen"
     ],
-    "image": "images/potions/regen_potion.png",
+    "image": "images/potions/regen_potion.webp",
     "variables": {
       "RegenPower": "5"
     }
@@ -577,7 +577,7 @@
       "Potion",
       "Strength"
     ],
-    "image": "images/potions/shackling_potion.png",
+    "image": "images/potions/shackling_potion.webp",
     "variables": {
       "StrengthPower": "7"
     }
@@ -592,7 +592,7 @@
       "Next",
       "Turn"
     ],
-    "image": "images/potions/ship_in_a_bottle.png",
+    "image": "images/potions/ship_in_a_bottle.webp",
     "variables": {
       "Block": "10"
     }
@@ -602,14 +602,14 @@
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/skill_potion.png"
+    "image": "images/potions/skill_potion.webp"
   },
   {
     "id": "SneckoOil",
     "rarity": "rare",
     "character": "any",
     "tags": [],
-    "image": "images/potions/snecko_oil.png",
+    "image": "images/potions/snecko_oil.webp",
     "variables": {
       "Cards": "7"
     }
@@ -621,7 +621,7 @@
     "tags": [
       "Replay"
     ],
-    "image": "images/potions/soldiers_stew.png"
+    "image": "images/potions/soldiers_stew.webp"
   },
   {
     "id": "SpeedPotion",
@@ -632,7 +632,7 @@
       "Speed",
       "Potion"
     ],
-    "image": "images/potions/speed_potion.png",
+    "image": "images/potions/speed_potion.webp",
     "variables": {
       "DexterityPower": "5"
     }
@@ -646,7 +646,7 @@
       "Retain",
       "Hand"
     ],
-    "image": "images/potions/stable_serum.png",
+    "image": "images/potions/stable_serum.webp",
     "variables": {
       "Repeat": "2"
     }
@@ -658,7 +658,7 @@
     "tags": [
       "Star"
     ],
-    "image": "images/potions/star_potion.png",
+    "image": "images/potions/star_potion.webp",
     "variables": {
       "Stars": 3
     }
@@ -670,7 +670,7 @@
     "tags": [
       "Strength"
     ],
-    "image": "images/potions/strength_potion.png",
+    "image": "images/potions/strength_potion.webp",
     "variables": {
       "StrengthPower": "2"
     }
@@ -680,7 +680,7 @@
     "rarity": "common",
     "character": "any",
     "tags": [],
-    "image": "images/potions/swift_potion.png",
+    "image": "images/potions/swift_potion.webp",
     "variables": {
       "Cards": "3"
     }
@@ -690,7 +690,7 @@
     "rarity": "uncommon",
     "character": "any",
     "tags": [],
-    "image": "images/potions/touch_of_insanity.png"
+    "image": "images/potions/touch_of_insanity.webp"
   },
   {
     "id": "VulnerablePotion",
@@ -699,7 +699,7 @@
     "tags": [
       "Vulnerable"
     ],
-    "image": "images/potions/vulnerable_potion.png",
+    "image": "images/potions/vulnerable_potion.webp",
     "variables": {
       "VulnerablePower": "3"
     }
@@ -711,7 +711,7 @@
     "tags": [
       "Weak"
     ],
-    "image": "images/potions/weak_potion.png",
+    "image": "images/potions/weak_potion.webp",
     "variables": {
       "WeakPower": "3"
     }

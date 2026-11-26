@@ -13,9 +13,9 @@
 	"potions": "potions.json",
 	"cardPool": {
 		"colorless": {
-			"char": "images/energy_colorless.png",
-			"cardEnergy": "images/energy_colorless.png",
-			"textEnergy": "images/colorless_energy_icon.png",
+			"char": "images/energy_colorless.webp",
+			"cardEnergy": "images/energy_colorless.webp",
+			"textEnergy": "images/colorless_energy_icon.webp",
 			"accent": "#a6a199",
 			"energyOutline": "#5c5440",
 			"cardFrame": {
@@ -31,9 +31,9 @@
 			}
 		},
 		"ironclad": {
-			"char": "images/character_icon_ironclad.png",
-			"cardEnergy": "images/energy_ironclad.png",
-			"textEnergy": "images/ironclad_energy_icon.png",
+			"char": "images/character_icon_ironclad.webp",
+			"cardEnergy": "images/energy_ironclad.webp",
+			"textEnergy": "images/ironclad_energy_icon.webp",
 			"accent": "#c65a42",
 			"energyOutline": "#802020",
 			"cardFrame": {
@@ -49,9 +49,9 @@
 			}
 		},
 		"defect": {
-			"char": "images/character_icon_defect.png",
-			"cardEnergy": "images/energy_defect.png",
-			"textEnergy": "images/defect_energy_icon.png",
+			"char": "images/character_icon_defect.webp",
+			"cardEnergy": "images/energy_defect.webp",
+			"textEnergy": "images/defect_energy_icon.webp",
 			"accent": "#5aa9c9",
 			"energyOutline": "#1d5673",
 			"cardFrame": {
@@ -67,9 +67,9 @@
 			}
 		},
 		"necrobinder": {
-			"char": "images/character_icon_necrobinder.png",
-			"cardEnergy": "images/energy_necrobinder.png",
-			"textEnergy": "images/necrobinder_energy_icon.png",
+			"char": "images/character_icon_necrobinder.webp",
+			"cardEnergy": "images/energy_necrobinder.webp",
+			"textEnergy": "images/necrobinder_energy_icon.webp",
 			"accent": "#9a73c9",
 			"energyOutline": "#803367",
 			"cardFrame": {
@@ -85,10 +85,10 @@
 			}
 		},
 		"regent": {
-			"char": "images/character_icon_regent.png",
-			"cardEnergy": "images/energy_regent.png",
+			"char": "images/character_icon_regent.webp",
+			"cardEnergy": "images/energy_regent.webp",
 			"textEnergy": "images/regent_energy_icon.webp",
-			"secondCardEnergy": "images/energy_star.png",
+			"secondCardEnergy": "images/energy_star.webp",
 			"secondTextEnergy": "images/star_icon.webp",
 			"accent": "#d5aa5b",
 			"energyOutline": "#803d0e",
@@ -105,8 +105,8 @@
 			}
 		},
 		"silent": {
-			"char": "images/character_icon_silent.png",
-			"cardEnergy": "images/energy_silent.png",
+			"char": "images/character_icon_silent.webp",
+			"cardEnergy": "images/energy_silent.webp",
 			"textEnergy": "images/silent_energy_icon.webp",
 			"accent": "#55a47c",
 			"energyOutline": "#1a6625",
@@ -123,9 +123,9 @@
 			}
 		},
 		"fool": {
-			"char": "images/character_icon_fool.png",
-			"cardEnergy": "images/energy_fool.png",
-			"textEnergy": "images/fool_energy_icon.png",
+			"char": "images/character_icon_fool.webp",
+			"cardEnergy": "images/energy_fool.webp",
+			"textEnergy": "images/fool_energy_icon.webp",
 			"accent": "#D62000",
 			"energyOutline": "#5a4411",
 			"cardFrame": {

@@ -4,7 +4,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/accelerant_power.png",
+		"icon": "images/powers/accelerant_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -12,7 +12,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/accuracy_power.png",
+		"icon": "images/powers/accuracy_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -20,7 +20,7 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/adaptable_power.png",
+		"icon": "images/powers/adaptable_power.webp",
 		"motif": "gear",
 		"enemyOnly": true
 	},
@@ -32,7 +32,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/afterimage_power.png",
+		"icon": "images/powers/afterimage_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -40,30 +40,30 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/aggression_power.png",
+		"icon": "images/powers/aggression_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "AimPower",
-		"icon": "images/powers/aim_power.png"
+		"icon": "images/powers/aim_power.webp"
 	},
 	{
 		"id": "AllIsWellPower",
-		"icon": "images/powers/all_is_well_power.png"
+		"icon": "images/powers/all_is_well_power.webp"
 	},
 	{
 		"id": "AmnesiaPower"
 	},
 	{
 		"id": "ArcheryPower",
-		"icon": "images/powers/archery_power.png"
+		"icon": "images/powers/archery_power.webp"
 	},
 	{
 		"id": "ArsenalPower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/arsenal_power.png",
+		"icon": "images/powers/arsenal_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -71,7 +71,7 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/artifact_power.png",
+		"icon": "images/powers/artifact_power.webp",
 		"motif": "star",
 		"enemyOnly": true
 	},
@@ -80,7 +80,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/asleep_power.png",
+		"icon": "images/powers/asleep_power.webp",
 		"motif": "moon",
 		"enemyOnly": true
 	},
@@ -89,7 +89,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/automation_power.png",
+		"icon": "images/powers/automation_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -97,20 +97,20 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Conserved",
-		"icon": "images/powers/back_attack_left_power.png",
+		"icon": "images/powers/back_attack_left_power.webp",
 		"motif": "gear",
 		"enemyOnly": true
 	},
 	{
 		"id": "BackAttackRightPower",
-		"icon": "images/powers/back_attack_right_power.png"
+		"icon": "images/powers/back_attack_right_power.webp"
 	},
 	{
 		"id": "BarricadePower",
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/barricade_power.png",
+		"icon": "images/powers/barricade_power.webp",
 		"motif": "gear"
 	},
 	{
@@ -118,7 +118,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/battleworn_dummy_time_limit_power.png",
+		"icon": "images/powers/battleworn_dummy_time_limit_power.webp",
 		"motif": "moon",
 		"enemyOnly": true
 	},
@@ -127,14 +127,14 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/beacon_of_hope_power.png",
+		"icon": "images/powers/beacon_of_hope_power.webp",
 		"motif": "gear"
 	},
 	{
 		"id": "BiasedCognitionPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/biased_cognition_power.png",
+		"icon": "images/powers/biased_cognition_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -142,7 +142,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/black_hole_power.png",
+		"icon": "images/powers/black_hole_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -150,7 +150,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Consumed",
-		"icon": "images/powers/block_next_turn_power.png",
+		"icon": "images/powers/block_next_turn_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -158,14 +158,14 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/blur_power.png",
+		"icon": "images/powers/blur_power.webp",
 		"motif": "moon"
 	},
 	{
 		"id": "BorrowedTimePower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/borrowed_time_power.png",
+		"icon": "images/powers/borrowed_time_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -173,31 +173,31 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/buffer_power.png",
+		"icon": "images/powers/buffer_power.webp",
 		"motif": "star"
 	},
 	{
 		"id": "BurrowedPower",
-		"icon": "images/powers/burrowed_power.png"
+		"icon": "images/powers/burrowed_power.webp"
 	},
 	{
 		"id": "BurstPower",
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Removed",
-		"icon": "images/powers/burst_power.png",
+		"icon": "images/powers/burst_power.webp",
 		"motif": "star"
 	},
 	{
 		"id": "CacophonyPower",
-		"icon": "images/powers/cacophony_power.png"
+		"icon": "images/powers/cacophony_power.webp"
 	},
 	{
 		"id": "CalamityPower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/calamity_power.png",
+		"icon": "images/powers/calamity_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -205,7 +205,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/calcify_power.png",
+		"icon": "images/powers/calcify_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -213,14 +213,14 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/call_of_the_void_power.png",
+		"icon": "images/powers/call_of_the_void_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "ChainsOfBindingPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/chains_of_binding_power.png",
+		"icon": "images/powers/chains_of_binding_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -228,7 +228,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/child_of_the_stars_power.png",
+		"icon": "images/powers/child_of_the_stars_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -236,7 +236,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/clarity_power.png",
+		"icon": "images/powers/clarity_power.webp",
 		"motif": "moon"
 	},
 	{
@@ -244,16 +244,16 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/colossus_power.png",
+		"icon": "images/powers/colossus_power.webp",
 		"motif": "moon"
 	},
 	{
 		"id": "CompostPower",
-		"icon": "images/powers/compost_power.png"
+		"icon": "images/powers/compost_power.webp"
 	},
 	{
 		"id": "ConcoctPower",
-		"icon": "images/powers/concoct_power.png"
+		"icon": "images/powers/concoct_power.webp"
 	},
 	{
 		"id": "ConductorsBatonPower"
@@ -262,21 +262,21 @@
 		"id": "ConfusedPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/confused_power.png",
+		"icon": "images/powers/confused_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "ConquerorPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/conqueror_power.png",
+		"icon": "images/powers/conqueror_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "ConstrictPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/constrict_power.png",
+		"icon": "images/powers/constrict_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -284,7 +284,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/consuming_shadow_power.png",
+		"icon": "images/powers/consuming_shadow_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -292,7 +292,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/coolant_power.png",
+		"icon": "images/powers/coolant_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -300,7 +300,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Removed",
-		"icon": "images/powers/corrosive_wave_power.png",
+		"icon": "images/powers/corrosive_wave_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -308,7 +308,7 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/corruption_power.png",
+		"icon": "images/powers/corruption_power.webp",
 		"motif": "gear"
 	},
 	{
@@ -316,7 +316,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/countdown_power.png",
+		"icon": "images/powers/countdown_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -324,19 +324,19 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Removed",
-		"icon": "images/powers/covered_power.png",
+		"icon": "images/powers/covered_power.webp",
 		"motif": "gear"
 	},
 	{
 		"id": "CoveringFirePower",
-		"icon": "images/powers/covering_fire_power.png"
+		"icon": "images/powers/covering_fire_power.webp"
 	},
 	{
 		"id": "CrabRagePower",
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/crab_rage_power.png",
+		"icon": "images/powers/crab_rage_power.webp",
 		"motif": "gear",
 		"enemyOnly": true
 	},
@@ -345,7 +345,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/creative_ai_power.png",
+		"icon": "images/powers/creative_ai_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -353,7 +353,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/crimson_mantle_power.png",
+		"icon": "images/powers/crimson_mantle_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -361,7 +361,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/cruelty_power.png",
+		"icon": "images/powers/cruelty_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -369,7 +369,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/curious_power.png",
+		"icon": "images/powers/curious_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -377,7 +377,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Conserved",
-		"icon": "images/powers/curl_up_power.png",
+		"icon": "images/powers/curl_up_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -385,7 +385,7 @@
 		"id": "DampenPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/dampen_power.png",
+		"icon": "images/powers/dampen_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -393,7 +393,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/danse_macabre_power.png",
+		"icon": "images/powers/danse_macabre_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -401,14 +401,14 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/dark_embrace_power.png",
+		"icon": "images/powers/dark_embrace_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "DebilitatePower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/debilitate_power.png",
+		"icon": "images/powers/debilitate_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -416,14 +416,14 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/demesne_power.png",
+		"icon": "images/powers/demesne_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "DemisePower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/demise_power.png",
+		"icon": "images/powers/demise_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -431,7 +431,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/demon_form_power.png",
+		"icon": "images/powers/demon_form_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -439,7 +439,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/devour_life_power.png",
+		"icon": "images/powers/devour_life_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -448,29 +448,29 @@
 		"stack": "Intensity",
 		"behavior": "Permanent",
 		"cap": "-999 ~ 999",
-		"icon": "images/powers/dexterity_power.png",
+		"icon": "images/powers/dexterity_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "DieForYouPower",
-		"icon": "images/powers/die_for_you_power.png"
+		"icon": "images/powers/die_for_you_power.webp"
 	},
 	{
 		"id": "DisintegrationPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/disintegration_power.png",
+		"icon": "images/powers/disintegration_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "DislikeYouPower",
-		"icon": "images/powers/dislike_you_power.png"
+		"icon": "images/powers/dislike_you_power.webp"
 	},
 	{
 		"id": "DoomPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/doom_power.png",
+		"icon": "images/powers/doom_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -478,7 +478,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/double_damage_power.png",
+		"icon": "images/powers/double_damage_power.webp",
 		"motif": "moon"
 	},
 	{
@@ -486,7 +486,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Consumed",
-		"icon": "images/powers/draw_cards_next_turn_power.png",
+		"icon": "images/powers/draw_cards_next_turn_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -494,7 +494,7 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/duplication_power.png",
+		"icon": "images/powers/duplication_power.webp",
 		"motif": "star",
 		"aliases": [
 			"Duplicate"
@@ -505,12 +505,12 @@
 		"group": "Other",
 		"stack": "IntensityCounter",
 		"behavior": "Permanent",
-		"icon": "images/powers/echo_form_power.png",
+		"icon": "images/powers/echo_form_power.webp",
 		"motif": "star"
 	},
 	{
 		"id": "EcstasyPower",
-		"icon": "images/powers/ecstasy_power.png"
+		"icon": "images/powers/ecstasy_power.webp"
 	},
 	{
 		"id": "EncorePower"
@@ -520,19 +520,19 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Consumed",
-		"icon": "images/powers/energy_next_turn_power.png",
+		"icon": "images/powers/energy_next_turn_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "EnnuiPower",
-		"icon": "images/powers/ennui_power.png"
+		"icon": "images/powers/ennui_power.webp"
 	},
 	{
 		"id": "EnragePower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/enrage_power.png",
+		"icon": "images/powers/enrage_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -544,7 +544,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/entropy_power.png",
+		"icon": "images/powers/entropy_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -552,7 +552,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/envenom_power.png",
+		"icon": "images/powers/envenom_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -560,27 +560,27 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/escape_artist_power.png",
+		"icon": "images/powers/escape_artist_power.webp",
 		"motif": "moon",
 		"enemyOnly": true
 	},
 	{
 		"id": "ExplosiveArrowsPower",
-		"icon": "images/powers/explosive_arrows_power.png"
+		"icon": "images/powers/explosive_arrows_power.webp"
 	},
 	{
 		"id": "ExplosivePower"
 	},
 	{
 		"id": "ExtraTurnPower",
-		"icon": "images/powers/extra_turn_power.png"
+		"icon": "images/powers/extra_turn_power.webp"
 	},
 	{
 		"id": "FanOfKnivesPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/fan_of_knives_power.png",
+		"icon": "images/powers/fan_of_knives_power.webp",
 		"motif": "gear"
 	},
 	{
@@ -588,7 +588,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/fasten_power.png",
+		"icon": "images/powers/fasten_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -596,7 +596,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/feel_no_pain_power.png",
+		"icon": "images/powers/feel_no_pain_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -604,7 +604,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/feral_power.png",
+		"icon": "images/powers/feral_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -612,14 +612,14 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Removed",
-		"icon": "images/powers/flame_barrier_power.png",
+		"icon": "images/powers/flame_barrier_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "FlankingPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/flanking_power.png",
+		"icon": "images/powers/flanking_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -627,7 +627,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/flutter_power.png",
+		"icon": "images/powers/flutter_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -636,7 +636,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/focus_power.png",
+		"icon": "images/powers/focus_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -644,7 +644,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/forbidden_grimoire_power.png",
+		"icon": "images/powers/forbidden_grimoire_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -652,14 +652,14 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Consumed",
-		"icon": "images/powers/foregone_conclusion_power.png",
+		"icon": "images/powers/foregone_conclusion_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "FrailPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/frail_power.png",
+		"icon": "images/powers/frail_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -667,7 +667,7 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/free_attack_power.png",
+		"icon": "images/powers/free_attack_power.webp",
 		"motif": "star"
 	},
 	{
@@ -678,7 +678,7 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/free_power_power.png",
+		"icon": "images/powers/free_power_power.webp",
 		"motif": "star"
 	},
 	{
@@ -686,7 +686,7 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/free_skill_power.png",
+		"icon": "images/powers/free_skill_power.webp",
 		"motif": "star"
 	},
 	{
@@ -694,7 +694,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/friendship_power.png",
+		"icon": "images/powers/friendship_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -702,7 +702,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/furnace_power.png",
+		"icon": "images/powers/furnace_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -710,7 +710,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/galvanic_power.png",
+		"icon": "images/powers/galvanic_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -719,7 +719,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/genesis_power.png",
+		"icon": "images/powers/genesis_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -727,7 +727,7 @@
 		"group": "Counter",
 		"stack": "Counter",
 		"behavior": "Conserved",
-		"icon": "images/powers/gigantification_power.png",
+		"icon": "images/powers/gigantification_power.webp",
 		"motif": "star"
 	},
 	{
@@ -735,14 +735,14 @@
 	},
 	{
 		"id": "GravityPower",
-		"icon": "images/powers/gravity_power.png"
+		"icon": "images/powers/gravity_power.webp"
 	},
 	{
 		"id": "GuardedPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/guarded_power.png",
+		"icon": "images/powers/guarded_power.webp",
 		"motif": "gear"
 	},
 	{
@@ -750,7 +750,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/hailstorm_power.png",
+		"icon": "images/powers/hailstorm_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -758,14 +758,14 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/hammer_time_power.png",
+		"icon": "images/powers/hammer_time_power.webp",
 		"motif": "gear"
 	},
 	{
 		"id": "HangPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/hang_power.png",
+		"icon": "images/powers/hang_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -773,7 +773,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Reset",
-		"icon": "images/powers/hardened_shell_power.png",
+		"icon": "images/powers/hardened_shell_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -782,7 +782,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/hard_to_kill_power.png",
+		"icon": "images/powers/hard_to_kill_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -791,7 +791,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/hatch_power.png",
+		"icon": "images/powers/hatch_power.webp",
 		"motif": "moon",
 		"enemyOnly": true
 	},
@@ -800,7 +800,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/haunt_power.png",
+		"icon": "images/powers/haunt_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -808,7 +808,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/heist_power.png",
+		"icon": "images/powers/heist_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
@@ -817,7 +817,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/hello_world_power.png",
+		"icon": "images/powers/hello_world_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -825,62 +825,62 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/hellraiser_power.png",
+		"icon": "images/powers/hellraiser_power.webp",
 		"motif": "gear"
 	},
 	{
 		"id": "HexPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/hex_power.png",
+		"icon": "images/powers/hex_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "HibernatePower",
-		"icon": "images/powers/hibernate_power.png"
+		"icon": "images/powers/hibernate_power.webp"
 	},
 	{
 		"id": "HiddenRootsPower",
-		"icon": "images/powers/hidden_roots_power.png"
+		"icon": "images/powers/hidden_roots_power.webp"
 	},
 	{
 		"id": "HighVoltagePower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/high_voltage_power.png",
+		"icon": "images/powers/high_voltage_power.webp",
 		"motif": "flame",
 		"enemyOnly": true
 	},
 	{
 		"id": "HoningPower",
-		"icon": "images/powers/honing_power.png"
+		"icon": "images/powers/honing_power.webp"
 	},
 	{
 		"id": "IllusionPower",
-		"icon": "images/powers/illusion_power.png"
+		"icon": "images/powers/illusion_power.webp"
 	},
 	{
 		"id": "ImbalancedPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/imbalanced_power.png",
+		"icon": "images/powers/imbalanced_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "ImitationLearningPower",
-		"icon": "images/powers/imitation_learning_power.png"
+		"icon": "images/powers/imitation_learning_power.webp"
 	},
 	{
 		"id": "ImpaledPower",
-		"icon": "images/powers/impaled_power.png"
+		"icon": "images/powers/impaled_power.webp"
 	},
 	{
 		"id": "ImprovementPower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/improvement_power.png",
+		"icon": "images/powers/improvement_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -888,7 +888,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/inferno_power.png",
+		"icon": "images/powers/inferno_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -896,7 +896,7 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/infested_power.png",
+		"icon": "images/powers/infested_power.webp",
 		"motif": "gear",
 		"enemyOnly": true
 	},
@@ -905,7 +905,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/infinite_blades_power.png",
+		"icon": "images/powers/infinite_blades_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -916,7 +916,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/intangible_power.png",
+		"icon": "images/powers/intangible_power.webp",
 		"motif": "moon"
 	},
 	{
@@ -924,19 +924,19 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Removed",
-		"icon": "images/powers/intercept_power.png",
+		"icon": "images/powers/intercept_power.webp",
 		"motif": "gear"
 	},
 	{
 		"id": "IterationPower",
-		"icon": "images/powers/iteration_power.png"
+		"icon": "images/powers/iteration_power.webp"
 	},
 	{
 		"id": "JuggernautPower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/juggernaut_power.png",
+		"icon": "images/powers/juggernaut_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -944,7 +944,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/juggling_power.png",
+		"icon": "images/powers/juggling_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -954,7 +954,7 @@
 		"id": "KnockdownPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/knockdown_power.png",
+		"icon": "images/powers/knockdown_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -962,14 +962,14 @@
 	},
 	{
 		"id": "LeadershipPower",
-		"icon": "images/powers/leadership_power.png"
+		"icon": "images/powers/leadership_power.webp"
 	},
 	{
 		"id": "LethalityPower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/lethality_power.png",
+		"icon": "images/powers/lethality_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -977,7 +977,7 @@
 		"group": "Duration",
 		"stack": "Duration",
 		"behavior": "Decremented",
-		"icon": "images/powers/lightning_rod_power.png",
+		"icon": "images/powers/lightning_rod_power.webp",
 		"motif": "moon"
 	},
 	{
@@ -985,30 +985,30 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/loop_power.png",
+		"icon": "images/powers/loop_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "LostLutePower",
-		"icon": "images/powers/lost_lute_power.png"
+		"icon": "images/powers/lost_lute_power.webp"
 	},
 	{
 		"id": "LullabyPower",
-		"icon": "images/powers/lullaby_power.png"
+		"icon": "images/powers/lullaby_power.webp"
 	},
 	{
 		"id": "MachineLearningPower",
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/machine_learning_power.png",
+		"icon": "images/powers/machine_learning_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "MagicBombPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/magic_bomb_power.png",
+		"icon": "images/powers/magic_bomb_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -1016,7 +1016,7 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/master_planner_power.png",
+		"icon": "images/powers/master_planner_power.webp",
 		"motif": "gear"
 	},
 	{
@@ -1024,14 +1024,14 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/mayhem_power.png",
+		"icon": "images/powers/mayhem_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "MindRotPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/mind_rot_power.png",
+		"icon": "images/powers/mind_rot_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -1039,7 +1039,7 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/minion_power.png",
+		"icon": "images/powers/minion_power.webp",
 		"motif": "gear",
 		"enemyOnly": true
 	},
@@ -1048,7 +1048,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/monarchs_gaze_power.png",
+		"icon": "images/powers/monarchs_gaze_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -1056,12 +1056,12 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Removed",
-		"icon": "images/powers/monologue_power.png",
+		"icon": "images/powers/monologue_power.webp",
 		"motif": "gear"
 	},
 	{
 		"id": "MotifPower",
-		"icon": "images/powers/motif_power.png"
+		"icon": "images/powers/motif_power.webp"
 	},
 	{
 		"id": "MythicFormPower"
@@ -1071,7 +1071,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/necro_mastery_power.png",
+		"icon": "images/powers/necro_mastery_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -1079,7 +1079,7 @@
 		"group": "Does not stack",
 		"stack": "NoStack",
 		"behavior": "Permanent",
-		"icon": "images/powers/nemesis_power.png",
+		"icon": "images/powers/nemesis_power.webp",
 		"motif": "gear",
 		"enemyOnly": true
 	},
@@ -1087,7 +1087,7 @@
 		"id": "NeurosurgePower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/neurosurge_power.png",
+		"icon": "images/powers/neurosurge_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -1095,28 +1095,28 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Consumed",
-		"icon": "images/powers/nightmare_power.png",
+		"icon": "images/powers/nightmare_power.webp",
 		"motif": "flame"
 	},
 	{
 		"id": "NoBlockPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/no_block_power.png",
+		"icon": "images/powers/no_block_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "NoDrawPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/no_draw_power.png",
+		"icon": "images/powers/no_draw_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "NoEnergyGainPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/no_energy_gain_power.png",
+		"icon": "images/powers/no_energy_gain_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -1124,7 +1124,7 @@
 		"group": "Intensity",
 		"stack": "Intensity",
 		"behavior": "Permanent",
-		"icon": "images/powers/nostalgia_power.png",
+		"icon": "images/powers/nostalgia_power.webp",
 		"motif": "flame"
 	},
 	{
@@ -2284,7 +2284,7 @@
 		"id": "DexterityDownPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/dexterity_down_power.png",
+		"icon": "images/powers/dexterity_down_power.webp",
 		"motif": "spiral"
 	},
 	{
@@ -2297,14 +2297,14 @@
 		"id": "GraspPower",
 		"group": "Counter",
 		"stack": "Counter",
-		"icon": "images/powers/grasp_power.png",
+		"icon": "images/powers/grasp_power.webp",
 		"motif": "spiral"
 	},
 	{
 		"id": "HungerPower",
 		"group": "Does not stack",
 		"stack": "NoStack",
-		"icon": "images/powers/hunger_power.png",
+		"icon": "images/powers/hunger_power.webp",
 		"motif": "spiral"
 	},
 	{
