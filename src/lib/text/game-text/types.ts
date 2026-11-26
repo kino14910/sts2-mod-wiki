@@ -49,6 +49,8 @@ export interface GameTextOptions extends CardTextOptions {
 	prefer?: readonly GameEntityType[]
 	/** 关闭实体匹配，仅渲染样式 / 变量 / 图标（卡面缩略图等不可嵌链接处） */
 	matchEntities?: boolean
+	/** 除 [gold] 高亮外，也匹配普通可见文本（药水列表等 wiki 化展示） */
+	matchPlainEntities?: boolean
 	/** 保留实体节点但不出链接（卡牌大图描述） */
 	interactive?: boolean
 	/** 图标资源所属模组，默认 sts2 */

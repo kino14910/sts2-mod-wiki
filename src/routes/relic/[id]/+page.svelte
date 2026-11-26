@@ -9,6 +9,7 @@
 	import WikiIntro from '#lib/components/WikiIntro.svelte'
 	import WikiNavbox from '#lib/components/WikiNavbox.svelte'
 	import WikiTable from '#lib/components/WikiTable.svelte'
+	import WikiText from '#lib/components/WikiText.svelte'
 	import WikiToc from '#lib/components/WikiToc.svelte'
 	import CommentList from '#lib/components/wiki/comments/CommentList.svelte'
 	import {
@@ -127,7 +128,7 @@
 							<h2 class="font-display text-[1.1rem] font-semibold text-gold">
 								{m.power_effect()}
 							</h2>
-							<p class="mt-2 text-[0.95rem] leading-[1.6]">{text}</p>
+							<p class="mt-2 text-[0.95rem] leading-[1.6]"><WikiText text={text} /></p>
 						</section>
 				</article>
 
@@ -157,7 +158,7 @@
 							</div>
 						</dl>
 						<p class="mt-3 rounded-sm border border-line bg-surface-2 p-2.5 text-[0.82rem] leading-[1.55]">
-							{text}
+							<WikiText text={text} />
 						</p>
 						<section class="mt-3 border-t border-line pt-2.5">
 							<h2 class="font-mono text-[0.56rem] uppercase tracking-wider text-gold-soft">

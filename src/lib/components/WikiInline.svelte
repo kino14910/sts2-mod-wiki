@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { page as appPage } from '$app/state'
 	import HoverTooltip from '#lib/components/HoverTooltip.svelte'
 	import WikiText from '#lib/components/WikiText.svelte'
 	import { relicImage, type RelicWikiPage } from '#lib/data/relic-wiki'
+	import { isSelfLink } from '#lib/data/wiki-links'
 
 	let {
 		text,
@@ -53,6 +55,7 @@
 	}
 
 	let nodes = $derived(parse(text))
+	let pathname = $derived(appPage.url.pathname)
 	let hovered = $state('')
 	let tipX = $state(0)
 	let tipY = $state(0)
@@ -97,7 +100,8 @@
 
 {#each nodes as node, index (index)}
 	{#if node.kind === 'token'}
-		{#if node.href}
+		{@const self = isSelfLink(pathname, node.href)}
+		{#if node.href && !self}
 			<a
 				class="wiki-inline-link text-[#85d2e4] whitespace-nowrap hover:underline [text-underline-thickness:1px] underline-offset-2"
 				href={node.href}
@@ -108,8 +112,9 @@
 			>
 		{:else}
 			<span
-				class="wiki-inline-link wiki-inline-link--plain text-[#85d2e4] whitespace-nowrap font-semibold hover:underline [text-underline-thickness:1px] underline-offset-2"
+				class="wiki-inline-link wiki-inline-link--plain whitespace-nowrap font-semibold text-ink"
 				role="note"
+				aria-current={self ? 'page' : undefined}
 				onmouseenter={(event) => enter(event, node.key, node.tooltip)}
 				onmousemove={move}
 				onmouseleave={leave}

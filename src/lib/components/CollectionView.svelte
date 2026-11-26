@@ -124,7 +124,9 @@
 	function descriptionOptions(entry: CollectionEntry): GameTextOptions {
 		return {
 			mode: 'collection',
-			energyIconSrc: entry.character === 'necrobinder' ? NECRO_ENERGY_ICON : ENERGY_ICON
+			energyIconSrc: entry.character === 'necrobinder' ? NECRO_ENERGY_ICON : ENERGY_ICON,
+			// 药水描述需要像详情页一样，把未加 [gold] 的实体名也渲染为关键词链接
+			matchPlainEntities: kind === 'potion'
 		};
 	}
 

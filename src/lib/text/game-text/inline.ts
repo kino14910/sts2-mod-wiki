@@ -18,7 +18,8 @@ export function resolveInline(
 		} else if (node.type === 'variable') {
 			result.push({ ...node, children: resolveInline(node.children, options, context, node.matchEntities === true && gold) })
 		} else if (node.type === 'text') {
-			result.push(...matchTextEntities(node.value, gold && options.matchEntities !== false, context))
+			const match = (gold || options.matchPlainEntities === true) && options.matchEntities !== false
+			result.push(...matchTextEntities(node.value, match, context))
 		} else result.push(node)
 	}
 	return result

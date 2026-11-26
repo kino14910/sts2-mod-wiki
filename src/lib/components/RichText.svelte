@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { page as appPage } from '$app/state';
 	import { termIndex, termPattern } from '#lib/data/localize';
 	import type { GlossaryKind, GlossaryLink } from '#lib/data/glossary';
+	import { isSelfLink } from '#lib/data/wiki-links';
 
 	type Token =
 		| { type: 'text'; value: string }
@@ -53,14 +55,24 @@
 <span class={['inline', className]}>
 	{#each tokens as token, index (`${token.type}-${index}-${token.value}`)}
 		{#if token.type === 'term'}
-			<a
-				class={[
-					'font-medium underline decoration-dotted decoration-1 underline-offset-2 transition-colors hover:decoration-[#fff3bd]',
-					TERM_COLOR[token.link.kind]
-				]}
-				href={token.link.href}
-				title="{token.link.name}: {token.link.summary}"
-			>{token.value}</a>
+			{@const self = isSelfLink(appPage.url.pathname, token.link.href)}
+			{#if self}
+				<span
+					class="font-medium text-ink"
+					role="note"
+					aria-current="page"
+					title="{token.link.name}: {token.link.summary}"
+				>{token.value}</span>
+			{:else}
+				<a
+					class={[
+						'font-medium underline decoration-dotted decoration-1 underline-offset-2 transition-colors hover:decoration-[#fff3bd]',
+						TERM_COLOR[token.link.kind]
+					]}
+					href={token.link.href}
+					title="{token.link.name}: {token.link.summary}"
+				>{token.value}</a>
+			{/if}
 		{:else if token.type === 'number'}
 			<span class="font-semibold tabular-nums text-gold">{token.value}</span>
 		{:else}{token.value}{/if}

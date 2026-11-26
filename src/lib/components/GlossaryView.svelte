@@ -216,13 +216,15 @@
 								{#if entry.cap}
 									{@render tag(m.glossary_cap({ value: entry.cap }))}
 								{/if}
-								<a
-									class="ml-auto font-mono text-[0.62rem] text-muted opacity-0 transition-[opacity,color] duration-160 ease-[ease] group-hover:opacity-100 hover:text-(--kind-accent)"
-									href={glossaryHref(entry)}
-									aria-label={m.glossary_link_to({ name: entry.name })}
-								>
-									#
-								</a>
+								{#if kind !== 'keyword'}
+									<a
+										class="ml-auto font-mono text-[0.62rem] text-muted opacity-0 transition-[opacity,color] duration-160 ease-[ease] group-hover:opacity-100 hover:text-(--kind-accent)"
+										href={glossaryHref(entry)}
+										aria-label={m.glossary_link_to({ name: entry.name })}
+									>
+										#
+									</a>
+								{/if}
 							</div>
 
 							<p class="mt-0.5 text-[0.78rem] leading-normal text-pretty text-ink-dim">
