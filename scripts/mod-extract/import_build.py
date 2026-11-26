@@ -73,10 +73,11 @@ def verify_source_unchanged(source, inputs, references, presentation_file, parse
 
 def publish_bundle(bundle, output, inputs, references, presentation_file, parser_config,
                    *, staged_public_root, public_root=None):
-    """Validate privately, publish assets, then atomically switch the bundle pointer.
+    """Validate privately, sync assets into the fixed public directory, then commit the bundle.
 
-    A fingerprint's published content is immutable. Repairs must reproduce its
-    verified manifest, and are rolled back if final validation/publication fails.
+    Published paths are stable, so files that disappear from the bundle are removed.
+    Every replacement and deletion is rolled back if final validation or the bundle
+    commit fails.
     """
     fingerprint = bundle['fingerprint']
     public_root = public_root or PROJECT_ROOT / 'static'
@@ -100,74 +101,59 @@ def publish_bundle(bundle, output, inputs, references, presentation_file, parser
             write_json(candidate, bundle)
             run_bundle_validator(candidate, staged_public_root, presentation_file)
             snapshot = output / 'snapshots' / f'{fingerprint}.json'
-            current = output / 'bundle.json'
-            verified_previous = False
-            # Never overwrite a historical snapshot or reinterpret the same URLs.
-            for previous_file in (snapshot, current):
-                if not previous_file.is_file():
-                    continue
-                previous = json.loads(previous_file.read_text(encoding='utf-8'))
-                if previous.get('fingerprint') != fingerprint:
-                    continue
-                previous_digest = bundle_digest(previous)
-                if (previous.get('contentSha256') != previous_digest or
-                        previous_digest != bundle['contentSha256']):
-                    raise ValueError('Existing fingerprint has different bundle content; keeping published assets')
-                verified_previous = True
-            repairs = []
-            if public_assets.exists():
-                for name, asset in bundle['assets'].items():
-                    target = public_assets / safe_path(name)
-                    if not target.is_file() or digest(target) != asset['sha256']:
-                        repairs.append(name)
-                if repairs and not verified_previous:
-                    raise ValueError('Cannot repair existing assets without a matching verified published bundle')
-            # All fallible preparation precedes writes to public resources.
             snapshot_candidate = transaction / 'snapshot.json'
-            if not snapshot.exists():
-                write_json(snapshot_candidate, bundle)
-            public_assets.parent.mkdir(parents=True, exist_ok=True)
+            write_json(snapshot_candidate, bundle)
+            current = output / 'bundle.json'
+            public_assets.mkdir(parents=True, exist_ok=True)
             verify_source_unchanged(bundle['source'], inputs, references, presentation_file, parser_config)
-            installed = False
             replaced = []
-            snapshot_created = False
+            desired = set(bundle['assets'])
             try:
-                if not public_assets.exists():
-                    os.replace(staged_assets, public_assets)
-                    installed = True
-                else:
-                    # Healthy files are never rewritten. Each repair is atomic;
-                    # retain the exact corrupt bytes (or absence) for rollback.
-                    for name in repairs:
-                        target = public_assets / safe_path(name)
+                for name in sorted(desired):
+                    source = staged_assets / safe_path(name)
+                    if not source.is_file():
+                        raise ValueError(f'Missing staged asset: {name}')
+                    target = public_assets / safe_path(name)
+                    if target.is_file() and digest(target) == digest(source):
+                        continue
+                    backup = None
+                    if target.is_file():
                         backup = transaction / 'rollback' / name
-                        existed = target.exists()
-                        if existed:
-                            backup.parent.mkdir(parents=True, exist_ok=True)
-                            shutil.copyfile(target, backup)
-                        target.parent.mkdir(parents=True, exist_ok=True)
-                        os.replace(staged_assets / name, target)
-                        replaced.append((target, backup if existed else None))
-                # Explicitly verify the real served tree, including repairs, and
-                # recheck inputs after validation before switching the pointer.
+                        backup.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copyfile(target, backup)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    os.replace(source, target)
+                    replaced.append((name, backup))
                 validated = run_bundle_validator(candidate, public_root, presentation_file)
                 verify_source_unchanged(bundle['source'], inputs, references, presentation_file, parser_config)
-                if snapshot_candidate.exists():
+                os.replace(candidate, current)
+                try:
                     snapshot.parent.mkdir(parents=True, exist_ok=True)
                     os.replace(snapshot_candidate, snapshot)
-                    snapshot_created = True
-                os.replace(candidate, current)
+                except OSError:
+                    pass
             except BaseException:
-                if snapshot_created:
-                    snapshot.unlink()
-                for target, backup in reversed(replaced):
+                for name, backup in reversed(replaced):
+                    target = public_assets / safe_path(name)
                     if backup is None:
-                        target.unlink()
+                        target.unlink(missing_ok=True)
                     else:
                         os.replace(backup, target)
-                if installed:
-                    os.replace(public_assets, staged_assets)
                 raise
+            # Stale files are already unreferenced by the committed bundle; a failed
+            # cleanup only leaves redundant bytes and is retried by the next import.
+            try:
+                for path in sorted((item for item in public_assets.rglob('*') if item.is_file()),
+                                   key=lambda item: len(item.parts), reverse=True):
+                    name = path.relative_to(public_assets).as_posix()
+                    if name not in desired:
+                        path.unlink()
+                for path in sorted((item for item in public_assets.rglob('*') if item.is_dir()),
+                                   key=lambda item: len(item.parts), reverse=True):
+                    if not any(path.iterdir()):
+                        path.rmdir()
+            except OSError:
+                pass
             return validated
     finally:
         lock.unlink(missing_ok=True)
@@ -477,19 +463,23 @@ def main():
     with tempfile.TemporaryDirectory(prefix='parse-', dir=parsed) as directory:
         stage = Path(directory)
         staged_public_root = stage / 'public'
-        public = staged_public_root / 'imported' / cfg.id / fingerprint
+        public = staged_public_root / 'imported' / cfg.id
         assembly = stage / 'assembly'
         command = [args.ilspy, '-p', '-o', str(assembly)]
         for reference in references:
             command += ['-r', str(reference)]
+        print(f'[{cfg.id}] decompile', flush=True)
         subprocess.run(command + [str(inputs['dll'])], check=True, capture_output=True, text=True)
+        print(f'[{cfg.id}] read mod pack', flush=True)
         pack = Pack(inputs['pck'])
         write_json(parsed / 'pack-index.json', [entry.__dict__ for entry in pack.entries.values()])
+        print(f'[{cfg.id}] extract resources', flush=True)
         locales, assets = extract_resources(pack, presentation['resourceRoot'], stage, public)
         source_locales = copy.deepcopy(locales)
         cfg.source = stage
         cfg.paths['localization'] = stage / 'localization'
         from parsers import parse_assembly
+        print(f'[{cfg.id}] parse assembly', flush=True)
         catalog, diagnostics = parse_assembly(cfg, assembly, image_index(assets))
         game_pack = Pack(game_pack_path)
         game_dll = next((folder / 'sts2.dll' for folder in references if (folder / 'sts2.dll').is_file()), None)
@@ -512,7 +502,7 @@ def main():
                     'dependency': cfg.dependency, 'cardRarities': cfg.card_rarities,
                     **{kind: f'{kind}.json' for kind in KINDS}}
         manifest.update(presentation.get('display', {}))
-        prefix = f'/imported/{cfg.id}/{fingerprint}/'
+        prefix = f'/imported/{cfg.id}/'
         bundle = {'schemaVersion': SCHEMA_VERSION, 'id': cfg.id, 'fingerprint': fingerprint, 'source': source,
                   'manifest': assets_to_urls(manifest, assets, prefix), 'data': assets_to_urls(categories, assets, prefix),
                   'catalog': catalog, 'quarantined': quarantined, 'inheritedLocalization': inherited_locales,

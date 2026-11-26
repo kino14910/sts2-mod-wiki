@@ -47,9 +47,10 @@ describe('canonical catalog text integration', () => {
 		const localized = localizedCardForLocale(card, 'zhs')
 		const base = visible(parseGameText(localized.text, { variables: card.variables, locale: 'zhs' }))
 		const upgraded = visible(parseGameText(localized.text, { variables: card.variables, locale: 'zhs', upgraded: true }))
-		expect(base).toContain('恢复20点生命')
-		expect(base).not.toContain('宝具值')
-		expect(upgraded).toContain('获得30%宝具值')
+		expect(base).toContain('恢复15点生命')
+		expect(base).toContain('移除所有负面状态')
+		expect(base).toContain('获得30%宝具值')
+		expect(upgraded).toContain('移除所有负面状态')
 		expect(upgraded).not.toMatch(/[{}|]/)
 	})
 

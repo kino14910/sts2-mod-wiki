@@ -3,8 +3,8 @@ import argparse
 import hashlib
 import io
 import json
+import os
 import re
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -48,8 +48,14 @@ def content_digest(bundle: dict) -> str:
 
 
 def convert_vanilla(quality: int) -> tuple[int, int]:
-	mapping = {}
+	# Existing WebP files also map their PNG names, so a rerun repairs references
+	# left behind by an earlier conversion instead of requiring new PNG sources.
+	mapping = {
+		f'{relative[:-len(".webp")]}.png': relative
+		for relative in (path.relative_to(VANILLA).as_posix() for path in VANILLA.rglob('*.webp'))
+	}
 	before = after = 0
+	converted = 0
 	for source in sorted(VANILLA.rglob('*')):
 		if not source.is_file() or source.suffix.lower() != '.png':
 			continue
@@ -65,13 +71,16 @@ def convert_vanilla(quality: int) -> tuple[int, int]:
 			target.write_bytes(data)
 			source.unlink()
 		mapping[relative] = webp_name(relative)
-		if len(mapping) % 200 == 0:
-			print(f'vanilla converted {len(mapping)}', flush=True)
+		converted += 1
+		if converted % 200 == 0:
+			print(f'vanilla converted {converted}', flush=True)
 
 	pattern = re.compile(r'"([^"\\]+\.png)"')
 
 	def replace(match: re.Match[str]) -> str:
 		value = match.group(1)
+		# Site-level art under `/images/` is not part of the mod asset tree, so only
+		# mod-relative and mod-prefixed references are rewritten.
 		if value.startswith('/mods/sts2/'):
 			prefix = '/mods/sts2/'
 			relative = value[len(prefix):]
@@ -89,51 +98,44 @@ def convert_vanilla(quality: int) -> tuple[int, int]:
 		if updated != original:
 			filename.write_text(updated, encoding='utf-8')
 
-	return len(mapping), before - after
+	return converted, before - after
 
 
-def convert_fgo(quality: int) -> tuple[int, int, str, str]:
+def convert_fgo(quality: int, trash_dir: Path) -> tuple[int, int]:
 	bundle = json.loads(FGO_BUNDLE.read_text(encoding='utf-8'))
-	old_fingerprint = bundle['fingerprint']
-	old_base = bundle['assetBase']
-	source_root = FGO_ASSETS / old_fingerprint
+	base = bundle['assetBase']
 
+	png_names = [name for name in bundle['assets'] if name.lower().endswith('.png')]
 	converted = {}
 	before = after = 0
-	for name, meta in bundle['assets'].items():
-		source = source_root / name
-		if not source.is_file():
-			raise FileNotFoundError(source)
-		data = to_webp(source, quality) if name.lower().endswith('.png') else source.read_bytes()
+	for index, (name, meta) in enumerate(bundle['assets'].items(), 1):
+		source = FGO_ASSETS / name
 		target_name = webp_name(name)
+		existing = FGO_ASSETS / target_name
+		if not source.is_file():
+			if not existing.is_file():
+				raise FileNotFoundError(source)
+			data = existing.read_bytes()
+		elif existing.is_file() and source.stat().st_mtime <= existing.stat().st_mtime:
+			data = existing.read_bytes()
+		else:
+			data = to_webp(source, quality) if name.lower().endswith('.png') else source.read_bytes()
+			before += source.stat().st_size
+			after += len(data)
 		converted[target_name] = (data, meta)
-		before += source.stat().st_size
-		after += len(data)
-
-	payload = {
-		'source': old_fingerprint,
-		'quality': quality,
-		'assets': {name: sha256(data) for name, (data, _) in converted.items()}
-	}
-	fingerprint = sha256(json.dumps(payload, sort_keys=True, separators=(',', ':')).encode('utf-8'))
-	new_base = f'/imported/fgo/{fingerprint}/'
-	target_root = FGO_ASSETS / fingerprint
+		if index % 100 == 0:
+			print(f'converted {index}/{len(bundle["assets"])}', flush=True)
 
 	for name, (data, _) in converted.items():
-		target = target_root / name
-		if target.exists() and sha256(target.read_bytes()) != sha256(data):
-			raise RuntimeError(f'Conflicting WebP asset: {target}')
+		target = FGO_ASSETS / name
+		if target.is_file() and target.read_bytes() == data:
+			continue
 		target.parent.mkdir(parents=True, exist_ok=True)
-		if not target.exists():
-			target.write_bytes(data)
+		target.write_bytes(data)
 
 	def rewrite(value):
-		if isinstance(value, str):
-			if value == old_base:
-				return new_base
-			if value.startswith(old_base):
-				return new_base + webp_name(value[len(old_base):])
-			return value
+		if isinstance(value, str) and value.startswith(base) and value.lower().endswith('.png'):
+			return value[:-4] + '.webp'
 		if isinstance(value, list):
 			return [rewrite(item) for item in value]
 		if isinstance(value, dict):
@@ -141,31 +143,33 @@ def convert_fgo(quality: int) -> tuple[int, int, str, str]:
 		return value
 
 	bundle = rewrite(bundle)
-	bundle['assets'] = {
-		name: {**meta, 'sha256': sha256(data)}
-		for name, (data, meta) in converted.items()
-	}
-	bundle['fingerprint'] = fingerprint
-	bundle['assetBase'] = new_base
+	bundle['assets'] = {name: {**meta, 'sha256': sha256(data)}
+	                    for name, (data, meta) in converted.items()}
 	bundle.pop('contentSha256', None)
 	bundle['contentSha256'] = content_digest(bundle)
 	FGO_BUNDLE.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
 
-	if target_root.resolve() != source_root.resolve():
-		shutil.rmtree(source_root)
+	for name in png_names:
+		source = FGO_ASSETS / name
+		if not source.exists():
+			continue
+		target = trash_dir / source.relative_to(FGO_ASSETS)
+		target.parent.mkdir(parents=True, exist_ok=True)
+		os.replace(source, target)
 
-	return len(converted), before - after, old_fingerprint, fingerprint
+	return len(converted), before - after
 
 
 def main() -> None:
 	parser = argparse.ArgumentParser(description='Convert mod PNG assets to WebP')
 	parser.add_argument('--quality', type=int, default=90)
+	parser.add_argument('--trash-dir', type=Path, default=ROOT.parent / '.sts2-mod-wiki-png-archive')
 	args = parser.parse_args()
 
 	vanilla_count, vanilla_saving = convert_vanilla(args.quality)
-	fgo_count, fgo_saving, old_fingerprint, fingerprint = convert_fgo(args.quality)
+	fgo_count, fgo_saving = convert_fgo(args.quality, args.trash_dir)
 	print(f'vanilla: {vanilla_count} files, saved {vanilla_saving / 1048576:.1f} MB')
-	print(f'fgo: {fgo_count} files, saved {fgo_saving / 1048576:.1f} MB, {old_fingerprint} -> {fingerprint}')
+	print(f'fgo: {fgo_count} files, saved {fgo_saving / 1048576:.1f} MB')
 
 
 if __name__ == '__main__':

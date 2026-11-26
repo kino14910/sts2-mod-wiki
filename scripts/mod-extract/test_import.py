@@ -106,7 +106,7 @@ class BundleContractTests(unittest.TestCase):
         self.fingerprint = 'a' * 64
         self.bundle = {
             'schemaVersion': 1, 'id': 'demo', 'fingerprint': self.fingerprint,
-            'assetBase': f'/imported/demo/{self.fingerprint}/',
+            'assetBase': '/imported/demo/',
             'source': {'config': digest(self.config)},
             'manifest': {'id': 'demo', 'name': 'Demo', 'author': '', 'blurb': '',
                          'dependency': {'type': 'other', 'prefix': ''}, 'cards': 'cards.json'},
@@ -150,9 +150,6 @@ class BundleContractTests(unittest.TestCase):
         previous = copy.deepcopy(self.bundle)
         if not same_fingerprint:
             previous['fingerprint'] = 'b' * 64
-            previous['assetBase'] = f'/imported/demo/{previous["fingerprint"]}/'
-            previous['data']['cards'][0]['image'] = previous['assetBase'] + 'images/cards/Strike.png'
-            previous['cardThumbnails']['Strike'] = previous['assetBase'] + 'images/thumbnails/Strike.webp'
             previous['contentSha256'] = bundle_digest(previous)
         write_json(self.current, previous)
         self.previous_bytes = self.current.read_bytes()
@@ -194,16 +191,20 @@ class BundleContractTests(unittest.TestCase):
         self.assertEqual(mtimes, {name: (self.previous_assets / name).stat().st_mtime_ns
                                   for name in self.asset_bytes})
 
-    def test_force_different_bytes_at_same_fingerprint_preserves_published_assets(self):
+    def test_force_different_bytes_at_same_fingerprint_replaces_assets(self):
         self.prepare_publication()
+        changed = {}
         for name in self.asset_bytes:
             data = b'different force output: ' + name.encode()
+            changed[name] = data
             (self.staged_assets / name).write_bytes(data)
             self.bundle['assets'][name]['sha256'] = hashlib.sha256(data).hexdigest()
         self.bundle['contentSha256'] = bundle_digest(self.bundle)
-        with self.assertRaisesRegex(ValueError, 'different bundle content'):
-            self.publish()
-        self.assert_previous_unchanged()
+        self.assertIn('Validated demo', self.publish())
+        for name, data in changed.items():
+            self.assertEqual((self.public / self.bundle['assetBase'].lstrip('/') / name).read_bytes(), data)
+        self.assertEqual(json.loads(self.current.read_text())['contentSha256'], self.bundle['contentSha256'])
+        self.assertEqual(json.loads(self.snapshot.read_text())['contentSha256'], self.bundle['contentSha256'])
 
     def test_candidate_validation_failure_never_touches_published_resources(self):
         self.prepare_publication()
@@ -212,16 +213,18 @@ class BundleContractTests(unittest.TestCase):
             self.publish()
         self.assert_previous_unchanged()
 
-    def test_existing_resources_cannot_be_repaired_without_matching_history(self):
+    def test_existing_resources_are_replaced_without_matching_history(self):
         self.prepare_publication(same_fingerprint=False)
-        existing = self.public / self.bundle['assetBase'].lstrip('/') / 'images/cards/Strike.png'
-        existing.parent.mkdir(parents=True)
+        fixed = self.public / self.bundle['assetBase'].lstrip('/')
+        existing = fixed / 'images/cards/Strike.png'
+        existing.parent.mkdir(parents=True, exist_ok=True)
         existing.write_bytes(b'unproven existing art')
-        with self.assertRaisesRegex(ValueError, 'matching verified published bundle'):
-            self.publish()
-        self.assert_previous_unchanged()
-        self.assertEqual(existing.read_bytes(), b'unproven existing art')
-        self.assertFalse((self.output / 'snapshots' / f'{self.fingerprint}.json').exists())
+        self.assertIn('Validated demo', self.publish())
+        for name, data in self.asset_bytes.items():
+            self.assertEqual((fixed / name).read_bytes(), data)
+        self.assertEqual(json.loads(self.current.read_text())['fingerprint'], self.fingerprint)
+        self.assertTrue((self.output / 'snapshots' / f'{self.fingerprint}.json').is_file())
+        self.assertEqual(self.snapshot.read_bytes(), self.previous_bytes)
 
     def test_changed_input_before_publication_preserves_bundle_art_and_thumbnail(self):
         self.prepare_publication()
@@ -284,9 +287,13 @@ class BundleContractTests(unittest.TestCase):
             self.publish()
         self.assert_previous_unchanged(state)
 
-    def test_new_generation_rename_is_rolled_back_if_bundle_commit_fails(self):
+    def test_asset_sync_rolls_back_when_bundle_commit_fails(self):
         self.prepare_publication(same_fingerprint=False)
-        new_assets = self.public / self.bundle['assetBase'].lstrip('/')
+        fixed = self.public / self.bundle['assetBase'].lstrip('/')
+        changed = b'new generation art'
+        (self.staged_assets / 'images/cards/Strike.png').write_bytes(changed)
+        self.bundle['assets']['images/cards/Strike.png']['sha256'] = hashlib.sha256(changed).hexdigest()
+        self.bundle['contentSha256'] = bundle_digest(self.bundle)
         replace = os.replace
         def fail_commit(source, target):
             if Path(target) == self.current:
@@ -295,19 +302,19 @@ class BundleContractTests(unittest.TestCase):
         with patch('import_build.os.replace', side_effect=fail_commit), self.assertRaisesRegex(OSError, 'commit failure'):
             self.publish()
         self.assert_previous_unchanged()
-        self.assertFalse(new_assets.exists())
+        self.assertEqual((fixed / 'images/cards/Strike.png').read_bytes(),
+                         self.asset_bytes['images/cards/Strike.png'])
         self.assertFalse((self.output / 'snapshots' / f'{self.fingerprint}.json').exists())
-        self.assertTrue(self.staged_assets.is_dir())
 
-    def test_new_generation_publishes_assets_before_bundle_and_preserves_old_snapshot(self):
+    def test_fixed_asset_directory_is_updated_for_a_new_fingerprint(self):
         self.prepare_publication(same_fingerprint=False)
         self.assertIn('Validated demo', self.publish())
         self.assertEqual(json.loads(self.current.read_text())['fingerprint'], self.fingerprint)
         self.assertEqual(self.snapshot.read_bytes(), self.previous_bytes)
+        fixed = self.public / self.bundle['assetBase'].lstrip('/')
         for name, data in self.asset_bytes.items():
-            self.assertEqual((self.previous_assets / name).read_bytes(), data)
-            self.assertEqual((self.public / self.bundle['assetBase'].lstrip('/') / name).read_bytes(), data)
-        self.assertFalse(self.staged_assets.exists())
+            self.assertEqual((fixed / name).read_bytes(), data)
+        self.assertTrue((self.output / 'snapshots' / f'{self.fingerprint}.json').is_file())
 
     def test_node_digest_handles_exponents_numeric_keys_unicode_and_negative_zero(self):
         # This is Node's canonical JSON, not Python's JSON formatting/order.

@@ -28,7 +28,7 @@ export function validateBundle(value: unknown, id: string): ImportedBundle {
 	const bundle = value as ImportedBundle;
 	if (!bundle || bundle.schemaVersion !== 1 || bundle.id !== id ||
 		!/^[-a-z0-9]+$/.test(id) || !/^[a-f0-9]{64}$/.test(bundle.fingerprint) ||
-		bundle.assetBase !== `/imported/${id}/${bundle.fingerprint}/` || bundle.manifest?.id !== id || !isManifest(bundle.manifest) ||
+		bundle.assetBase !== `/imported/${id}/` || bundle.manifest?.id !== id || !isManifest(bundle.manifest) ||
 		!bundle.data || !bundle.localization || !bundle.assets) {
 		throw new Error(`Invalid normalized mod bundle: ${id}`);
 	}

@@ -13,14 +13,14 @@ describe('shared game template evaluator', () => {
 		expect(nodes.at(-1)).toMatchObject({ type: 'variable', name: 'IfUpgraded' })
 		expect(resolveGameTemplate(real['FGO_CARD_WISDOM_OF_THE_PEOPLE.description'], {
 			variables: { Heal: 20, Np: 30 }
-		})).toBe('恢复20点生命。\n[gold]消耗[/gold]你所有的状态牌。')
+		})).toBe('恢复20点生命。\n移除所有负面状态。')
 	})
 
 	it('evaluates selected nested branches and distinguishes upgrade from preview', () => {
 		const text = real['FGO_CARD_WISDOM_OF_THE_PEOPLE.description']
 		const variables = { Heal: 20, Np: 30 }
 		expect(resolveGameTemplate(text, { variables, upgraded: true, upgradeDisplay: 'upgraded' }))
-			.toBe('恢复20点生命。\n[gold]消耗[/gold]你所有的状态牌。\n获得30%[gold]宝具值[/gold]')
+			.toBe('恢复20点生命。\n移除所有负面状态。\n获得30%[gold]宝具值[/gold]')
 		expect(resolveGameTemplate(text, { variables, upgraded: true }))
 			.toContain('[green]\n获得30%[gold]宝具值[/gold][/green]')
 	})

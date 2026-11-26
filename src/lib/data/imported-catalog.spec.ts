@@ -13,7 +13,7 @@ describe('real imported catalog integration', () => {
 		for (const [pool, oldAssets] of Object.entries(legacy.cardPool) as [string, { cardFrame: Record<string, string> }][]) {
 			const assets = CHARACTER_ASSETS[pool];
 			expect(options.find((option) => option.id === pool)?.image, pool).toBe(assets.char);
-			expect(assets.char).toMatch(/^\/imported\/fgo\/[a-f0-9]{64}\//);
+			expect(assets.char).toMatch(/^\/imported\/fgo\//);
 			expect(Object.keys(assets.cardFrame ?? {}).sort(), pool).toEqual(Object.keys(oldAssets.cardFrame).sort());
 			for (const [type, oldPath] of Object.entries(oldAssets.cardFrame)) {
 				expect(assets.cardFrame?.[type as CardType]).toBe(bundle.assetBase + oldPath.replace(/\.png$/, '.webp'));
@@ -35,7 +35,7 @@ describe('real imported catalog integration', () => {
 		const strike = CARDS.find((card) => card.mod === 'fgo' && card.id === 'Strike')!;
 		expect(strike.variables?.Damage).toBe(6);
 		expect(strike.upgrade?.variables?.Damage).toBe(9);
-		expect(strike.image).toMatch(/^\/imported\/fgo\/[a-f0-9]{64}\//);
+		expect(strike.image).toMatch(/^\/imported\/fgo\//);
 		expect(strike.thumb).toMatch(/\.webp$/);
 	});
 });

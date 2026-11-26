@@ -10,13 +10,13 @@
 | 提取证据 | `.cache/mod-import/{mod}/{fingerprint}/` | PCK 索引、反编译 C#、诊断、标准化快照 |
 | 标准化数据 | `generated/mods/{mod}/bundle.json` | 实体、变量、升级、关联、本地化、资源引用和来源哈希 |
 | 历史快照 | `generated/mods/{mod}/snapshots/` | 保留每次成功导入，便于比较或恢复 |
-| Web 资源 | `static/imported/{mod}/{fingerprint}/images/` | 从 PCK 解码的图片，按内容输入版本隔离 |
+| Web 资源 | `static/imported/{mod}/images/` | 从 PCK 解码的图片，固定路径原地更新 |
 | 展示配置 | `content/mods/{mod}.json` | 程序集名、PCK 根路径、Wiki 配色与卡池展示 |
 | Wiki 正文 | 内容模块 / Postgres Wiki 章节与版本 | 编辑、审核、历史与来源同步，不由游戏数据导入器覆盖 |
 
 `virtual:mods` 在构建时消费标准化 bundle。兼容现有公共实体 ID 的逻辑文件键不代表实际读取 `static/mods/{mod}`；已配置构建导入的 Mod 会完全跳过该手工目录。原版游戏的现有离线数据仍由独立适配器读取，未假称本次重建了完整原版数据集。
 
-Vercel 构建不接触原始 DLL/PCK；仓库提交当前 `generated/mods/{mod}/bundle.json` 及其 `assetBase` 指向的 `static/imported/{mod}/{fingerprint}/` 资源目录。原版数据 `static/mods/sts2/` 也完整提交：构建从其 manifest 读取角色配色、能量图标与卡框配置，线上静态资源同样来自该目录。线上图片统一用 WebP；重新导入后先运行 `python scripts/convert_mod_images_to_webp.py --quality 90` 把新 PNG 转成 WebP 并改写 bundle URL、资源哈希与指纹，再把新指纹目录和 bundle 一起提交，并移除不再引用的旧指纹目录，否则构建会因校验失败而中止。
+Vercel 构建不接触原始 DLL/PCK；仓库提交当前 `generated/mods/{mod}/bundle.json` 及其固定资源目录 `static/imported/{mod}/images/`。原版数据 `static/mods/sts2/` 也完整提交：构建从其 manifest 读取角色配色、能量图标与卡框配置，线上静态资源同样来自该目录。线上图片统一用 WebP；重新导入后先运行 `python scripts/convert_mod_images_to_webp.py --quality 90` 把新 PNG 转成 WebP、改写 bundle URL 与资源哈希，并把 PNG 移出仓库。脚本同时改写原版 JSON 里指向 Mod 图片的旧 `.png` 引用，且可重复运行（已有 WebP 参与映射），因此也能修复历史遗留引用；站点级 `/images/...` 不属于 Mod 资源树，保持原样。资源路径固定，发布时逐文件同步并删除本次不再引用的图片；bundle 与图片一起提交，构建会核验二者一致。
 
 ## 运行
 
@@ -49,26 +49,26 @@ pnpm build
 
 2026-11-13 核对实际发布产物：`Fgo.dll` SHA-256 为 `9b4859d66aca6eef15d935d6b811fa6e2c2a4002ca306f3c0dc3eb899bd83fe6`，`Fgo.pck` 为 `a7a6006d4b0f77783601edb56a4f89340b06a949f78eb4d50963779fc84f7f7d`。反编译的 `NobleCardModel` 具有 `[RegisterCard(typeof(NobleCardPool), Inherit = true)]` 与 `Pool => ModelDb.CardPool<NobleCardPool>()`，`NobleCardPool.EnergyColorName => "noble"` 且 `IsColorless => false`。现有解析器已导出 46 张 `pool=noble`、`poolRef=NobleCardPool` 的卡牌，无需新增 `color` 字段或修改池分类逻辑；回归测试保留这些实际声明。
 
-PCK 通过 `.import` 指向 `.ctex`，对应导入路径为 `images/charui/character_icon_{fgo,noble}.png`、`images/ui/energy_{fgo,noble}_big.png`、共享的 `images/ui/energy_fgo.png` 和 `images/card_frames/card_frame_{attack,skill,power}.png`。`localization/zhs/characters.json` 的 `FGO_CHARACTER_FGO_CHARACTER.title` 为“御主”；`localization/{eng,zhs}/gameplay_ui.json` 的 `FGO_GAMEPLAY_UI_POOL_NOBLE` 分别为“Noble Phantasm”和“宝具”。所有配置图片须存在于本次 PCK 提取结果，再转换为当前指纹下的 `/imported/...` URL；转换须保留 labels、配色和空卡框对象。
+PCK 通过 `.import` 指向 `.ctex`，对应导入路径为 `images/charui/character_icon_{fgo,noble}.png`、`images/ui/energy_{fgo,noble}_big.png`、共享的 `images/ui/energy_fgo.png` 和 `images/card_frames/card_frame_{attack,skill,power}.png`。`localization/zhs/characters.json` 的 `FGO_CHARACTER_FGO_CHARACTER.title` 为“御主”；`localization/{eng,zhs}/gameplay_ui.json` 的 `FGO_GAMEPLAY_UI_POOL_NOBLE` 分别为“Noble Phantasm”和“宝具”。所有配置图片须存在于本次 PCK 提取结果，再转换为固定目录下的 `/imported/fgo/images/...` URL；转换须保留 labels、配色和空卡框对象。
 
 ## 校验与增量
 
-指纹包含原始产物、游戏 PCK、引用程序集、解析器代码、Node 校验合同及其依赖、工具版本及配置的 SHA-256。输入相同且当前校验器确认 bundle 与资源完整时跳过；输入变化时生成新快照。Node 是 JSON 摘要的唯一实现，拒绝不安全整数与非有限数值。发布前再次核对输入，处理中发生变化则失败，不替换当前已发布 bundle，也不更新数据库。Python 发布前调用站点共享的 TypeScript 字段校验器；构建再次核验配置、摘要和磁盘资源，禁止损坏或过期内容静默进入站点。
+指纹包含原始产物、游戏 PCK、引用程序集、解析器代码、Node 校验合同及其依赖、工具版本及配置的 SHA-256。输入相同且当前校验器确认 bundle 与资源完整时跳过；输入变化时重新导入并覆盖固定资源目录。Node 是 JSON 摘要的唯一实现，拒绝不安全整数与非有限数值。发布前再次核对输入，处理中发生变化则失败，不替换当前已发布 bundle，也不更新数据库。Python 发布前调用站点共享的 TypeScript 字段校验器；构建再次核验配置、摘要和磁盘资源，禁止损坏或过期内容静默进入站点。
 
 PCK 读取器支持独立 Godot v2/v3 包，校验边界、路径、重复条目及读取文件的 MD5。加密、稀疏包、删除条目和未支持的纹理编码明确失败。当前 FGO 使用的 `CompressedTexture2D` WebP 数据按 Godot 格式解析首个 mip，再输出 PNG；同名 PNG/WebP 源保留为不同输出，不覆盖。
 
-每次解析使用独立临时资源树，通过校验后才发布资源并切换 bundle 指针。同一指纹的健康资源不重写；修复损坏资源前要求与已发布快照内容一致，发布失败会恢复原有字节。`.publish.lock` 防止两个进程同时发布；异常中止留下锁时，先确认没有导入进程运行，再移除该锁后重试。
+每次解析使用独立临时资源树，通过校验后才同步到固定资源目录并切换 bundle。内容相同的文件不重写；替换与新增逐文件原子完成，提交失败会恢复原有字节。bundle 提交成功后才删除本次不再引用的图片，清理失败只会留下冗余文件，由下次导入重试。`.publish.lock` 防止两个进程同时发布；异常中止留下锁时，先确认没有导入进程运行，再移除该锁后重试。
 
 C# 提取是静态分析。运行时战斗状态、随机结果及无法静态求值的表达式不能伪装成已验证常量。请查看每次的 `diagnostics.json`；新增语法应先添加真实反编译样例测试，再扩展解析器。游戏描述保持原始模板，变量保持原始数值，例如倍率 `1.25`，由共享文本求值层负责显示。
 
 完整模型保存在 `catalog`，可显示模型保存在 `data`。缺少真实基础语言文本的模型进入 `quarantined`，不会伪造译文或丢弃原始声明。`sourceLocalization` 保留 PCK 原表；继承的标题/描述由代码中的 `localizationRefs` 决定，规范化投影与原表独立。外部模型关系对照实际游戏 DLL 的类型表验证，资源通过 `.import`/`.remap` 追踪。运行时投影不携带反编译正文、诊断或所有来源证据，减少客户端下载量。
 
-2026-11-13 本地实测 FGO：171 张卡牌、12 遗物、4 药水、69 能力模型、1 角色；426 图片和 171 缩略图。`DefDownPower`、`PeerlessStrikePower` 缺翻译，隐藏模型 `ImaginarySpacePower` 也无对应翻译；三者完整保留但不公开到实体列表。47 个运行时费用覆盖与 17 个计算变量保留表达式，展示静态基础值，不能等同于战斗模拟。3 个自定义关键词保留关系引用。
+2026-11-26 本地实测 FGO 0.9.1：173 张卡牌、12 遗物、4 药水、69 能力模型、1 角色；601 张图片与对应缩略图。`DefDownPower`、`PeerlessStrikePower` 缺翻译，隐藏模型 `ImaginarySpacePower` 也无对应翻译；三者完整保留但不公开到实体列表。47 个运行时费用覆盖与 17 个计算变量保留表达式，展示静态基础值，不能等同于战斗模拟。3 个自定义关键词保留关系引用。
 
 `maxUpgradeLevel`、`upgradeLevels` 和 `upgradeMetadata` 保存多级升级和验证状态；`upgrade` 保持首次升级投影供当前基础/升级切换使用。当前 DLL 共 310 个已验证升级级别，其中 47 张卡可升四级。按语句顺序执行明确的变量/费用变化与 `base.OnUpgrade()`，未知控制流使导入失败。`FifthForce` 对现有战斗 power 的修改另存 runtime effect，不重复计入卡牌变量。`refs` 的 `relationKind=declaration-reference` 与来源表示声明引用，包含继承类，不能直接解释为“这张卡施加该能力”。
 
 ## 内容安全与回退
 
-原有 `static/mods` 文件没有被删除。导入器不写社区数据库、不重新生成已应用迁移、不清空评论或修订历史。恢复某个导入版本时，先核实对应 `snapshots/{fingerprint}.json` 与资源完整，再将其作为当前 bundle；社区记录不随游戏数据回退。
+原有 `static/mods` 文件没有被删除。导入器不写社区数据库、不重新生成已应用迁移、不清空评论或修订历史。资源路径固定，回退某个导入版本时用 git 恢复对应 bundle 与 `static/imported/{mod}/images/` 提交；`snapshots/{fingerprint}.json` 仅作审计参考。社区记录不随游戏数据回退。
 
 `pnpm mod:extract-source` 只保留为开发交叉验证工具。站点不把它的 FGO 输出作为构建产物导入后的事实来源。

@@ -18,10 +18,10 @@ describe('text rendering in the browser', () => {
 			text: real['FGO_CARD_WISDOM_OF_THE_PEOPLE.description'],
 			options: { variables: { Heal: 20, Np: 30 }, matchEntities: false }
 		})
-		expect(document.querySelector('.game-text')?.textContent).toBe('恢复20点生命。\n消耗你所有的状态牌。')
+		expect(document.querySelector('.game-text')?.textContent).toBe('恢复20点生命。\n移除所有负面状态。')
 		expect(document.querySelector('[data-variable="IfUpgraded"]')?.textContent).toBe('')
 		await view.rerender({ options: { upgraded: true, variables: { Heal: 20, Np: 30 }, matchEntities: false } })
-		expect(view.container.textContent).toBe('恢复20点生命。\n消耗你所有的状态牌。\n获得30%宝具值')
+		expect(view.container.textContent).toBe('恢复20点生命。\n移除所有负面状态。\n获得30%宝具值')
 	})
 
 	it('renders selected branch styling, exact visible text and compact energy output', async () => {

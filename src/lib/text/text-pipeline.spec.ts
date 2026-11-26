@@ -39,7 +39,7 @@ describe('real GameText templates', () => {
 		const rendered = visible(parseGameText(real['FGO_CARD_WISDOM_OF_THE_PEOPLE.description'], {
 			upgraded, variables: { Heal: 20, Np: 30 }
 		}))
-		expect(rendered).toBe(`恢复20点生命。\n消耗你所有的状态牌。${upgraded ? '\n获得30%宝具值' : ''}`)
+		expect(rendered).toBe(`恢复20点生命。\n移除所有负面状态。${upgraded ? '\n获得30%宝具值' : ''}`)
 		expect(rendered).not.toMatch(/[{}|]/)
 	})
 

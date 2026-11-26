@@ -3,9 +3,9 @@ import { contentDigest, importedModuleFiles, validateBundle, type ImportedBundle
 
 function fixture(): ImportedBundle {
 	const fingerprint = 'a'.repeat(64);
-	return { schemaVersion: 1, id: 'demo', fingerprint, assetBase: `/imported/demo/${fingerprint}/`,
+	return { schemaVersion: 1, id: 'demo', fingerprint, assetBase: '/imported/demo/',
 		manifest: { id: 'demo', name: 'Demo', author: '', blurb: '', dependency: { type: 'other', prefix: '' }, cards: 'cards.json' },
-		data: { cards: [{ id: 'Strike', pool: ['demo'], type: 'attack', rarity: 'basic', cost: 1, keywords: [], image: `/imported/demo/${fingerprint}/images/cards/Strike.png` }] },
+		data: { cards: [{ id: 'Strike', pool: ['demo'], type: 'attack', rarity: 'basic', cost: 1, keywords: [], image: '/imported/demo/images/cards/Strike.png' }] },
 		localization: { 'localization/eng/cards.json': { 'STRIKE.title': 'Strike', 'STRIKE.description': 'Deal damage.' } },
 		assets: {
 			'images/ui/energy.png': { resource: 'res://.godot/imported/energy.ctex', sha256: 'b'.repeat(64) },
