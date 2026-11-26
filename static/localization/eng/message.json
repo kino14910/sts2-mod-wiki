@@ -206,6 +206,7 @@
 	"comments_title": "Comments",
 	"comments_count": "{count} comments",
 	"comments_author_label": "Your name",
+	"comments_signed_in_as": "Commenting as {name}",
 	"comments_placeholder": "Share your thoughts…",
 	"comments_submit": "Post comment",
 	"comments_reply": "Reply",

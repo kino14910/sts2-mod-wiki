@@ -23,6 +23,14 @@
 	let authBusy = $state(false)
 	let authError = $state('')
 	let authNotice = $state('')
+	let passwordOpen = $state(false)
+	let passwordBusy = $state(false)
+	let currentPassword = $state('')
+	let newPassword = $state('')
+	let confirmPassword = $state('')
+	let usernameOpen = $state(false)
+	let usernameBusy = $state(false)
+	let newUsername = $state('')
 	let ui = $derived(wikiUi(getLocale()))
 	let currentViewer: WikiViewer = $derived(viewer ?? page.data.viewer ?? anonymousViewer)
 	let session = $derived(currentViewer.session)
@@ -75,12 +83,18 @@
 
 	function closeAccount() {
 		accountOpen = false
+		resetPasswordForm()
+		resetUsernameForm()
 		focusAccountButton()
 	}
 
 	function validateCredentials(requireInvite: boolean) {
 		if (!isAllowedEmail(email)) { authError = ui.emailInvalid; return false }
 		if (password.length < 8) { authError = ui.passwordShort; return false }
+		if (requireInvite && (username.trim().length < 2 || username.trim().length > 32)) {
+			authError = ui.usernameInvalid
+			return false
+		}
 		if (requireInvite && !inviteCode.trim()) { authError = ui.inviteInvalid; return false }
 		return true
 	}
@@ -90,6 +104,95 @@
 		if (signingIn && response.status === 429) return ui.authRateLimited
 		const result = await response.json().catch(() => null) as { message?: unknown } | null
 		return typeof result?.message === 'string' && result.message.trim() ? result.message : ui.error
+	}
+
+	function resetPasswordForm() {
+		passwordOpen = false
+		passwordBusy = false
+		currentPassword = ''
+		newPassword = ''
+		confirmPassword = ''
+	}
+
+	function togglePasswordForm() {
+		passwordOpen = !passwordOpen
+		usernameOpen = false
+		currentPassword = ''
+		newPassword = ''
+		confirmPassword = ''
+		authError = ''
+		authNotice = ''
+	}
+
+	function resetUsernameForm() {
+		usernameOpen = false
+		usernameBusy = false
+		newUsername = ''
+	}
+
+	function toggleUsernameForm() {
+		usernameOpen = !usernameOpen
+		passwordOpen = false
+		newUsername = session?.username ?? ''
+		authError = ''
+		authNotice = ''
+	}
+
+	async function submitUsernameChange(event: SubmitEvent) {
+		event.preventDefault()
+		if (usernameBusy) return
+		authError = ''
+		authNotice = ''
+		const next = newUsername.replace(/\s+/g, ' ').trim()
+		if (next.length < 2 || next.length > 32) { authError = ui.usernameInvalid; return }
+		usernameBusy = true
+		try {
+			const response = await fetch(resolve('/api/auth/username'), {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ username: next })
+			})
+			if (!response.ok) {
+				authError = response.status === 409 ? ui.usernameTaken : await responseError(response)
+				return
+			}
+			const result = await response.json() as { username?: unknown }
+			if (typeof result.username !== 'string') { authError = ui.error; return }
+			commitViewer({
+				...currentViewer,
+				session: session ? { ...session, username: result.username } : null
+			})
+			resetUsernameForm()
+			authNotice = ui.usernameChanged
+			await refreshPermissions()
+		} catch { authError = ui.error }
+		finally { usernameBusy = false }
+	}
+
+	async function submitPasswordChange(event: SubmitEvent) {
+		event.preventDefault()
+		if (passwordBusy) return
+		authError = ''
+		authNotice = ''
+		if (newPassword.length < 8) { authError = ui.passwordShort; return }
+		if (newPassword !== confirmPassword) { authError = ui.passwordMismatch; return }
+		passwordBusy = true
+		try {
+			const response = await fetch(resolve('/api/auth/password'), {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ currentPassword, newPassword })
+			})
+			if (!response.ok) {
+				authError = response.status === 401 ? ui.passwordWrong
+					: response.status === 429 ? ui.authRateLimited
+					: await responseError(response)
+				return
+			}
+			resetPasswordForm()
+			authNotice = ui.passwordChanged
+		} catch { authError = ui.error }
+		finally { passwordBusy = false }
 	}
 
 	async function submitCredentials(event: SubmitEvent) {
@@ -122,6 +225,8 @@
 			password = ''
 			username = ''
 			inviteCode = ''
+			resetPasswordForm()
+			resetUsernameForm()
 			// Return focus to the trigger if the focused form control is being removed.
 			if (accountOpen && (form.contains(document.activeElement) || document.activeElement === document.body)) {
 				focusAccountButton()
@@ -149,6 +254,8 @@
 			password = ''
 			username = ''
 			inviteCode = ''
+			resetPasswordForm()
+			resetUsernameForm()
 			if (accountOpen && (document.activeElement === document.body || document.activeElement === button)) focusAccountButton()
 			if (await refreshPermissions() && accountOpen) closeAccount()
 		} catch { authError = ui.error }
@@ -245,11 +352,37 @@
 					<div class="space-y-3">
 						{#if session}
 							<p class="break-words text-sm">{session.username}</p>
-							<button class="text-sm text-link" type="button" disabled={authBusy} onclick={signOut}>{ui.signOut}</button>
+							<div class="flex flex-wrap items-center gap-3 text-sm">
+								<button class="text-link" type="button" disabled={usernameBusy} onclick={toggleUsernameForm}>{ui.changeUsername}</button>
+								<button class="text-link" type="button" disabled={passwordBusy} onclick={togglePasswordForm}>{ui.changePassword}</button>
+								<button class="text-link" type="button" disabled={authBusy || passwordBusy || usernameBusy} onclick={signOut}>{ui.signOut}</button>
+							</div>
+							{#if usernameOpen}
+								<form class="space-y-2" onsubmit={submitUsernameChange}>
+									<label class="block text-xs">{ui.username}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="newUsername" bind:value={newUsername} required minlength="2" maxlength="32" autocomplete="nickname" /></label>
+									<p class="text-xs text-muted">{ui.usernameHint}</p>
+									<div class="flex items-center gap-3">
+										<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={usernameBusy}>{ui.changeUsername}</button>
+										<button type="button" class="text-xs text-link" onclick={toggleUsernameForm}>{ui.cancel}</button>
+									</div>
+								</form>
+							{/if}
+							{#if passwordOpen}
+								<form class="space-y-2" onsubmit={submitPasswordChange}>
+									<label class="block text-xs">{ui.currentPassword}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="currentPassword" type="password" bind:value={currentPassword} required maxlength="128" autocomplete="current-password" /></label>
+									<label class="block text-xs">{ui.newPassword}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="newPassword" type="password" bind:value={newPassword} required minlength="8" maxlength="128" autocomplete="new-password" /></label>
+									<label class="block text-xs">{ui.confirmPassword}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="confirmPassword" type="password" bind:value={confirmPassword} required minlength="8" maxlength="128" autocomplete="new-password" /></label>
+									<div class="flex items-center gap-3">
+										<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={passwordBusy}>{ui.changePassword}</button>
+										<button type="button" class="text-xs text-link" onclick={togglePasswordForm}>{ui.cancel}</button>
+									</div>
+								</form>
+							{/if}
 						{:else}
 							<form class="space-y-3" onsubmit={submitCredentials}>
 								{#if authMode === 'register'}
-									<label class="block text-xs">{ui.username}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="username" bind:value={username} maxlength="64" autocomplete="nickname" /></label>
+									<label class="block text-xs">{ui.username}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="username" bind:value={username} required minlength="2" maxlength="32" autocomplete="nickname" /></label>
+									<p class="text-xs text-muted">{ui.usernameHint}</p>
 								{/if}
 								<label class="block text-xs">{ui.qqEmail}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="email" type="email" bind:value={email} required maxlength="64" pattern="[^@\s]+@[qQ][qQ]\.com" title={ui.emailHint} autocomplete="email" /></label>
 								<p class="text-xs text-muted">{ui.emailHint}</p>

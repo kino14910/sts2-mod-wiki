@@ -12,6 +12,8 @@ export const MAX_COMMENT_PAGE_SIZE = 50
 
 export interface CommentAuthor {
 	name: string
+	/** Account avatar for signed-in comments; anonymous comments have no avatar. */
+	avatarUrl: string | null
 }
 
 export interface CommentView {

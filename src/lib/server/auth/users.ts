@@ -55,6 +55,20 @@ export async function findUserBySubject(
 	return toSession(await findUserRowBySubject(db, subject))
 }
 
+export async function findUserRowById(db: WikiDatabase, userId: string): Promise<UserRow | null> {
+	return db
+		.prepare(`SELECT ${USER_COLUMNS} FROM users WHERE id = ? LIMIT 1`)
+		.bind(userId)
+		.first<UserRow>()
+}
+
+export async function findUserRowByUsername(db: WikiDatabase, username: string): Promise<UserRow | null> {
+	return db
+		.prepare(`SELECT ${USER_COLUMNS} FROM users WHERE username = ? LIMIT 1`)
+		.bind(username)
+		.first<UserRow>()
+}
+
 /** Local development login only. Resolves existing accounts; registration always requires an invite. */
 export async function ensureDevUser(db: WikiDatabase, subject: string): Promise<AuthSession | null> {
 	if (!isAllowedEmail(subject)) return null

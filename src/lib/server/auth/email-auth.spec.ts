@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { sqliteDb, seedSection } from '#lib/server/wiki/testing/sqlite-db'
-import { loginWithEmail, registerWithEmail } from './email-auth'
+import { changePassword, changeUsername, loginWithEmail, registerWithEmail } from './email-auth'
 import { createInvites, revokeInvite } from './invites'
 import { readSessionCookie, verifySession } from './cookie-session'
 
@@ -23,7 +23,7 @@ async function newInvite(db: DB, input: Record<string, unknown> = {}, now = Date
 	return invites[0]
 }
 
-function registration(inviteCode: string, email = 'alice@qq.com', password = 'password123', username?: string) {
+function registration(inviteCode: string, email = 'alice@qq.com', password = 'password123', username = email.slice(0, email.indexOf('@'))) {
 	return { email, password, username, inviteCode }
 }
 
@@ -31,18 +31,18 @@ describe('invite-only registration', () => {
 	it('rejects invalid credentials before consuming an invitation', async () => {
 		const c = setup()
 		for (const input of [
-			{ email: 'alice@example.com', password: 'password123', inviteCode: 'X' },
-			{ email: 'alice@vip.qq.com', password: 'password123', inviteCode: 'X' },
-			{ email: 'alice@qq.com', password: 'short', inviteCode: 'X' },
-			{ email: 'alice@qq.com', password: 12345, inviteCode: 'X' }
+			{ email: 'alice@example.com', password: 'password123', username: 'Alice', inviteCode: 'X' },
+			{ email: 'alice@vip.qq.com', password: 'password123', username: 'Alice', inviteCode: 'X' },
+			{ email: 'alice@qq.com', password: 'short', username: 'Alice', inviteCode: 'X' },
+			{ email: 'alice@qq.com', password: 12345, username: 'Alice', inviteCode: 'X' }
 		]) await expect(registerWithEmail(c.db, secret, input)).rejects.toMatchObject({ status: 400 })
 		expect(c.sql.prepare("SELECT COUNT(*) AS count FROM users WHERE auth_subject='alice@qq.com'").get()).toEqual({ count: 0 })
 	})
 
-	it('requires a valid invitation code and defaults to the user role', async () => {
+	it('requires a valid invitation code and stores the chosen username', async () => {
 		const c = setup()
 		const invite = await newInvite(c.db)
-		await expect(registerWithEmail(c.db, secret, { email: 'alice@qq.com', password: 'password123' }))
+		await expect(registerWithEmail(c.db, secret, { email: 'alice@qq.com', password: 'password123', username: 'Alice' }))
 			.rejects.toMatchObject({ code: 'INVITE_REQUIRED' })
 		await expect(registerWithEmail(c.db, secret, registration('INVALIDINVALIDINVALID')))
 			.rejects.toMatchObject({ code: 'INVALID_INVITE' })
@@ -54,6 +54,19 @@ describe('invite-only registration', () => {
 		}
 		expect(redemption.target_id).toBe(invite.id)
 		expect(redemption.email).toBe('alice@qq.com')
+	})
+
+	it('requires a unique 2-32 character username at registration', async () => {
+		const c = setup()
+		const invite = await newInvite(c.db, { maxUses: 3 })
+		for (const username of [undefined, '', 'A', 'A'.repeat(33), '<bob>']) {
+			await expect(registerWithEmail(c.db, secret, { ...registration(invite.code), username }))
+				.rejects.toMatchObject({ status: 400, code: 'BAD_USERNAME' })
+		}
+		await registerWithEmail(c.db, secret, registration(invite.code, 'alice@qq.com', 'password123', 'Alice'))
+		await expect(registerWithEmail(c.db, secret, registration(invite.code, 'bob@qq.com', 'password123', 'Alice')))
+			.rejects.toMatchObject({ status: 409, code: 'USERNAME_TAKEN' })
+		expect(c.sql.prepare('SELECT used_count FROM auth_invite_codes').get()).toEqual({ used_count: 1 })
 	})
 
 	it('stores only a password hash and issues a signed session cookie', async () => {
@@ -105,7 +118,7 @@ describe('invite-only registration', () => {
 		const invite = await newInvite(c.db)
 		await registerWithEmail(c.db, secret, registration(invite.code))
 		await expect(registerWithEmail(c.db, secret, {
-			email: 'alice@qq.com', password: 'password123', inviteCode: 'ANOTHERINVALIDCODE'
+			email: 'alice@qq.com', password: 'password123', username: 'Alice', inviteCode: 'ANOTHERINVALIDCODE'
 		})).rejects.toMatchObject({ code: 'EMAIL_TAKEN' })
 		expect(c.sql.prepare('SELECT used_count FROM auth_invite_codes').get()).toEqual({ used_count: 1 })
 		await expect(loginWithEmail(c.db, secret, { email: 'alice@qq.com', password: 'wrong-password' }))
@@ -117,6 +130,42 @@ describe('invite-only registration', () => {
 				.rejects.toMatchObject({ code: 'INVALID_INVITE' })
 		await expect(registerWithEmail(c.db, secret, registration('ANOTHERINVALIDCODE', 'flood@qq.com'), 'flood'))
 			.rejects.toMatchObject({ code: 'RATE_LIMITED' })
+	})
+
+	it('changes the password only when the current password matches', async () => {
+		const c = setup()
+		const invite = await newInvite(c.db)
+		await registerWithEmail(c.db, secret, registration(invite.code))
+		const userId = (c.sql.prepare("SELECT id FROM users WHERE auth_subject='alice@qq.com'").get() as { id: string }).id
+		await expect(changePassword(c.db, userId, { currentPassword: 'wrong-password', newPassword: 'newpassword123' }))
+			.rejects.toMatchObject({ status: 401, code: 'INVALID_PASSWORD' })
+		await expect(changePassword(c.db, userId, { currentPassword: 'password123', newPassword: 'short' }))
+			.rejects.toMatchObject({ status: 400 })
+		await changePassword(c.db, userId, { currentPassword: 'password123', newPassword: 'newpassword123' })
+		await expect(loginWithEmail(c.db, secret, { email: 'alice@qq.com', password: 'password123' }))
+			.rejects.toMatchObject({ status: 401 })
+		const result = await loginWithEmail(c.db, secret, { email: 'alice@qq.com', password: 'newpassword123' })
+		expect(result.session.username).toBe('alice')
+	})
+
+	it('changes the username and keeps existing comments in sync', async () => {
+		const c = setup()
+		const invite = await newInvite(c.db)
+		const registered = await registerWithEmail(c.db, secret, registration(invite.code, 'alice@qq.com', 'password123', 'Alice'))
+		const userId = registered.session.userId
+		c.sql.prepare(`INSERT INTO comments (id,target_type,target_id,author_name,author_user_id,author_token_hash,content)
+			VALUES (?,?,?,?,?,?,?)`).run('c1', 'card', 'Bash', 'Alice', userId, 'token-hash', 'hello')
+		c.sql.exec("INSERT INTO users (id,auth_subject,username) VALUES ('bob','bob@qq.com','Bob')")
+
+		await expect(changeUsername(c.db, userId, { username: 'A' })).rejects.toMatchObject({ status: 400 })
+		await expect(changeUsername(c.db, userId, { username: 'Bob' }))
+			.rejects.toMatchObject({ status: 409, code: 'USERNAME_TAKEN' })
+		await expect(changeUsername(c.db, userId, { username: '  Alice   Renamed  ' }))
+			.resolves.toEqual({ username: 'Alice Renamed' })
+		expect(c.sql.prepare('SELECT username FROM users WHERE id=?').get(userId)).toEqual({ username: 'Alice Renamed' })
+		expect(c.sql.prepare("SELECT author_name FROM comments WHERE id='c1'").get()).toEqual({ author_name: 'Alice Renamed' })
+		const login = await loginWithEmail(c.db, secret, { email: 'alice@qq.com', password: 'password123' })
+		expect(login.session.username).toBe('Alice Renamed')
 	})
 
 	it('refuses suspended accounts', async () => {

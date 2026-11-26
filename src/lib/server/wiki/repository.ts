@@ -25,7 +25,7 @@ const SOURCE_COLUMNS =
 const UPDATE_COLUMNS =
 	'id, source_id, section_id, base_content, current_content, incoming_content, base_hash, incoming_hash, incoming_mod_version, status, reviewed_by, review_note, created_at, reviewed_at, published_revision_id'
 const COMMENT_COLUMNS =
-	'id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content, status, created_at, updated_at'
+	'id, target_type, target_id, parent_id, author_name, author_user_id, author_avatar_url, author_token_hash, author_ip_hash, content, status, created_at, updated_at'
 
 export interface PageInsert {
 	id: string
@@ -509,8 +509,8 @@ export function createCommentStore(db: WikiDatabase): CommentStore {
 			// a separate rate check before any insert is visible.
 			const result = await db
 				.prepare(
-					`INSERT INTO comments (id, target_type, target_id, parent_id, author_name, author_token_hash, author_ip_hash, content)
-					SELECT ?, ?, ?, ?, ?, ?, ?, ?
+					`INSERT INTO comments (id, target_type, target_id, parent_id, author_name, author_user_id, author_avatar_url, author_token_hash, author_ip_hash, content)
+					SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 					WHERE (SELECT COUNT(*) FROM comments WHERE author_token_hash = ?
 					AND created_at >= strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-60 seconds')) < ?
 					AND (? IS NULL OR (SELECT COUNT(*) FROM comments WHERE author_ip_hash = ?
@@ -522,6 +522,8 @@ export function createCommentStore(db: WikiDatabase): CommentStore {
 					input.targetId,
 					input.parentId,
 					input.authorName,
+					input.authorUserId,
+					input.authorAvatarUrl,
 					input.authorTokenHash,
 					input.authorIpHash,
 					input.content,
@@ -532,24 +534,28 @@ export function createCommentStore(db: WikiDatabase): CommentStore {
 			if (!Number(result.meta?.changes ?? 0)) throw new CommentError(429, 'comment rate limit exceeded')
 		},
 
-		async updateContent(id: string, tokenHash: string, content: string, expected): Promise<number> {
+		async updateContent(id: string, owner, content: string, expected): Promise<number> {
 			const result = await db
 				.prepare(
 					`UPDATE comments SET content = ?, updated_at = CASE
 					WHEN strftime('%Y-%m-%dT%H:%M:%fZ', 'now') <= updated_at THEN strftime('%Y-%m-%dT%H:%M:%fZ', updated_at, '+0.001 seconds')
 					ELSE strftime('%Y-%m-%dT%H:%M:%fZ', 'now') END
-					WHERE id = ? AND author_token_hash = ? AND status = 'visible'
+					WHERE id = ? AND status = 'visible'
+					AND (author_token_hash = ? OR author_user_id = ?)
 					AND (? IS NULL OR (updated_at = ? AND content = ?))`
 				)
-				.bind(content, id, tokenHash, expected?.updatedAt ?? null, expected?.updatedAt ?? null, expected?.content ?? null)
+				.bind(content, id, owner.tokenHash, owner.userId,
+					expected?.updatedAt ?? null, expected?.updatedAt ?? null, expected?.content ?? null)
 				.run()
 			return Number(result.meta?.changes ?? 0)
 		},
 
-		async softDelete(id: string, tokenHash: string): Promise<number> {
+		async softDelete(id: string, owner): Promise<number> {
 			const results = await db.batch([
 				db.prepare(`UPDATE comments SET status = 'deleted', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
-					WHERE id = ? AND author_token_hash = ? AND status = 'visible'`).bind(id, tokenHash),
+					WHERE id = ? AND status = 'visible'
+					AND (author_token_hash = ? OR author_user_id = ?)`)
+					.bind(id, owner.tokenHash, owner.userId),
 				db.prepare(`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
 					SELECT ?, NULL, 'comment.delete', 'comment', id,
 					json_object('targetType', target_type, 'targetId', target_id, 'authorName', author_name)

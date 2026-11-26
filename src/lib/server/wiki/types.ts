@@ -86,6 +86,8 @@ export interface CommentRow {
 	target_id: string
 	parent_id: string | null
 	author_name: string
+	author_user_id: string | null
+	author_avatar_url: string | null
 	author_token_hash: string
 	author_ip_hash: string | null
 	content: string
@@ -100,9 +102,17 @@ export interface CommentInsert {
 	targetId: string
 	parentId: string | null
 	authorName: string
+	authorUserId: string | null
+	authorAvatarUrl: string | null
 	authorTokenHash: string
 	authorIpHash: string | null
 	content: string
+}
+
+/** Anonymous authors are proven by their browser token; signed-in authors by their account id. */
+export interface CommentOwner {
+	tokenHash: string
+	userId: string | null
 }
 
 export interface AuditLogInsert {
@@ -130,8 +140,8 @@ export interface CommentStore {
 	countRecentByToken(tokenHash: string, since: string): Promise<number>
 	countRecentByIp(ipHash: string, since: string): Promise<number>
 	insertComment(input: CommentInsert): Promise<void>
-	updateContent(id: string, tokenHash: string, content: string, expected?: { updatedAt: string; content: string }): Promise<number>
-	softDelete(id: string, tokenHash: string): Promise<number>
+	updateContent(id: string, owner: CommentOwner, content: string, expected?: { updatedAt: string; content: string }): Promise<number>
+	softDelete(id: string, owner: CommentOwner): Promise<number>
 	insertAuditLog(input: AuditLogInsert): Promise<void>
 }
 

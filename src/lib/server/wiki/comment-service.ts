@@ -95,6 +95,7 @@ function normalizeParentId(value: unknown): string | null {
 function toView(
 	row: CommentRow,
 	viewerTokenHash: string | null,
+	viewerUserId: string | null,
 	replies: CommentView[] = []
 ): CommentView {
 	const deleted = row.status === 'deleted'
@@ -105,13 +106,24 @@ function toView(
 		parentId: row.parent_id,
 		content: deleted ? '' : row.content,
 		status: row.status,
-		author: { name: row.author_name },
-		owned: viewerTokenHash !== null && row.author_token_hash === viewerTokenHash,
+		author: { name: row.author_name, avatarUrl: row.author_avatar_url },
+		owned: canModify(row, viewerTokenHash, viewerUserId),
 		edited: !deleted && row.updated_at !== row.created_at,
 		createdAt: row.created_at,
 		updatedAt: row.updated_at,
 		replies
 	}
+}
+
+function canModify(row: CommentRow, tokenHash: string | null, userId: string | null): boolean {
+	if (tokenHash !== null && row.author_token_hash === tokenHash) return true
+	return userId !== null && row.author_user_id === userId
+}
+
+/** Signed-in comments take their public identity from the account, never from the request body. */
+function accountAuthorName(username: string): string {
+	const name = username.replace(/\s+/g, ' ').trim()
+	return (name || 'Anonymous').slice(0, MAX_COMMENT_AUTHOR_NAME_LENGTH)
 }
 
 async function enforceRateLimit(
@@ -132,6 +144,7 @@ export interface ListCommentsInput {
 	page?: number
 	pageSize?: number
 	viewerToken?: string | null
+	viewerUserId?: string | null
 }
 
 export async function listComments(
@@ -142,6 +155,7 @@ export async function listComments(
 	const page = normalizePage(input.page)
 	const pageSize = normalizePageSize(input.pageSize)
 	const viewerTokenHash = await hashOptionalToken(input.viewerToken)
+	const viewerUserId = input.viewerUserId ?? null
 
 	const [rows, total] = await Promise.all([
 		store.listTopLevel({ targetType, targetId, limit: pageSize, offset: (page - 1) * pageSize }),
@@ -153,17 +167,23 @@ export async function listComments(
 	for (const reply of replies) {
 		if (!reply.parent_id) continue
 		const list = repliesByParent.get(reply.parent_id) ?? []
-		list.push(toView(reply, viewerTokenHash))
+		list.push(toView(reply, viewerTokenHash, viewerUserId))
 		repliesByParent.set(reply.parent_id, list)
 	}
 
 	return {
-		items: rows.map((row) => toView(row, viewerTokenHash, repliesByParent.get(row.id) ?? [])),
+		items: rows.map((row) => toView(row, viewerTokenHash, viewerUserId, repliesByParent.get(row.id) ?? [])),
 		page,
 		pageSize,
 		total,
 		hasMore: (page - 1) * pageSize + rows.length < total
 	}
+}
+
+export interface CommentViewer {
+	userId: string
+	username: string
+	avatarUrl: string | null
 }
 
 export interface CreateCommentInput {
@@ -174,6 +194,7 @@ export interface CreateCommentInput {
 	authorName: unknown
 	token: unknown
 	ip?: string | null
+	viewer?: CommentViewer | null
 }
 
 export async function createComment(
@@ -187,7 +208,10 @@ export async function createComment(
 			throw new CommentError(404, 'wiki section not found')
 	}
 	const content = normalizeCommentContent(input.content)
-	const authorName = normalizeCommentAuthorName(input.authorName)
+	const viewer = input.viewer ?? null
+	const authorName = viewer
+		? accountAuthorName(viewer.username)
+		: normalizeCommentAuthorName(input.authorName)
 	const tokenHash = await hashCommentToken(normalizeCommentToken(input.token))
 	const ipHash = input.ip ? await hashCommentToken(`ip:${input.ip}`) : null
 	const parentId = normalizeParentId(input.parentId)
@@ -212,6 +236,8 @@ export async function createComment(
 		targetId: target.targetId,
 		parentId,
 		authorName,
+		authorUserId: viewer?.userId ?? null,
+		authorAvatarUrl: viewer?.avatarUrl ?? null,
 		authorTokenHash: tokenHash,
 		authorIpHash: ipHash,
 		content
@@ -225,6 +251,8 @@ export async function createComment(
 			target_id: target.targetId,
 			parent_id: parentId,
 			author_name: authorName,
+			author_user_id: viewer?.userId ?? null,
+			author_avatar_url: viewer?.avatarUrl ?? null,
 			author_token_hash: tokenHash,
 			author_ip_hash: ipHash,
 			content,
@@ -232,7 +260,8 @@ export async function createComment(
 			created_at: now,
 			updated_at: now
 		},
-		tokenHash
+		tokenHash,
+		viewer?.userId ?? null
 	)
 }
 
@@ -241,6 +270,7 @@ export interface EditCommentInput {
 	token: unknown
 	content: unknown
 	updatedAt?: unknown
+	viewerUserId?: string | null
 }
 
 export async function editComment(
@@ -249,24 +279,26 @@ export async function editComment(
 ): Promise<CommentView> {
 	const tokenHash = await hashCommentToken(normalizeCommentToken(input.token))
 	const content = normalizeCommentContent(input.content)
+	const viewerUserId = input.viewerUserId ?? null
 	const existing = await store.findComment(input.commentId)
 	if (!existing) throw new CommentError(404, 'comment not found')
 	if (existing.status !== 'visible')
 		throw new CommentError(409, 'deleted comments cannot be edited')
-	if (existing.author_token_hash !== tokenHash) throw new CommentError(403, 'not your comment')
+	if (!canModify(existing, tokenHash, viewerUserId)) throw new CommentError(403, 'not your comment')
 	if (input.updatedAt !== undefined && input.updatedAt !== existing.updated_at)
 		throw new CommentError(409, 'comment changed since it was loaded, reload and retry')
 
-	const changes = await store.updateContent(existing.id, tokenHash, content, { updatedAt: existing.updated_at, content: existing.content })
+	const changes = await store.updateContent(existing.id, { tokenHash, userId: viewerUserId }, content, { updatedAt: existing.updated_at, content: existing.content })
 	if (changes === 0) throw new CommentError(409, 'comment changed while editing, reload and retry')
 
 	const updated = await store.findComment(existing.id)
-	return toView(updated ?? { ...existing, content }, tokenHash)
+	return toView(updated ?? { ...existing, content }, tokenHash, viewerUserId)
 }
 
 export interface DeleteCommentInput {
 	commentId: string
 	token: unknown
+	viewerUserId?: string | null
 }
 
 export async function deleteComment(
@@ -274,20 +306,21 @@ export async function deleteComment(
 	input: DeleteCommentInput
 ): Promise<CommentView> {
 	const tokenHash = await hashCommentToken(normalizeCommentToken(input.token))
+	const viewerUserId = input.viewerUserId ?? null
 	const existing = await store.findComment(input.commentId)
 	if (!existing) throw new CommentError(404, 'comment not found')
-	if (existing.author_token_hash !== tokenHash) throw new CommentError(403, 'not your comment')
-	if (existing.status === 'deleted') return toView(existing, tokenHash)
+	if (!canModify(existing, tokenHash, viewerUserId)) throw new CommentError(403, 'not your comment')
+	if (existing.status === 'deleted') return toView(existing, tokenHash, viewerUserId)
 
-	const changes = await store.softDelete(existing.id, tokenHash)
+	const changes = await store.softDelete(existing.id, { tokenHash, userId: viewerUserId })
 	if (changes === 0) {
 		const latest = await store.findComment(existing.id)
-		if (latest?.status === 'deleted') return toView(latest, tokenHash)
+		if (latest?.status === 'deleted') return toView(latest, tokenHash, viewerUserId)
 		throw new CommentError(409, 'comment could not be deleted')
 	}
 
 	// The store commits soft deletion, history and audit together.
 
 	const latest = (await store.findComment(existing.id)) ?? existing
-	return toView({ ...latest, status: 'deleted' }, tokenHash)
+	return toView({ ...latest, status: 'deleted' }, tokenHash, viewerUserId)
 }

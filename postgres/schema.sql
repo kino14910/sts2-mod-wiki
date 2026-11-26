@@ -143,6 +143,8 @@ CREATE TABLE IF NOT EXISTS comments (
 	target_id text NOT NULL,
 	parent_id text,
 	author_name text NOT NULL,
+	author_user_id text REFERENCES users(id) ON DELETE SET NULL,
+	author_avatar_url text,
 	author_token_hash text NOT NULL,
 	author_ip_hash text,
 	content text NOT NULL,
@@ -150,6 +152,10 @@ CREATE TABLE IF NOT EXISTS comments (
 	created_at text NOT NULL DEFAULT wiki_now(),
 	updated_at text NOT NULL DEFAULT wiki_now()
 );
+-- Existing databases were created before comments carried account attribution.
+ALTER TABLE comments ADD COLUMN IF NOT EXISTS author_user_id text REFERENCES users(id) ON DELETE SET NULL;
+ALTER TABLE comments ADD COLUMN IF NOT EXISTS author_avatar_url text;
+CREATE INDEX IF NOT EXISTS idx_comments_author_user_created ON comments(author_user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_comments_target_created ON comments(target_type, target_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_comments_parent_created ON comments(parent_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_comments_token_created ON comments(author_token_hash, created_at DESC);

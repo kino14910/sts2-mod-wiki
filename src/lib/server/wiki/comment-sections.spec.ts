@@ -11,6 +11,11 @@ import {
 const TOKEN = 'wiki-token-0123456789abcdef'
 const SECTION = 'modsection:sts2:index:overview'
 
+function owns(row: CommentRow, owner: { tokenHash: string; userId: string | null }): boolean {
+	if (row.author_token_hash === owner.tokenHash) return true
+	return owner.userId !== null && row.author_user_id === owner.userId
+}
+
 function memoryStore(sections: string[] = [SECTION]) {
 	const rows: CommentRow[] = []
 	let tick = Date.now()
@@ -56,6 +61,8 @@ function memoryStore(sections: string[] = [SECTION]) {
 				target_id: input.targetId,
 				parent_id: input.parentId,
 				author_name: input.authorName,
+				author_user_id: input.authorUserId,
+				author_avatar_url: input.authorAvatarUrl,
 				author_token_hash: input.authorTokenHash,
 				author_ip_hash: input.authorIpHash,
 				content: input.content,
@@ -64,16 +71,16 @@ function memoryStore(sections: string[] = [SECTION]) {
 				updated_at: at
 			})
 		},
-		async updateContent(id, tokenHash, content) {
+		async updateContent(id, owner, content) {
 			const row = rows.find((item) => item.id === id)
-			if (!row || row.author_token_hash !== tokenHash || row.status !== 'visible') return 0
+			if (!row || !owns(row, owner) || row.status !== 'visible') return 0
 			row.content = content
 			row.updated_at = stamp()
 			return 1
 		},
-		async softDelete(id, tokenHash) {
+		async softDelete(id, owner) {
 			const row = rows.find((item) => item.id === id)
-			if (!row || row.author_token_hash !== tokenHash || row.status !== 'visible') return 0
+			if (!row || !owns(row, owner) || row.status !== 'visible') return 0
 			row.status = 'deleted'
 			return 1
 		},

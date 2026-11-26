@@ -40,6 +40,22 @@ describe('non-destructive collaboration migrations', () => {
 			.toEqual([{ comment_id: 'relic', content: 'Relic tip' }, { comment_id: 'relic', content: 'Edited tip' }])
 		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
 	})
+	it('adds comment author accounts while keeping anonymous comments intact', () => {
+		const c = sqliteDb({ migrations: false }); connections.push(c)
+		for (const name of ['0001_wiki_foundation', '0003_comments_anonymous', '0004_wiki_collaboration', '0005_collaboration_integrity', '0006_entity_identity', '0007_identity_data_epoch', '0012_relic_comment_target'])
+			c.sql.exec(migration(name))
+		c.sql.exec(`INSERT INTO users (id,auth_subject,username) VALUES ('alice','alice@qq.com','Alice');
+			INSERT INTO comments (id,target_type,target_id,author_name,author_token_hash,content)
+			VALUES ('anonymous','card','Bash','Anonymous','token-hash','Old tip');`)
+		c.sql.exec(migration('0013_comment_authors'))
+		expect(c.sql.prepare('SELECT author_user_id,author_avatar_url FROM comments WHERE id=?').get('anonymous'))
+			.toEqual({ author_user_id: null, author_avatar_url: null })
+		c.sql.exec(`INSERT INTO comments (id,target_type,target_id,author_name,author_user_id,author_avatar_url,author_token_hash,content)
+			VALUES ('signed','card','Bash','Alice','alice','https://q.qlogo.cn/avatar','another-hash','Account tip')`)
+		expect(c.sql.prepare('SELECT author_user_id,author_avatar_url FROM comments WHERE id=?').get('signed'))
+			.toEqual({ author_user_id: 'alice', author_avatar_url: 'https://q.qlogo.cn/avatar' })
+		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
+	})
 	it('adds QQ email and password columns without changing existing accounts', () => {
 		const c = sqliteDb({ migrations: false }); connections.push(c)
 		c.sql.exec(migration('0001_wiki_foundation'))

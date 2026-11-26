@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
+	import { page } from '$app/state'
 	import { commentRequestHeaders, getCommentName, setCommentName } from '#lib/comment-identity'
 	import {
 		MAX_COMMENT_LENGTH,
@@ -28,6 +29,7 @@
 	let content = $state('')
 	let submitting = $state(false)
 	let errorMessage = $state('')
+	let session = $derived(page.data.viewer?.session ?? null)
 	const contentId = $props.id()
 
 	onMount(() => {
@@ -48,7 +50,7 @@
 					targetId,
 					parentId,
 					content,
-					authorName
+					authorName: session ? undefined : authorName
 				})
 			})
 			if (response.status === 429) {
@@ -60,7 +62,7 @@
 				return
 			}
 			const created: CommentView = await response.json()
-			setCommentName(authorName)
+			if (!session) setCommentName(authorName)
 			content = ''
 			onPosted(created)
 		} catch {
@@ -72,7 +74,14 @@
 </script>
 
 <form class="mt-3 space-y-2" onsubmit={submit}>
-	{#if !compact || authorName.trim().length === 0}
+	{#if session}
+		<p class="flex items-center gap-2 text-[0.8rem] opacity-80">
+			{#if session.avatarUrl}
+				<img src={session.avatarUrl} alt="" referrerpolicy="no-referrer" class="size-5 shrink-0 rounded-full object-cover" />
+			{/if}
+			{m.comments_signed_in_as({ name: session.username })}
+		</p>
+	{:else if !compact || authorName.trim().length === 0}
 		<label class="block text-[0.8rem] opacity-80">
 			{m.comments_author_label()}
 			<input
@@ -115,7 +124,7 @@
 			<button
 				type="submit"
 				class="rounded-md bg-link px-3 py-1 font-semibold text-black transition-opacity disabled:opacity-45"
-				disabled={submitting || content.trim().length === 0 || authorName.trim().length < 2}
+				disabled={submitting || content.trim().length === 0 || (!session && authorName.trim().length < 2)}
 			>
 				{m.comments_submit()}
 			</button>

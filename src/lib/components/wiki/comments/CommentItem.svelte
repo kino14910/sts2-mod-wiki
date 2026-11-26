@@ -11,6 +11,7 @@
 	let editContent = $state('')
 	let saving = $state(false)
 	let errorMessage = $state('')
+	let avatarFailed = $state(false)
 
 	let deleted = $derived(comment.status === 'deleted')
 	let canReply = $derived(!deleted && comment.parentId === null)
@@ -72,7 +73,21 @@
 </script>
 
 <article data-comment-id={comment.id} class="rounded-md border border-white/10 bg-white/5 px-3 py-2.5">
-	<header class="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-[0.78rem]">
+	<header class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.78rem]">
+		{#if comment.author.avatarUrl && !avatarFailed}
+			<img
+				src={comment.author.avatarUrl}
+				alt=""
+				referrerpolicy="no-referrer"
+				loading="lazy"
+				class="size-6 shrink-0 rounded-full object-cover"
+				onerror={() => (avatarFailed = true)}
+			/>
+		{:else}
+			<span aria-hidden="true" class="grid size-6 shrink-0 place-items-center rounded-full bg-surface-2 text-[0.7rem] font-bold text-ink">
+				{Array.from(comment.author.name.trim())[0]?.toUpperCase() ?? '?'}
+			</span>
+		{/if}
 		<span class="font-semibold text-ink">{comment.author.name}</span>
 		<time class="opacity-55" datetime={comment.createdAt}>{formatTime(comment.createdAt)}</time>
 		{#if comment.edited}

@@ -207,6 +207,7 @@
 	"comments_title": "评论",
 	"comments_count": "{count} 条评论",
 	"comments_author_label": "你的昵称",
+	"comments_signed_in_as": "以 {name} 的身份发表评论",
 	"comments_placeholder": "写下你的评论…",
 	"comments_submit": "发表评论",
 	"comments_reply": "回复",

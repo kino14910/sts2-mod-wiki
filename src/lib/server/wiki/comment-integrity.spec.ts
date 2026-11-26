@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { sqliteDb, seedSection } from './testing/sqlite-db'
 import { createCommentStore } from './repository'
-import { createComment, editComment, deleteComment } from './comment-service'
+import { createComment, editComment, deleteComment, listComments } from './comment-service'
 import { moderateComment } from './comment-moderation'
 
 const connections: ReturnType<typeof sqliteDb>[] = []
@@ -18,6 +18,27 @@ describe('anonymous comments with actual SQL and history', () => {
 		expect(attempts.filter((v) => v.status === 'fulfilled')).toHaveLength(5)
 		expect(attempts.filter((v) => v.status === 'rejected' && v.reason.status === 429)).toHaveLength(7)
 		expect(c.sql.prepare('SELECT COUNT(*) AS n FROM comments').get()?.n).toBe(5)
+	})
+	it('stores the author account and avatar for signed-in comments', async () => {
+		const c = setup()
+		const viewer = {
+			userId: 'u-member', username: 'Member',
+			avatarUrl: 'https://q.qlogo.cn/headimg_dl?dst_uin=10001&spec=640&img_type=webp'
+		}
+		const comment = await createComment(c.store, { ...input, authorName: 'Impostor', viewer })
+		expect(comment.author).toEqual({ name: 'Member', avatarUrl: viewer.avatarUrl })
+		expect(c.sql.prepare('SELECT author_user_id, author_avatar_url FROM comments WHERE id=?').get(comment.id)).toEqual({
+			author_user_id: 'u-member', author_avatar_url: viewer.avatarUrl
+		})
+		const mine = await listComments(c.store, { targetType: 'wiki_section', targetId: 's1', viewerUserId: 'u-member' })
+		const other = await listComments(c.store, { targetType: 'wiki_section', targetId: 's1', viewerUserId: 'u-admin' })
+		expect(mine.items[0]?.owned).toBe(true)
+		expect(other.items[0]?.owned).toBe(false)
+		const otherToken = 'other-token-0123456789abcd'
+		await expect(editComment(c.store, { commentId: comment.id, token: otherToken, content: 'hijack', viewerUserId: 'u-admin' }))
+			.rejects.toMatchObject({ status: 403 })
+		const edited = await editComment(c.store, { commentId: comment.id, token: otherToken, content: 'account edit', viewerUserId: 'u-member' })
+		expect(edited.content).toBe('account edit')
 	})
 	it('enforces the IP limit across independent anonymous tokens', async () => {
 		const c = setup()

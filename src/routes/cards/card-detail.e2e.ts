@@ -121,7 +121,7 @@ test('registration requires a QQ email and an invitation code', async ({ context
 	for (const email of ['reader@example.com', 'reader@qq.com']) {
 		const response = await context.request.post(`${baseURL}/api/auth/register`, {
 			headers: { origin: new URL(baseURL).origin },
-			data: { email, password: 'password123', inviteCode: 'INVALIDINVALIDINVALID' }
+			data: { email, password: 'password123', username: 'Reader', inviteCode: 'INVALIDINVALIDINVALID' }
 		})
 		expect(response.status(), email).toBe(400)
 		expect((await response.json()).message).toContain(email === 'reader@qq.com' ? 'invitation' : '@qq.com')
@@ -216,13 +216,16 @@ test('real TeslaCoil cards have isolated canonical pages, publication, history, 
 	async function postCardComment(target: string, content: string) {
 		const node = page.locator('#Comments')
 		await expect(node).toHaveAttribute('data-comment-target-id', target)
-		await node.locator('input[name="authorName"]').fill('E2E namespace reader')
+		// Signed-in readers comment under their account, so no nickname input is shown.
+		await expect(node.locator('input[name="authorName"]')).toHaveCount(0)
 		await node.locator('textarea[name="content"]').fill(content)
 		const created = page.waitForResponse((response) => new URL(response.url()).pathname === '/api/comments' && response.request().method() === 'POST')
 		await node.getByRole('button', { name: /post|submit/i }).click()
 		const response = await created
 		expect(response.status()).toBe(201)
 		const comment = await response.json()
+		expect(comment.author.name).toBe('E2E moderator')
+		expect(comment.author.avatarUrl).toMatch(/q\.qlogo\.cn/)
 		const token = (await page.evaluate(() => localStorage.getItem('sts2.wiki.comment.token')))!
 		comments.push({ id: comment.id, token })
 		expect(comment.targetId).toBe(target)

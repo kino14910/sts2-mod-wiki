@@ -19,6 +19,11 @@ interface MemoryStore {
 	audits: unknown[]
 }
 
+function owns(row: CommentRow, owner: { tokenHash: string; userId: string | null }): boolean {
+	if (row.author_token_hash === owner.tokenHash) return true
+	return owner.userId !== null && row.author_user_id === owner.userId
+}
+
 function memoryStore(): MemoryStore {
 	const rows: CommentRow[] = []
 	const audits: unknown[] = []
@@ -69,6 +74,8 @@ function memoryStore(): MemoryStore {
 				target_id: input.targetId,
 				parent_id: input.parentId,
 				author_name: input.authorName,
+				author_user_id: input.authorUserId,
+				author_avatar_url: input.authorAvatarUrl,
 				author_token_hash: input.authorTokenHash,
 				author_ip_hash: input.authorIpHash,
 				content: input.content,
@@ -77,16 +84,16 @@ function memoryStore(): MemoryStore {
 				updated_at: at
 			})
 		},
-		async updateContent(id, tokenHash, content) {
+		async updateContent(id, owner, content) {
 			const row = rows.find((item) => item.id === id)
-			if (!row || row.author_token_hash !== tokenHash || row.status !== 'visible') return 0
+			if (!row || !owns(row, owner) || row.status !== 'visible') return 0
 			row.content = content
 			row.updated_at = stamp()
 			return 1
 		},
-		async softDelete(id, tokenHash) {
+		async softDelete(id, owner) {
 			const row = rows.find((item) => item.id === id)
-			if (!row || row.author_token_hash !== tokenHash || row.status !== 'visible') return 0
+			if (!row || !owns(row, owner) || row.status !== 'visible') return 0
 			row.status = 'deleted'
 			audits.push({ action: 'comment.delete', targetId: id })
 			return 1
@@ -171,6 +178,24 @@ describe('comment creation and listing', () => {
 		expect(comment.owned).toBe(true)
 		expect(comment.edited).toBe(false)
 		expect(comment.createdAt).toBe(comment.updatedAt)
+	})
+
+	it('attributes signed-in comments to the account and its avatar', async () => {
+		const { store } = memoryStore()
+		const viewer = {
+			userId: 'user:alice@qq.com',
+			username: 'Alice',
+			avatarUrl: 'https://q.qlogo.cn/headimg_dl?dst_uin=123&spec=640&img_type=webp'
+		}
+		const comment = await createComment(store, baseInput({ authorName: 'Impostor', viewer }))
+		expect(comment.author).toEqual({ name: 'Alice', avatarUrl: viewer.avatarUrl })
+		await expect(editComment(store, {
+			commentId: comment.id, token: OTHER_TOKEN, content: 'hijack', viewerUserId: 'user:bob@qq.com'
+		})).rejects.toMatchObject({ status: 403 })
+		const edited = await editComment(store, {
+			commentId: comment.id, token: OTHER_TOKEN, content: 'account edit', viewerUserId: viewer.userId
+		})
+		expect(edited.content).toBe('account edit')
 	})
 
 	it('marks ownership only for the matching browser token', async () => {

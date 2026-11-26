@@ -34,7 +34,8 @@ export const GET: RequestHandler = async ({ url, request, locals }) => {
 			...target,
 			page: optionalNumber(url.searchParams.get('page')),
 			pageSize: optionalNumber(url.searchParams.get('pageSize')),
-			viewerToken: request.headers.get('x-comment-token')
+			viewerToken: request.headers.get('x-comment-token'),
+			viewerUserId: locals.session?.userId ?? null
 		})
 		return json(page)
 	} catch (cause) {
@@ -56,7 +57,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			content: input.content,
 			authorName: input.authorName,
 			token: request.headers.get('x-comment-token'),
-			ip: clientIp(request)
+			ip: clientIp(request),
+			viewer: locals.session && {
+				userId: locals.session.userId,
+				username: locals.session.username,
+				avatarUrl: locals.session.avatarUrl
+			}
 		})
 		return json(comment, { status: 201 })
 	} catch (cause) {

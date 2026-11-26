@@ -19,7 +19,8 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 			commentId: params.id,
 			token: request.headers.get('x-comment-token'),
 			content: input.content,
-			updatedAt: input.updatedAt
+			updatedAt: input.updatedAt,
+			viewerUserId: locals.session?.userId ?? null
 		})
 		return json(comment)
 	} catch (cause) {
@@ -32,7 +33,8 @@ export const DELETE: RequestHandler = async ({ params, request, locals }) => {
 	try {
 		const comment = await deleteComment(createCommentStore(locals.wikiDb), {
 			commentId: params.id,
-			token: request.headers.get('x-comment-token')
+			token: request.headers.get('x-comment-token'),
+			viewerUserId: locals.session?.userId ?? null
 		})
 		return json(comment)
 	} catch (cause) {
