@@ -35,10 +35,11 @@ describe('article composition', () => {
 	})
 	it('hides language names without mutating source content or persisted history', () => {
 		const names = persisted('Names_in_Other_Languages', 'Archived names')
+		const count = original.sections.length
 		const article = composeWikiArticle(original, [names])
 		expect(article.sections.some((section) => section.id === 'Names_in_Other_Languages')).toBe(false)
 		expect(names.content).toBe('Archived names')
-		expect(original.sections).toHaveLength(6)
+		expect(original.sections).toHaveLength(count)
 	})
 	it('includes additional community sections in persisted sort order', () => {
 		const article = composeWikiArticle(original, [
