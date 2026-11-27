@@ -64,5 +64,8 @@ describe('Postgres database compatibility translation', () => {
 			0
 		)
 		expect(roleGuard.sql).toContain('$2::boolean OR role')
+
+		const nullGuard = translate('SELECT ? WHERE (? IS NULL OR id = ?)', 0)
+		expect(nullGuard.sql).toContain('$2::text IS NULL')
 	})
 })

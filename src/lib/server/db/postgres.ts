@@ -51,6 +51,7 @@ export function translate(sql: string, previousChanges: number): { sql: string; 
 		.replace(/strftime\('%Y-%m-%dT%H:%M:%fZ',\s*updated_at,\s*'\+0\.001 seconds'\)/g, `to_char((updated_at::timestamp + interval '1 millisecond') AT TIME ZONE 'UTC', '${UTC_FORMAT}')`)
 		.replace(/strftime\('%Y-%m-%dT%H:%M:%fZ',\s*'now'\)/g, `to_char(now() AT TIME ZONE 'UTC', '${UTC_FORMAT}')`)
 		.replace(/ IS \?/g, ' IS NOT DISTINCT FROM ?')
+		.replace(/(\?)\s+IS\s+NULL/g, '$1::text IS NULL')
 		.replace(/WHERE \(\? OR role != 'admin'/g, "WHERE (?::boolean OR role != 'admin'")
 
 	let conflictIgnored = false
