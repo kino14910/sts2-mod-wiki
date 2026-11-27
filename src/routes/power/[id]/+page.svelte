@@ -8,20 +8,8 @@
 	import WikiSources from '#lib/components/WikiSources.svelte'
 	import WikiIntro from '#lib/components/WikiIntro.svelte'
 	import WikiText from '#lib/components/WikiText.svelte'
-	import type { CollectionEntry, CollectionKind } from '#lib/data/collections'
-	import { entityHref, publicEntityKey } from '#lib/entities'
-	import { powerHref } from '#lib/data/glossary'
-	import {
-		behaviorName,
-		groupName,
-		localizedCollections,
-		localizedEntries,
-		localizedEntry,
-		modName,
-		stackName
-	} from '#lib/data/localize'
+	import { behaviorName, groupName, localizedEntry, modName, stackName } from '#lib/data/localize'
 	import { m } from '#lib/paraglide/messages'
-	import { collectionTextToPlain } from '#lib/text/collection-text'
 	import type { PageProps } from './$types'
 
 	let { data }: PageProps = $props()
@@ -31,17 +19,11 @@
 	let intro = $derived(data.intro)
 	let sources = $derived(data.sources)
 	let interactions = $derived(data.interactions)
-	let relatedPowers = $derived(localizedEntries(data.powers))
-	let relics = $derived(localizedCollections(data.relics))
-	let potions = $derived(localizedCollections(data.potions))
 	let modLabel = $derived(entry.mod ? modName(entry.mod) : '')
 
 	let expandedCardSources = $state<string | null>(null)
 	let showAllCards = $derived(expandedCardSources === data.entityKey)
 	let visibleCards = $derived(showAllCards ? data.cards : data.cards.slice(0, 6))
-	let sourceCount = $derived(
-		data.cards.length + relics.length + potions.length + relatedPowers.length
-	)
 
 	let iconAlt = $derived(`StS2 Icon ${wiki?.title ?? entry.name}.png`)
 	let stackLabel = $derived(wiki ? 'Stack Type' : m.power_stack_type())
@@ -72,25 +54,6 @@
 		})}
 	/>
 </svelte:head>
-
-{#snippet collectionRows(items: CollectionEntry[], kind: CollectionKind)}
-	<ul class="wiki-prose">
-		{#each items as item (publicEntityKey({ type: kind, id: item.id, modId: item.mod }))}
-			<li>
-				<a href={entityHref({ type: kind, id: item.id, modId: item.mod })}
-					>{item.name}</a
-				>
-				— {collectionTextToPlain(item.text)}
-			</li>
-		{/each}
-	</ul>
-{/snippet}
-
-{#snippet sourceHeading(label: string, count: number)}
-	<h3 class="wiki-section-title wiki-h3">
-		<span class="mw-headline">{label}<span class="count">{count}</span></span>
-	</h3>
-{/snippet}
 
 {#snippet introParagraph(text: string)}
 	<WikiText text={text} />
@@ -224,37 +187,6 @@
 					{#each sources as details (details.summary)}
 						<WikiSources {details} />
 					{/each}
-
-					{#if showGameSources}
-						{#if sourceCount === 0}
-							<p class="wiki-prose-p">{m.power_sources_empty()}</p>
-						{/if}
-
-						{#if relics.length}
-							<div class="wiki-source-group">
-								{@render sourceHeading(m.power_sources_relics(), relics.length)}
-								{@render collectionRows(relics, 'relic')}
-							</div>
-						{/if}
-
-						{#if potions.length}
-							<div class="wiki-source-group">
-								{@render sourceHeading(m.power_sources_potions(), potions.length)}
-								{@render collectionRows(potions, 'potion')}
-							</div>
-						{/if}
-
-						{#if relatedPowers.length}
-							<div class="wiki-source-group">
-								{@render sourceHeading(m.power_sources_powers(), relatedPowers.length)}
-								<ul class="wiki-prose">
-									{#each relatedPowers as item (publicEntityKey({ type: 'power', id: item.id, modId: item.mod ?? 'sts2' }))}
-										<li><a href={powerHref(item)}>{item.name}</a> — {item.summary}</li>
-									{/each}
-								</ul>
-							</div>
-						{/if}
-					{/if}
 				</section>
 
 				{#if showInteractions}
@@ -426,15 +358,6 @@
 		font-size: 1.2rem;
 	}
 
-	.count {
-		margin-left: 9px;
-		font-family: var(--font-mono);
-		font-size: 0.58rem;
-		font-weight: 400;
-		letter-spacing: 0.06em;
-		color: var(--muted);
-	}
-
 	.wiki-prose {
 		margin: 0 0 12px;
 		padding-left: 24px;
@@ -446,10 +369,6 @@
 	.wiki-prose li {
 		margin-bottom: 6px;
 		text-wrap: pretty;
-	}
-
-	.wiki-source-group {
-		margin-top: 18px;
 	}
 
 	.wiki-card-list {
