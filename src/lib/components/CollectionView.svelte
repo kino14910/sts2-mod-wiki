@@ -121,14 +121,19 @@
 		mod = 'all';
 	}
 
-	function descriptionOptions(entry: CollectionEntry): GameTextOptions {
-		return {
-			mode: 'collection',
-			energyIconSrc: entry.character === 'necrobinder' ? NECRO_ENERGY_ICON : ENERGY_ICON,
-			// 药水描述需要像详情页一样，把未加 [gold] 的实体名也渲染为关键词链接
-			matchPlainEntities: kind === 'potion'
-		};
-	}
+	/** 每条目复用同一份 options：模板里现造对象会让 GameText 每次渲染都重新解析 */
+	let descriptionOptions = $derived.by(() => {
+		const options = new Map<CollectionEntry, GameTextOptions>();
+		for (const entry of localized) {
+			options.set(entry, {
+				mode: 'collection',
+				energyIconSrc: entry.character === 'necrobinder' ? NECRO_ENERGY_ICON : ENERGY_ICON,
+				// 药水描述需要像详情页一样，把未加 [gold] 的实体名也渲染为关键词链接
+				matchPlainEntities: kind === 'potion'
+			});
+		}
+		return options;
+	});
 
 	function meta(entry: CollectionEntry) {
 		const parts = [collectionRarityName(entry.rarity), collectionCharacterName(entry.character)];
@@ -212,7 +217,7 @@
 							<p
 								class="collection-desc mt-1 max-w-[82ch] text-[0.86rem] leading-[1.45] text-pretty text-ink-dim"
 							>
-								<GameText text={entry.text} options={descriptionOptions(entry)} />
+								<GameText text={entry.text} options={descriptionOptions.get(entry)} />
 							</p>
 
 							{#if kind === 'relic'}
