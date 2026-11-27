@@ -22,13 +22,13 @@ export const BASH_EDITORIAL_ZH = {
 		columns: ['类型', '版本', '发布日期', '改动'],
 		rows: [
 			[
-				{ text: '抢先体验版' },
+				{ text: 'beta' },
 				{ text: 'V0.55.0' },
 				{ text: '2025 年 5 月 8 日' },
 				{ lines: ['修复了用同时施加能力的攻击（如痛击）击杀敌人会导致游戏卡死的问题'] }
 			],
 			[
-				{ text: '抢先体验版' },
+				{ text: 'beta' },
 				{ text: 'V0.43.0' },
 				{ text: '2025 年 1 月 30 日' },
 				{
@@ -39,13 +39,13 @@ export const BASH_EDITORIAL_ZH = {
 				}
 			],
 			[
-				{ text: '抢先体验版' },
+				{ text: 'beta' },
 				{ text: '2023-04-21' },
 				{ text: '2023 年 4 月 21 日' },
 				{ lines: ['错误修复：使用无情猛攻后无法打出痛击'] }
 			],
 			[
-				{ text: '抢先体验版' },
+				{ text: 'beta' },
 				{ text: '未知' },
 				{ text: '—' },
 				{ lines: ['将痛击加入游戏'] }
