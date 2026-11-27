@@ -69,7 +69,7 @@ export async function findUserRowByUsername(db: WikiDatabase, username: string):
 		.first<UserRow>()
 }
 
-/** Local development login only. Resolves existing accounts; registration always requires an invite. */
+/** Local development login only. Resolves existing accounts; it never creates them. */
 export async function ensureDevUser(db: WikiDatabase, subject: string): Promise<AuthSession | null> {
 	if (!isAllowedEmail(subject)) return null
 	return findUserBySubject(db, subject)

@@ -1,40 +1,23 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
-	import { refreshAll } from '$app/navigation'
-	import { isAllowedEmail } from '#lib/email-domain'
 	import { onMount } from 'svelte'
 	import { page } from '$app/state'
 	import { getLocale, setLocale } from '#lib/paraglide/runtime'
 	import { m } from '#lib/paraglide/messages'
 	import { wikiUi } from '#lib/wiki-article'
 	import type { WikiViewer } from '#lib/wiki-collaboration'
+	import AccountPanel from './AccountPanel.svelte'
+	import SessionAvatar from './SessionAvatar.svelte'
 
 	const anonymousViewer: WikiViewer = { session: null, permissions: [] }
 	let open = $state(false)
 	let accountOpen = $state(false)
+	let accountArea: HTMLDivElement | undefined
 	let viewer = $state.raw<WikiViewer>()
 	let initialSessionRequest: AbortController | undefined
-	let avatarFailed = $state(false)
-	let email = $state('')
-	let password = $state('')
-	let username = $state('')
-	let inviteCode = $state('')
-	let authMode = $state<'login' | 'register'>('login')
-	let authBusy = $state(false)
-	let authError = $state('')
-	let authNotice = $state('')
-	let passwordOpen = $state(false)
-	let passwordBusy = $state(false)
-	let currentPassword = $state('')
-	let newPassword = $state('')
-	let confirmPassword = $state('')
-	let usernameOpen = $state(false)
-	let usernameBusy = $state(false)
-	let newUsername = $state('')
 	let ui = $derived(wikiUi(getLocale()))
 	let currentViewer: WikiViewer = $derived(viewer ?? page.data.viewer ?? anonymousViewer)
 	let session = $derived(currentViewer.session)
-	let avatarKey = $derived(JSON.stringify([session?.userId, session?.avatarUrl]))
 
 	onMount(() => {
 		// Keep the SSR viewer as a fallback, but don't follow page data after hydration.
@@ -45,17 +28,10 @@
 		return () => request.abort()
 	})
 
-	function updateViewer(next: WikiViewer) {
-		if (next.session?.userId !== session?.userId || next.session?.avatarUrl !== session?.avatarUrl) {
-			avatarFailed = false
-		}
-		viewer = next
-	}
-
 	function commitViewer(next: WikiViewer) {
 		// A GET started before this mutation must not restore the old session.
 		initialSessionRequest?.abort()
-		updateViewer(next)
+		viewer = next
 	}
 
 	async function refreshSession(signal: AbortSignal) {
@@ -63,204 +39,25 @@
 			const response = await fetch(resolve('/api/auth/session'), { cache: 'no-store', signal })
 			if (!response.ok) return
 			const result = await response.json() as WikiViewer
-			if (!signal.aborted) updateViewer(result)
+			if (!signal.aborted) viewer = result
 		} catch { /* Reading remains available without an authentication server. */ }
-	}
-
-	async function refreshPermissions() {
-		try {
-			await refreshAll()
-			return true
-		} catch {
-			authError = ui.permissionsRefreshFailed
-			return false
-		}
-	}
-
-	function focusAccountButton() {
-		document.getElementById('community-account')?.focus()
 	}
 
 	function closeAccount() {
 		accountOpen = false
-		resetPasswordForm()
-		resetUsernameForm()
-		focusAccountButton()
+		document.getElementById('community-account')?.focus()
 	}
 
-	function validateCredentials(requireInvite: boolean) {
-		if (!isAllowedEmail(email)) { authError = ui.emailInvalid; return false }
-		if (password.length < 8) { authError = ui.passwordShort; return false }
-		if (requireInvite && (username.trim().length < 2 || username.trim().length > 32)) {
-			authError = ui.usernameInvalid
-			return false
-		}
-		if (requireInvite && !inviteCode.trim()) { authError = ui.inviteInvalid; return false }
-		return true
+	function trackAccountArea(node: HTMLDivElement) {
+		accountArea = node
+		return () => { accountArea = undefined }
 	}
 
-	async function responseError(response: Response, signingIn = false) {
-		if (signingIn && response.status === 401) return ui.credentialsRejected
-		if (signingIn && response.status === 429) return ui.authRateLimited
-		const result = await response.json().catch(() => null) as { message?: unknown } | null
-		return typeof result?.message === 'string' && result.message.trim() ? result.message : ui.error
+	function dismissAccount(event: PointerEvent) {
+		// Clicking outside closes the panel without stealing focus from the new target.
+		if (accountOpen && !accountArea?.contains(event.target as Node)) accountOpen = false
 	}
 
-	function resetPasswordForm() {
-		passwordOpen = false
-		passwordBusy = false
-		currentPassword = ''
-		newPassword = ''
-		confirmPassword = ''
-	}
-
-	function togglePasswordForm() {
-		passwordOpen = !passwordOpen
-		usernameOpen = false
-		currentPassword = ''
-		newPassword = ''
-		confirmPassword = ''
-		authError = ''
-		authNotice = ''
-	}
-
-	function resetUsernameForm() {
-		usernameOpen = false
-		usernameBusy = false
-		newUsername = ''
-	}
-
-	function toggleUsernameForm() {
-		usernameOpen = !usernameOpen
-		passwordOpen = false
-		newUsername = session?.username ?? ''
-		authError = ''
-		authNotice = ''
-	}
-
-	async function submitUsernameChange(event: SubmitEvent) {
-		event.preventDefault()
-		if (usernameBusy) return
-		authError = ''
-		authNotice = ''
-		const next = newUsername.replace(/\s+/g, ' ').trim()
-		if (next.length < 2 || next.length > 32) { authError = ui.usernameInvalid; return }
-		usernameBusy = true
-		try {
-			const response = await fetch(resolve('/api/auth/username'), {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ username: next })
-			})
-			if (!response.ok) {
-				authError = response.status === 409 ? ui.usernameTaken : await responseError(response)
-				return
-			}
-			const result = await response.json() as { username?: unknown }
-			if (typeof result.username !== 'string') { authError = ui.error; return }
-			commitViewer({
-				...currentViewer,
-				session: session ? { ...session, username: result.username } : null
-			})
-			resetUsernameForm()
-			authNotice = ui.usernameChanged
-			await refreshPermissions()
-		} catch { authError = ui.error }
-		finally { usernameBusy = false }
-	}
-
-	async function submitPasswordChange(event: SubmitEvent) {
-		event.preventDefault()
-		if (passwordBusy) return
-		authError = ''
-		authNotice = ''
-		if (newPassword.length < 8) { authError = ui.passwordShort; return }
-		if (newPassword !== confirmPassword) { authError = ui.passwordMismatch; return }
-		passwordBusy = true
-		try {
-			const response = await fetch(resolve('/api/auth/password'), {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ currentPassword, newPassword })
-			})
-			if (!response.ok) {
-				authError = response.status === 401 ? ui.passwordWrong
-					: response.status === 429 ? ui.authRateLimited
-					: await responseError(response)
-				return
-			}
-			resetPasswordForm()
-			authNotice = ui.passwordChanged
-		} catch { authError = ui.error }
-		finally { passwordBusy = false }
-	}
-
-	async function submitCredentials(event: SubmitEvent) {
-		event.preventDefault()
-		const form = event.currentTarget as HTMLFormElement
-		if (authBusy) return
-		authError = ''
-		authNotice = ''
-		const registering = authMode === 'register'
-		if (!validateCredentials(registering)) return
-		authBusy = true
-		try {
-			const response = await fetch(resolve(registering ? '/api/auth/register' : '/api/auth/login'), {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify(registering ? { email, password, username, inviteCode } : { email, password })
-			})
-			if (!response.ok) {
-				authError = await responseError(response, !registering)
-				return
-			}
-			const result = await response.json() as WikiViewer | null
-			if (!result?.session || !Array.isArray(result.permissions)) {
-				authError = ui.error
-				return
-			}
-			commitViewer(result)
-			authNotice = registering ? ui.registered : ui.signedIn
-			authMode = 'login'
-			password = ''
-			username = ''
-			inviteCode = ''
-			resetPasswordForm()
-			resetUsernameForm()
-			// Return focus to the trigger if the focused form control is being removed.
-			if (accountOpen && (form.contains(document.activeElement) || document.activeElement === document.body)) {
-				focusAccountButton()
-			}
-			await refreshPermissions()
-		} catch { authError = ui.error }
-		finally { authBusy = false }
-	}
-
-	async function signOut(event: MouseEvent) {
-		if (authBusy) return
-		const button = event.currentTarget
-		authBusy = true
-		authError = ''
-		authNotice = ''
-		try {
-			const response = await fetch(resolve('/api/auth/session'), { method: 'DELETE' })
-			if (!response.ok) {
-				authError = await responseError(response)
-				return
-			}
-			commitViewer(anonymousViewer)
-			authMode = 'login'
-			email = ''
-			password = ''
-			username = ''
-			inviteCode = ''
-			resetPasswordForm()
-			resetUsernameForm()
-			if (accountOpen && (document.activeElement === document.body || document.activeElement === button)) focusAccountButton()
-			if (await refreshPermissions() && accountOpen) closeAccount()
-		} catch { authError = ui.error }
-		finally { authBusy = false }
-	}
 	const locale = getLocale()
 
 	const baseLinks = [
@@ -290,6 +87,7 @@
 <svelte:window onkeydown={(event) => {
 	if (event.key === 'Escape' && accountOpen) closeAccount()
 }} />
+<svelte:document onpointerdown={dismissAccount} />
 
 <header class="site-header sticky top-0 z-60 [background:color-mix(in_srgb,var(--tooltip-bg)_88%,transparent)] backdrop-blur-md border-b-2 border-tooltip-border [box-shadow:0_4px_12px_rgba(0,0,0,0.45)]">
 	<div class="wrap header-inner h-(--header-height) flex min-w-0 items-center gap-7 max-[980px]:gap-2 max-[620px]:px-3">
@@ -323,83 +121,21 @@
 			<span aria-hidden="true">↗</span>
 		</a>
 
-		<div class="relative ml-auto min-w-0 max-w-40 shrink-0 max-[620px]:max-w-24">
-			<button id="community-account" type="button" class="flex max-w-full items-center gap-1.5 whitespace-nowrap rounded border border-line px-2 py-1 text-xs text-link hover:text-gold"
+		<div class="relative ml-auto min-w-0 max-w-40 shrink-0 max-[620px]:max-w-24" {@attach trackAccountArea}>
+			<button id="community-account" type="button" class="flex max-w-full items-center gap-1.5 whitespace-nowrap rounded border border-line px-2 py-1 text-xs text-link transition-colors duration-160 hover:border-line-strong hover:text-gold"
 				aria-label={session?.username ?? ui.signIn} aria-expanded={accountOpen} aria-controls={accountOpen ? 'community-account-panel' : undefined} onclick={() => (accountOpen = !accountOpen)}>
 				{#if session}
-					{#key avatarKey}
-						{#if session.avatarUrl && !avatarFailed}
-							<img src={session.avatarUrl} alt="" referrerpolicy="no-referrer" class="size-5 shrink-0 rounded-full object-cover" onerror={() => (avatarFailed = true)} />
-						{:else}
-							<span aria-hidden="true" class="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 font-bold text-ink">{Array.from(session.username.trim())[0]?.toUpperCase() ?? '?'}</span>
-						{/if}
-					{/key}
+					<SessionAvatar session={session} class="size-5" />
 					<span class="truncate">{session.username}</span>
 				{:else}
 					{ui.signIn}
 				{/if}
+				<svg class="size-2 shrink-0 text-muted transition-transform duration-180 {accountOpen ? 'rotate-180' : ''}" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+					<path d="M1 2.5 L4 5.5 L7 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+				</svg>
 			</button>
 			{#if accountOpen}
-				<div id="community-account-panel" class="absolute right-0 top-full z-70 mt-2 max-h-[calc(100dvh-var(--header-height)-1rem)] w-[min(19rem,calc(100vw-1.5rem))] overflow-y-auto rounded border border-line bg-surface p-4 shadow-xl max-[620px]:fixed max-[620px]:right-3 max-[620px]:top-(--header-height)" role="region" aria-label={ui.account}>
-					<div class="sticky top-0 z-10 bg-surface">
-						<div role="status" aria-atomic="true">
-							{#if authNotice}<p class="mb-3 rounded border border-green-300/40 bg-green-950/40 px-3 py-2 text-sm text-green-300">{authNotice}</p>{/if}
-						</div>
-						<div role="alert" aria-atomic="true">
-							{#if authError}<p class="mb-3 rounded border border-red-300/50 bg-red-950/40 px-3 py-2 text-sm font-medium text-red-300">{authError}</p>{/if}
-						</div>
-					</div>
-					<div class="space-y-3">
-						{#if session}
-							<p class="break-words text-sm">{session.username}</p>
-							<div class="flex flex-wrap items-center gap-3 text-sm">
-								<button class="text-link" type="button" disabled={usernameBusy} onclick={toggleUsernameForm}>{ui.changeUsername}</button>
-								<button class="text-link" type="button" disabled={passwordBusy} onclick={togglePasswordForm}>{ui.changePassword}</button>
-								<button class="text-link" type="button" disabled={authBusy || passwordBusy || usernameBusy} onclick={signOut}>{ui.signOut}</button>
-							</div>
-							{#if usernameOpen}
-								<form class="space-y-2" onsubmit={submitUsernameChange}>
-									<label class="block text-xs">{ui.username}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="newUsername" bind:value={newUsername} required minlength="2" maxlength="32" autocomplete="nickname" /></label>
-									<p class="text-xs text-muted">{ui.usernameHint}</p>
-									<div class="flex items-center gap-3">
-										<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={usernameBusy}>{ui.changeUsername}</button>
-										<button type="button" class="text-xs text-link" onclick={toggleUsernameForm}>{ui.cancel}</button>
-									</div>
-								</form>
-							{/if}
-							{#if passwordOpen}
-								<form class="space-y-2" onsubmit={submitPasswordChange}>
-									<label class="block text-xs">{ui.currentPassword}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="currentPassword" type="password" bind:value={currentPassword} required maxlength="128" autocomplete="current-password" /></label>
-									<label class="block text-xs">{ui.newPassword}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="newPassword" type="password" bind:value={newPassword} required minlength="8" maxlength="128" autocomplete="new-password" /></label>
-									<label class="block text-xs">{ui.confirmPassword}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="confirmPassword" type="password" bind:value={confirmPassword} required minlength="8" maxlength="128" autocomplete="new-password" /></label>
-									<div class="flex items-center gap-3">
-										<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={passwordBusy}>{ui.changePassword}</button>
-										<button type="button" class="text-xs text-link" onclick={togglePasswordForm}>{ui.cancel}</button>
-									</div>
-								</form>
-							{/if}
-						{:else}
-							<form class="space-y-3" onsubmit={submitCredentials}>
-								{#if authMode === 'register'}
-									<label class="block text-xs">{ui.username}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="username" bind:value={username} required minlength="2" maxlength="32" autocomplete="nickname" /></label>
-									<p class="text-xs text-muted">{ui.usernameHint}</p>
-								{/if}
-								<label class="block text-xs">{ui.qqEmail}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="email" type="email" bind:value={email} required maxlength="64" pattern="[^@\s]+@[qQ][qQ]\.com" title={ui.emailHint} autocomplete="email" /></label>
-								<p class="text-xs text-muted">{ui.emailHint}</p>
-								<label class="block text-xs">{ui.password}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2" name="password" type="password" bind:value={password} required minlength="8" maxlength="128" autocomplete={authMode === 'login' ? 'current-password' : 'new-password'} /></label>
-								{#if authMode === 'register'}
-									<label class="block text-xs">{ui.inviteCode}<input class="mt-1 w-full rounded border border-line bg-black/30 p-2 font-mono" name="inviteCode" bind:value={inviteCode} required maxlength="64" autocomplete="off" /></label>
-									<p class="text-xs text-muted">{ui.inviteHint}</p>
-								{/if}
-								<button type="submit" class="rounded bg-link px-3 py-1 text-sm text-black" disabled={authBusy}>{authMode === 'login' ? ui.signIn : ui.register}</button>
-							</form>
-							<button type="button" class="text-xs text-link" disabled={authBusy} onclick={() => { authMode = authMode === 'login' ? 'register' : 'login'; authError = ''; authNotice = ''; inviteCode = '' }}>
-								{authMode === 'login' ? ui.createAccount : ui.haveAccount}
-							</button>
-						{/if}
-						<button type="button" class="text-xs text-link" onclick={closeAccount}>{ui.close}</button>
-					</div>
-				</div>
+				<AccountPanel viewer={currentViewer} ui={ui} onCommit={commitViewer} onClose={closeAccount} />
 			{/if}
 		</div>
 		<div class="locale-switch inline-flex flex-none overflow-hidden rounded-sm border border-tooltip-border bg-surface-2">

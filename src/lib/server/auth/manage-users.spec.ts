@@ -17,15 +17,20 @@ describe('administrator permissions and role changes', () => {
 		await expect(manageUser(c.db, user, 'u-admin', 'status', 'suspended')).rejects.toMatchObject({ status: 403 })
 	})
 
-	it('only allows user/trusted assignments and never admin roles', async () => {
+	it('only allows user/trusted/moderator assignments and never admin roles', async () => {
 		const c = setup()
 		await expect(manageUser(c.db, admin, 'u-member', 'role', 'admin')).rejects.toMatchObject({ code: 'BAD_INPUT' })
 		await expect(manageUser(c.db, admin, 'u-admin', 'role', 'user')).rejects.toMatchObject({ code: 'ADMIN_IMMUTABLE' })
+		await manageUser(c.db, admin, 'u-member', 'role', 'moderator')
 		await manageUser(c.db, admin, 'u-member', 'role', 'trusted')
 		await manageUser(c.db, admin, 'u-member', 'role', 'user')
 		expect(c.sql.prepare("SELECT role FROM users WHERE id='u-member'").get()).toEqual({ role: 'member' })
 		const log = c.sql.prepare("SELECT json_extract(metadata_json, '$.from') AS fromRole, json_extract(metadata_json, '$.to') AS toRole FROM wiki_audit_logs WHERE target_id='u-member' ORDER BY created_at").all() as Array<{ fromRole: string; toRole: string }>
-		expect(log).toEqual([{ fromRole: 'user', toRole: 'trusted' }, { fromRole: 'trusted', toRole: 'user' }])
+		expect(log).toEqual([
+			{ fromRole: 'user', toRole: 'moderator' },
+			{ fromRole: 'moderator', toRole: 'trusted' },
+			{ fromRole: 'trusted', toRole: 'user' }
+		])
 	})
 
 	it('preserves the last active administrator, including across serialized concurrent changes', async () => {

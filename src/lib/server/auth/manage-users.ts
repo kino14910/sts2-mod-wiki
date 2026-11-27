@@ -5,8 +5,8 @@ export async function manageUser(db: WikiDatabase, actorInput: MaybeActor, userI
 	field: 'role' | 'status', value: unknown): Promise<{ userId: string; value: Role | UserStatus }> {
 	const actor = requirePermission(actorInput, field === 'role' ? 'user:role:manage' : 'user:status:manage')
 	if (field === 'role') {
-		if (value !== 'user' && value !== 'trusted')
-			throw new WikiCollaborationError(400, 'Only user and trusted roles can be assigned', 'BAD_INPUT')
+		if (value !== 'user' && value !== 'trusted' && value !== 'moderator')
+			throw new WikiCollaborationError(400, 'Only user, trusted and moderator roles can be assigned', 'BAD_INPUT')
 	} else if (value !== 'active' && value !== 'suspended') {
 		throw new WikiCollaborationError(400, `Invalid ${field}`, 'BAD_INPUT')
 	}

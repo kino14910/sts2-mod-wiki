@@ -256,29 +256,6 @@ CREATE TABLE IF NOT EXISTS auth_oauth_states (
 	created_at text NOT NULL DEFAULT wiki_now()
 );
 
-CREATE TABLE IF NOT EXISTS auth_email_codes (
-	id text PRIMARY KEY,
-	email text NOT NULL,
-	code_hash text NOT NULL,
-	expires_at integer NOT NULL,
-	attempts integer NOT NULL DEFAULT 0,
-	consumed_at integer,
-	created_at integer NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_auth_email_codes_email_created ON auth_email_codes(email, created_at DESC);
-
-CREATE TABLE IF NOT EXISTS auth_invite_codes (
-	id text PRIMARY KEY,
-	code_hash text NOT NULL UNIQUE,
-	created_by text NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
-	created_at integer NOT NULL,
-	expires_at integer NOT NULL,
-	max_uses integer NOT NULL CHECK (max_uses > 0),
-	used_count integer NOT NULL DEFAULT 0 CHECK (used_count >= 0),
-	revoked_at integer
-);
-CREATE INDEX IF NOT EXISTS idx_auth_invite_codes_created ON auth_invite_codes(created_at DESC);
-
 CREATE TABLE IF NOT EXISTS auth_rate_limits (
 	key text PRIMARY KEY,
 	attempts integer NOT NULL DEFAULT 0,

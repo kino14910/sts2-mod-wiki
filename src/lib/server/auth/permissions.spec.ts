@@ -55,12 +55,6 @@ describe('roles and permissions', () => {
 		expect(can('moderator', 'wiki:source:sync')).toBe(false)
 	})
 
-	it('only administrators can manage invitation codes', () => {
-		for (const role of ['user', 'trusted', 'moderator'] as Role[])
-			expect(can(role, 'invite:manage')).toBe(false)
-		expect(can('admin', 'invite:manage')).toBe(true)
-	})
-
 	it('admin exclusively handles mod upstream updates', () => {
 		expect(can('admin', 'wiki:source:view')).toBe(true)
 		expect(can('admin', 'wiki:source:review')).toBe(true)

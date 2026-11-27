@@ -71,26 +71,14 @@ describe('non-destructive collaboration migrations', () => {
 		expect(() => c.sql.exec("INSERT INTO users (id,auth_subject,username,email) VALUES ('clone','clone@qq.com','Clone','bob@qq.com')")).toThrow()
 		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
 	})
-	it('creates the email verification code table', () => {
-		const c = sqliteDb({ migrations: false }); connections.push(c)
-		c.sql.exec(migration('0001_wiki_foundation')); c.sql.exec(migration('0010_email_verification'))
-		c.sql.exec("INSERT INTO auth_email_codes (id,email,code_hash,expires_at,created_at) VALUES ('code','alice@qq.com','digest',1000,500)")
-		expect(c.sql.prepare('SELECT email,code_hash,attempts,consumed_at FROM auth_email_codes').get()).toEqual({
-			email: 'alice@qq.com', code_hash: 'digest', attempts: 0, consumed_at: null
-		})
-		expect(c.sql.prepare("SELECT name FROM sqlite_master WHERE type='index' AND name='idx_auth_email_codes_email_created'").get()).toBeDefined()
-		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
-	})
-	it('adds invite and rate limit tables without rewriting existing accounts', () => {
+	it('adds the shared auth rate limit table without rewriting existing accounts', () => {
 		const c = sqliteDb({ migrations: false }); connections.push(c)
 		c.sql.exec(migration('0001_wiki_foundation'))
 		c.sql.exec("INSERT INTO users (id,auth_subject,username,role) VALUES ('alice','alice@qq.com','Alice','member')")
-		c.sql.exec(migration('0011_invite_registration'))
+		c.sql.exec(migration('0011_auth_rate_limits'))
 		expect(c.sql.prepare('SELECT role FROM users WHERE id = ?').get('alice')).toEqual({ role: 'member' })
-		expect(c.sql.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('auth_invite_codes','auth_rate_limits') ORDER BY name").all().map((r) => r.name))
-			.toEqual(['auth_invite_codes', 'auth_rate_limits'])
-		c.sql.exec("INSERT INTO auth_invite_codes (id,code_hash,created_by,created_at,expires_at,max_uses) VALUES ('inv','hash','alice',1000,2000,1)")
-		expect(() => c.sql.exec("INSERT INTO auth_invite_codes (id,code_hash,created_by,created_at,expires_at,max_uses) VALUES ('dup','hash','alice',1000,2000,1)")).toThrow()
+		c.sql.exec("INSERT INTO auth_rate_limits (key, attempts, window_start) VALUES ('register:ip', 1, 1000)")
+		expect(c.sql.prepare('SELECT key, attempts FROM auth_rate_limits').get()).toEqual({ key: 'register:ip', attempts: 1 })
 		expect(c.sql.prepare('PRAGMA foreign_key_check').all()).toEqual([])
 	})
 	it('upgrades databases which already applied the original 0003 and preserves anonymous ownership', () => {

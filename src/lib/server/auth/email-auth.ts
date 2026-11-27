@@ -3,13 +3,11 @@ import { WikiCollaborationError } from '#lib/server/wiki/access'
 import { sessionCookie, signSession } from './cookie-session'
 import { hashPassword, verifyPassword } from './password'
 import { findUserBySubject, findUserRowById, findUserRowBySubject, findUserRowByUsername } from './users'
-import { validateInvite } from './invites'
 import { assertWithinLimit } from './rate-limit'
 import type { AuthSession } from './session'
 
 const LIMIT_WINDOW_MS = 10 * 60 * 1000
 const REGISTER_LIMIT = 10
-const INVITE_FAILURE_LIMIT = 10
 const PASSWORD_CHANGE_LIMIT = 10
 const MIN_USERNAME_LENGTH = 2
 const MAX_USERNAME_LENGTH = 32
@@ -48,38 +46,18 @@ export async function registerWithEmail(
 	const { email, password } = credentials(input)
 	const body = input as Record<string, unknown>
 	const username = normalizeUsername(body.username)
-	const inviteCode = typeof body.inviteCode === 'string' ? body.inviteCode.trim() : ''
-	if (!inviteCode)
-		throw new WikiCollaborationError(400, 'An invitation code is required', 'INVITE_REQUIRED')
 	await assertWithinLimit(db, `register:${ipHash}`, REGISTER_LIMIT, LIMIT_WINDOW_MS, now)
 	if (await findUserRowBySubject(db, email))
 		throw new WikiCollaborationError(409, 'An account with this email already exists', 'EMAIL_TAKEN')
 	if (await findUserRowByUsername(db, username))
 		throw new WikiCollaborationError(409, 'This username is already taken', 'USERNAME_TAKEN')
 
-	let invite
-	try { invite = await validateInvite(db, secret, inviteCode, now) }
-	catch (cause) {
-		await assertWithinLimit(db, `invite-fail:${ipHash}`, INVITE_FAILURE_LIMIT, LIMIT_WINDOW_MS, now)
-		throw cause
-	}
-
 	const passwordHash = await hashPassword(password)
 	const userId = `user:${email}`
-	let result: WikiResult<unknown>[]
 	try {
-		result = await db.batch([
-			db.prepare(`UPDATE auth_invite_codes SET used_count = used_count + 1
-				WHERE id = ? AND revoked_at IS NULL AND expires_at > ? AND used_count < max_uses`)
-				.bind(invite.id, now),
-			db.prepare(`INSERT INTO users (id, auth_subject, username, email, password_hash, role, status)
-				SELECT ?, ?, ?, ?, ?, 'member', 'active' WHERE changes() = 1`)
-				.bind(userId, email, username, email, passwordHash),
-			db.prepare(`INSERT INTO wiki_audit_logs (id, actor_id, action, target_type, target_id, metadata_json)
-				SELECT ?, ?, 'invite.redeem', 'invite', ?, ?
-				WHERE EXISTS (SELECT 1 FROM users WHERE id = ?)`)
-				.bind(crypto.randomUUID(), userId, invite.id, JSON.stringify({ userId, email }), userId)
-		])
+		await db.prepare(`INSERT INTO users (id, auth_subject, username, email, password_hash, role, status)
+			VALUES (?, ?, ?, ?, ?, 'member', 'active')`)
+			.bind(userId, email, username, email, passwordHash).run()
 	} catch (cause) {
 		if (String(cause).includes('UNIQUE')) {
 			if (await findUserRowByUsername(db, username))
@@ -88,8 +66,6 @@ export async function registerWithEmail(
 		}
 		throw cause
 	}
-	if (Number(result[1].meta?.changes ?? 0) !== 1)
-		throw new WikiCollaborationError(409, 'Invitation code has been fully used', 'INVITE_EXHAUSTED')
 	return issueSession(db, secret, email)
 }
 

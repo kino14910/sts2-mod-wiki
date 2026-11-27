@@ -17,15 +17,15 @@ Production login is a site-owned QQ email + password flow. Configure these Verce
 | Value | Purpose |
 | --- | --- |
 | `DATABASE_URL` | Postgres connection string (Neon or Supabase pooled endpoint) |
-| `WIKI_SESSION_SECRET` | Strong random HMAC session key and invite-code hash key; keep secret |
+| `WIKI_SESSION_SECRET` | Strong random HMAC session key; keep secret |
 
-Registration is invite-only. Administrators generate codes with `POST /api/admin/invites` (`{ count?, maxUses?, ttlDays?, expiresAt? }`, defaults 1 / 1 / 7 days); plaintext codes are returned once and never stored. `auth_invite_codes` keeps only HMAC-SHA256 digests keyed by `WIKI_SESSION_SECRET`. `POST /api/auth/register` accepts `{ email, password, username?, inviteCode }` and, in one transaction, consumes a still-valid code, creates the account and writes the `invite.redeem` audit record. Conditional writes and row counts prevent concurrent over-use. Registration and failed-code attempts are rate-limited per IP hash via `auth_rate_limits`. `POST /api/auth/login` accepts `{ email, password }`. All endpoints reject any address whose domain is not exactly `@qq.com` with `EMAIL_DOMAIN_NOT_ALLOWED`. Passwords must be 8-128 characters and are stored as salted PBKDF2-SHA256 hashes in `users.password_hash`. Email is unique and checked again on every session resolution. New accounts are active ordinary `user` role (stored as legacy `member`); suspended users cannot sign in.
+Registration is open to any `@qq.com` address. `POST /api/auth/register` accepts `{ email, password, username }` and creates the account in one insert. Registration is rate-limited per IP hash via `auth_rate_limits`. `POST /api/auth/login` accepts `{ email, password }`. All endpoints reject any address whose domain is not exactly `@qq.com` with `EMAIL_DOMAIN_NOT_ALLOWED`. Passwords must be 8-128 characters and are stored as salted PBKDF2-SHA256 hashes in `users.password_hash`. Email is unique and checked again on every session resolution. New accounts are active ordinary `user` role (stored as legacy `member`); suspended users cannot sign in.
 
 `GET /api/auth/session` returns the public session and effective permissions with `Cache-Control: no-store`. `DELETE /api/auth/session` clears the session cookie. Session cookies expire after seven days and contain only the signed subject and expiry. The server reloads role/status from Postgres on every request, so suspension and role changes apply on the next request. Stateless cookies do not provide individual token revocation after logout. Suspend the account or rotate the secret when revocation is required.
 
-`POST /api/auth/session` is a development-only subject picker for elevated test roles. It requires `WIKI_DEV_LOGIN=1`, a session secret and a loopback hostname (`localhost`, `127.0.0.1`, `[::1]`). Its subject must also be an `@qq.com` address of an existing account; it cannot create accounts and therefore cannot bypass invitations. The flag must remain disabled on public deployments. All cookie-authenticated mutation APIs reject an explicit foreign Origin.
+`POST /api/auth/session` is a development-only subject picker for elevated test roles. It requires `WIKI_DEV_LOGIN=1`, a session secret and a loopback hostname (`localhost`, `127.0.0.1`, `[::1]`). Its subject must also be an `@qq.com` address of an existing account; it cannot create accounts. The flag must remain disabled on public deployments. All cookie-authenticated mutation APIs reject an explicit foreign Origin.
 
-Provision the first administrator explicitly in the `users` table, e.g. `UPDATE users SET role = 'admin' WHERE email = 'you@qq.com'`. No user becomes administrator merely because they are first or because they hold an invite. `PUT /api/admin/users/:id/role` only accepts `user` and `trusted`; admin roles cannot be granted or revoked there. `GET /api/admin/users?q=…` lists users. `GET/POST /api/admin/invites`, `GET /api/admin/invites/:id` (usage records) and `POST /api/admin/invites/:id/revoke` are admin-only. Role/status management uses audited transactional writes and cannot remove the last active administrator.
+Provision the first administrator explicitly in the `users` table, e.g. `UPDATE users SET role = 'admin' WHERE email = 'you@qq.com'`. No user becomes administrator merely because they registered first. `PUT /api/admin/users/:id/role` only accepts `user`, `trusted` and `moderator`; administrators assign these roles manually, and admin roles cannot be granted or revoked there. `GET /api/admin/users?q=…` lists users. Role/status management uses audited transactional writes and cannot remove the last active administrator.
 
 ## API and authorization
 
@@ -33,7 +33,6 @@ Provision the first administrator explicitly in the `users` table, e.g. `UPDATE 
 | --- | --- | --- |
 | Submit section edit | `POST /api/wiki/sections/:id/edits`, `{ content, baseVersion, summary? }` | User; trusted users publish directly |
 | List users | `GET /api/admin/users?q=…` | Administrator |
-| Manage invitation codes | `GET/POST /api/admin/invites`, `GET /api/admin/invites/:id`, `POST /api/admin/invites/:id/revoke` | Administrator |
 | List proposals | `GET /api/wiki/proposals?sectionId=…&pageId=…&status=…&limit=…&offset=…` | Members see their own; reviewers see the queue |
 | List section proposals | `GET /api/wiki/sections/:id/proposals` | Same visibility rule |
 | Read proposal | `GET /api/wiki/proposals/:id` | Author or reviewer; anonymous access denied |

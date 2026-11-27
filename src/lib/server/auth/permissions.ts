@@ -24,7 +24,6 @@ export type Permission =
 	| 'comment:moderate'
 	| 'user:role:manage'
 	| 'user:status:manage'
-	| 'invite:manage'
 
 const USER: readonly Permission[] = ['wiki:proposal:create', 'comment:create']
 const TRUSTED: readonly Permission[] = [...USER, 'wiki:revision:publish']
@@ -41,8 +40,7 @@ const ADMIN: readonly Permission[] = [
 	'wiki:source:review',
 	'wiki:source:sync',
 	'user:role:manage',
-	'user:status:manage',
-	'invite:manage'
+	'user:status:manage'
 ]
 
 export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {

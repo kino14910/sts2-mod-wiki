@@ -111,21 +111,29 @@ test('mobile header keeps account, languages, menu and account panel inside the 
 	await page.screenshot({ path: 'output/playwright/bash-mobile-final.png', fullPage: true })
 })
 
-test('registration requires a QQ email and an invitation code', async ({ context }) => {
+test('registration requires a QQ email and creates an ordinary user', async ({ context }) => {
 	const retired = await context.request.post(`${baseURL}/api/auth/register/code`, {
 		headers: { origin: new URL(baseURL).origin },
 		data: { email: 'reader@qq.com', password: 'password123' }
 	})
-	expect(retired.status()).toBe(410)
+	expect(retired.status()).toBe(404)
 
-	for (const email of ['reader@example.com', 'reader@qq.com']) {
-		const response = await context.request.post(`${baseURL}/api/auth/register`, {
-			headers: { origin: new URL(baseURL).origin },
-			data: { email, password: 'password123', username: 'Reader', inviteCode: 'INVALIDINVALIDINVALID' }
-		})
-		expect(response.status(), email).toBe(400)
-		expect((await response.json()).message).toContain(email === 'reader@qq.com' ? 'invitation' : '@qq.com')
-	}
+	const invalid = await context.request.post(`${baseURL}/api/auth/register`, {
+		headers: { origin: new URL(baseURL).origin },
+		data: { email: 'reader@example.com', password: 'password123', username: 'Reader' }
+	})
+	expect(invalid.status()).toBe(400)
+	expect((await invalid.json()).message).toContain('@qq.com')
+
+	const suffix = randomUUID().slice(0, 8)
+	const registered = await context.request.post(`${baseURL}/api/auth/register`, {
+		headers: { origin: new URL(baseURL).origin },
+		data: { email: `reader-${suffix}@qq.com`, password: 'password123', username: `Reader ${suffix}` }
+	})
+	expect(registered.status()).toBe(201)
+	const body = await registered.json()
+	expect(body.session).toMatchObject({ username: `Reader ${suffix}`, role: 'user', status: 'active' })
+	expect(body.permissions).toContain('comment:create')
 })
 
 test('imported Fgo card loads decoded art and renders English and Chinese base and upgraded descriptions', async ({ page, context }) => {

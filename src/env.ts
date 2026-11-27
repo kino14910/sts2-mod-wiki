@@ -6,7 +6,7 @@ export const variables = defineEnvVars({
 		schema: (value) => value ?? ''
 	},
 	WIKI_SESSION_SECRET: {
-		description: 'HMAC key for session cookies and invite-code digests',
+		description: 'HMAC key for signed session cookies',
 		schema: (value) => value ?? ''
 	},
 	WIKI_DEV_LOGIN: {
