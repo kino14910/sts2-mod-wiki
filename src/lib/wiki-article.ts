@@ -265,7 +265,7 @@ const UI = {
 		passwordMismatch: 'The new passwords do not match.', passwordChanged: 'Password updated.', passwordWrong: 'Current password is incorrect.', cancel: 'Cancel',
 		authRateLimited: 'Too many attempts. Please try again later.',
 		permissionsRefreshFailed: 'Your account changed, but page permissions could not be refreshed. Please reload the page.',
-		admin: 'Admin', adminUsers: 'Users', adminSearch: 'Search name or email', adminRole: 'Role', adminRoleUser: 'User', adminRoleTrusted: 'Trusted', adminRoleModerator: 'Moderator', adminStatus: 'Status', adminJoined: 'Joined', adminRoleConfirm: 'Change this user role?', adminNoUsers: 'No users found.', adminLoadFailed: 'Could not load data.', adminSaved: 'Saved.',
+		admin: 'Admin', adminUsers: 'Users', adminSearch: 'Search name or email', adminRole: 'Role', adminRoleUser: 'User', adminRoleTrusted: 'Trusted', adminRoleModerator: 'Moderator', adminStatus: 'Status', adminJoined: 'Joined', adminRoleConfirm: 'Change this user role?', adminNoUsers: 'No users found.', adminLoadFailed: 'Could not load data.', adminSaved: 'Saved.', adminPending: 'Pending review',
 		conflict: 'This section changed while you were editing. Your draft has been kept.', reload: 'Load latest version', compare: 'Compare with latest',
 		readOnly: 'This section is available for reading. Editing is not available yet.', show: 'show', hide: 'hide', overview: 'Overview',
 		sessionExpired: 'Your session has expired. Sign in again to submit this draft.', review: 'Review changes', refresh: 'Refresh', summary: 'Edit summary', withdraw: 'Withdraw proposal', withdrawn: 'Proposal withdrawn', rebase: 'Keep draft and use latest version'
@@ -281,7 +281,7 @@ const UI = {
 		passwordMismatch: '两次输入的新密码不一致。', passwordChanged: '密码已更新。', passwordWrong: '当前密码错误。', cancel: '取消',
 		authRateLimited: '尝试次数过多，请稍后再试。',
 		permissionsRefreshFailed: '账号状态已更改，但页面权限未能刷新。请重新加载页面。',
-		admin: '管理后台', adminUsers: '用户管理', adminSearch: '搜索名称或邮箱', adminRole: '角色', adminRoleUser: '普通用户', adminRoleTrusted: '可信用户', adminRoleModerator: '审核员', adminStatus: '状态', adminJoined: '注册时间', adminRoleConfirm: '确认修改该用户角色？', adminNoUsers: '未找到用户。', adminLoadFailed: '加载失败。', adminSaved: '已保存。',
+		admin: '管理后台', adminUsers: '用户管理', adminSearch: '搜索名称或邮箱', adminRole: '角色', adminRoleUser: '普通用户', adminRoleTrusted: '可信用户', adminRoleModerator: '审核员', adminStatus: '状态', adminJoined: '注册时间', adminRoleConfirm: '确认修改该用户角色？', adminNoUsers: '未找到用户。', adminLoadFailed: '加载失败。', adminSaved: '已保存。', adminPending: '待审核内容',
 		conflict: '编辑期间此章节已更新，草稿已保留。', reload: '载入最新版本', compare: '与最新版本比较',
 		readOnly: '此章节可供阅读，暂未开放编辑。', show: '显示', hide: '隐藏', overview: '概述',
 		sessionExpired: '登录已失效，请重新登录后提交草稿。', review: '审核修改', refresh: '刷新', summary: '编辑摘要', withdraw: '撤回提案', withdrawn: '提案已撤回', rebase: '保留草稿并采用最新版本'
