@@ -1,0 +1,9 @@
+- 此牌施加的[[sts2:Keyword:Vulnerable]]：
+  - 提高[[sts2:Card:Bully]]造成的伤害。
+  - 使[[sts2:Card:Dismantle]]额外造成一次伤害。
+  - 使[[sts2:Card:Dominate]]额外获得[[sts2:Keyword:Strength]]。
+  - 通过[[sts2:Card:Vicious]]抽 1（2）张牌。
+  - 配合[[sts2:Card:Colossus]]使敌人造成的伤害降低 50%。
+  - 配合[[sts2:Card:Cruelty]]使敌人受到的伤害提高 25%（50%）。
+  - 配合[[sts2:Relic:PaperPhrog]]使敌人受到的伤害提高 25%。
+  - 伤害可能被[[sts2:Relic:UnsettlingLamp]]翻倍。

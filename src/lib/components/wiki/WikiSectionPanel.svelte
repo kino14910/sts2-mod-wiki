@@ -6,7 +6,7 @@
 		section: PublishedSection; viewer: WikiViewer; onChanged: () => void | Promise<void>
 	} = $props()
 	let articleSection = $derived({ key: section.key, id: `section-${section.key}`, title: section.key,
-		level: 2 as const, blocks: articleBlocks(section.content, section.contentType), published: section })
+		level: 2 as const, blocks: section.contentType === 'markdown' ? [] : articleBlocks(section.content, section.contentType), published: section })
 </script>
 
 <WikiSection section={articleSection} {viewer} {onChanged} heading={false} />

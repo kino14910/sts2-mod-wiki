@@ -10,7 +10,7 @@ import {
 } from '#lib/data/wiki-links'
 import { CHARACTER_ASSETS } from '#lib/data/mods'
 import type { ArticleContent } from '#lib/wiki-article'
-import { BASH_EDITORIAL, BASH_CARD_CONTENT } from './card-article-content'
+import { BASH_CARD_CONTENT } from './card-article-content'
 import { BASH_CARD_CONTENT_ZH } from './card-article-content.zh'
 
 interface CardWikiTocItem {
@@ -86,8 +86,7 @@ export const BASH_WIKI = {
 		{ id: 'Relics', number: '2.1.1', label: 'Relics', indent: true, depth: 2 },
 		{ id: 'Notes', number: '3', label: 'Notes' },
 		{ id: 'Update_History', number: '4', label: 'Update History' }
-	] satisfies CardWikiTocItem[],
-	...BASH_EDITORIAL
+	] satisfies CardWikiTocItem[]
 }
 
 /** Presentation enrichment resolves entity icons separately from the editorial source. */

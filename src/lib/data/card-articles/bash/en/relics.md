@@ -1,0 +1,1 @@
+- [[sts2:Relic:IntimidatingHelmet]] grants 4 [[Block]] whenever this card is played.

@@ -19,9 +19,9 @@
 
 <div lang={article.lang}>
 	{#if article.overview}
-		<WikiSection section={{ key: 'overview', id: 'Overview', title: ui.overview, level: 2, blocks: article.intro, published: article.overview }}
+		<WikiSection section={{ key: 'overview', id: 'Overview', title: ui.overview, level: 2, blocks: article.intro, markdown: article.introMarkdown, published: article.overview }}
 			{viewer} context={article.context} {onChanged} heading={false} />
-	{:else}<WikiSectionContent blocks={article.intro} context={article.context} />{/if}
+	{:else}<WikiSectionContent blocks={article.intro} markdown={article.introMarkdown ?? null} context={article.context} />{/if}
 	<div class="my-4"><WikiToc items={toc} collapsible /></div>
 	{#each article.sections as section (section.published?.sectionId ?? section.key)}
 		<WikiSection {section} {viewer} context={article.context} {onChanged} />

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { parseWikiDocument } from './wiki-document'
 import { seedDocument, listSeedRefs } from './data/wiki-seed'
-import { BASH_EDITORIAL, CARD_SECTION_KEYS, cardSectionSeeds } from './data/card-article-content'
+import { BASH_SECTIONS, CARD_SECTION_KEYS, cardSectionSeeds } from './data/card-article-content'
 
 describe('validated wiki documents and the canonical card content source', () => {
 	it('validates every existing seed without inventing missing fields', () => {
@@ -12,17 +12,13 @@ describe('validated wiki documents and the canonical card content source', () =>
 		expect(parseWikiDocument({ kind: 'power', page: { title: 'Forged' } })).toBeNull()
 		expect(parseWikiDocument({ kind: 'card', page: { title: 'Forged', sections: [{ key: 'notes', content: 123 }] } })).toBeNull()
 	})
-	it('serializes editorial facts into seed content with no second hand-written copy', () => {
+	it('uses the Markdown files as the single Bash seed source', () => {
 		const sections = cardSectionSeeds('Bash')
 		expect(Object.keys(sections)).toEqual([...CARD_SECTION_KEYS])
-		expect(sections.overview).toBe(BASH_EDITORIAL.intro)
-		for (const text of BASH_EDITORIAL.synergies) expect(sections.synergies).toContain(text)
-		for (const row of BASH_EDITORIAL.updateHistory.rows) {
-			for (const cell of row) {
-				if ('text' in cell) expect(sections.history).toContain(cell.text)
-				if ('lines' in cell) for (const line of cell.lines ?? []) expect(sections.history).toContain(line)
-			}
-		}
+		expect(sections.overview).toBe(BASH_SECTIONS.overview)
+		expect(sections.overview).toContain('[[sts2:Card:Bash]]')
+		expect(sections.synergies).toContain('[[sts2:Card:Bully]]')
+		expect(sections.history).toContain('| Type | Version | Release Date | Changes |')
 		expect(Object.values(cardSectionSeeds('OtherCard'))).toEqual(CARD_SECTION_KEYS.map(() => ''))
 	})
 })

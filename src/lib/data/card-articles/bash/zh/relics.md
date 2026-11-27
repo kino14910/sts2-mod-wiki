@@ -1,0 +1,1 @@
+- 每当打出此牌时，[[sts2:Relic:IntimidatingHelmet]]给予 4 点[[Block]]。

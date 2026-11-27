@@ -22,6 +22,7 @@
 		"test:import": "python -m unittest discover -s scripts/mod-extract -p test_*.py",
 		"data:audit-vanilla": "python scripts/mod-extract/audit_vanilla.py",
 		"db:seed-sql": "node scripts/gen-wiki-seed-sql.mjs",
+		"card-seed:refresh": "node --experimental-transform-types scripts/refresh-card-seeds.mjs",
 		"mod-wiki:scan": "node --experimental-strip-types scripts/mod-wiki/scan.mjs",
 		"mod-wiki:sync": "node --experimental-strip-types scripts/mod-wiki/sync.mjs"
 	},
@@ -61,6 +62,10 @@
 		"@neon/env": "^2.1.11",
 		"@vercel/functions": "^3.11.4",
 		"pg": "^8.23.1",
+		"remark-gfm": "4.0.1",
+		"remark-parse": "11.0.0",
+		"remark-rehype": "11.1.2",
+		"unified": "11.0.5",
 		"virtua": "^0.54.2"
 	}
 }

@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { page as appPage } from '$app/state'
-	import HoverTooltip from '#lib/components/HoverTooltip.svelte'
+	import WikiTokenLink from '#lib/components/WikiTokenLink.svelte'
 	import WikiText from '#lib/components/WikiText.svelte'
 	import { relicImage, type RelicWikiPage } from '#lib/data/relic-wiki'
-	import { isSelfLink } from '#lib/data/wiki-links'
 
 	let {
 		text,
@@ -55,80 +53,14 @@
 	}
 
 	let nodes = $derived(parse(text))
-	let pathname = $derived(appPage.url.pathname)
-	let hovered = $state('')
-	let tipX = $state(0)
-	let tipY = $state(0)
-	let tipEl: HTMLElement | undefined = $state()
-	let timer: ReturnType<typeof setTimeout> | undefined
-
-	function registerTip(element: HTMLElement) {
-		tipEl = element
-		return () => {
-			if (tipEl === element) tipEl = undefined
-		}
-	}
-
-	function place(event: MouseEvent) {
-		const rect = tipEl?.getBoundingClientRect()
-		const width = rect?.width || 390
-		const height = rect?.height || 150
-		tipX = Math.max(8, Math.min(event.clientX + 15, window.innerWidth - width - 8))
-		tipY = Math.max(8, Math.min(event.clientY + 15, window.innerHeight - height - 8))
-	}
-
-	function enter(event: MouseEvent, key: string, tooltip: string) {
-		if (!tooltip) return
-		clearTimeout(timer)
-		timer = setTimeout(() => {
-			hovered = key
-			place(event)
-		}, 100)
-	}
-
-	function move(event: MouseEvent) {
-		if (hovered) place(event)
-	}
-
-	function leave() {
-		clearTimeout(timer)
-		hovered = ''
-	}
-
-	let activeTip = $derived(nodes.find((node) => node.kind === 'token' && node.key === hovered))
 </script>
 
 {#each nodes as node, index (index)}
-	{#if node.kind === 'token'}
-		{@const self = isSelfLink(pathname, node.href)}
-		{#if node.href && !self}
-			<a
-				class="wiki-inline-link text-[#85d2e4] whitespace-nowrap hover:underline [text-underline-thickness:1px] underline-offset-2"
-				href={node.href}
-				onmouseenter={(event) => enter(event, node.key, node.tooltip)}
-				onmousemove={move}
-				onmouseleave={leave}
-				>{#if node.icon}<img class="wiki-inline-icon inline h-[1.35em] w-auto mx-[0.08em] align-[-0.32em] filter-[drop-shadow(0_0_1px_black)]" src={node.icon} alt="" />{/if}{node.label}</a
-			>
-		{:else}
-			<span
-				class="wiki-inline-link wiki-inline-link--plain whitespace-nowrap font-semibold text-ink"
-				role="note"
-				aria-current={self ? 'page' : undefined}
-				onmouseenter={(event) => enter(event, node.key, node.tooltip)}
-				onmousemove={move}
-				onmouseleave={leave}
-				>{#if node.icon}<img class="wiki-inline-icon inline h-[1.35em] w-auto mx-[0.08em] align-[-0.32em] filter-[drop-shadow(0_0_1px_black)]" src={node.icon} alt="" />{/if}{node.label}</span
-			>
-		{/if}
-{:else if node.kind === 'bold'}<strong>{node.value}</strong
->{:else if node.kind === 'break'}<br />{:else if node.kind === 'text'}<WikiText text={node.value} />{/if}
+	{#if node.kind === 'token'}<WikiTokenLink
+			label={node.label}
+			icon={node.icon}
+			href={node.href}
+			tooltip={node.tooltip}
+		/>{:else if node.kind === 'bold'}<strong>{node.value}</strong
+	>{:else if node.kind === 'break'}<br />{:else if node.kind === 'text'}<WikiText text={node.value} />{/if}
 {/each}
-
-<HoverTooltip
-	show={!!activeTip && activeTip.kind === 'token' && !!activeTip.tooltip}
-	html={activeTip?.kind === 'token' ? activeTip.tooltip : ''}
-	x={tipX}
-	y={tipY}
-	{registerTip}
-/>

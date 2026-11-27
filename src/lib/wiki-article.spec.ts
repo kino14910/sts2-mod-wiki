@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { articleBlocks, articleMarkdown, articleSectionMarkdown, articleToc, composeWikiArticle, type ArticleContent, type PublishedSection } from './wiki-article'
-import { BASH_CARD_CONTENT, BASH_EDITORIAL, BASH_SECTIONS } from './data/card-article-content'
+import { articleBlocks, articleMarkdown, articleToc, composeWikiArticle, type ArticleContent, type PublishedSection } from './wiki-article'
+import { BASH_CARD_CONTENT, BASH_SECTIONS } from './data/card-article-content'
 
 const original: ArticleContent = {
 	intro: [{ kind: 'paragraph', text: 'Original introduction' }],
@@ -54,13 +54,14 @@ describe('article composition', () => {
 })
 
 describe('persisted content rendering boundary', () => {
-	it('uses one Bash content tree for fallback, published seed and editor drafts', () => {
+	it('uses the Markdown files as the single Bash content tree', () => {
 		const published = Object.entries(BASH_SECTIONS).map(([key, content]) => persisted(key, content))
 		const article = composeWikiArticle(BASH_CARD_CONTENT, published)
-		expect(article.intro).toEqual(BASH_CARD_CONTENT.intro)
-		expect(article.sections.map((section) => section.blocks)).toEqual(BASH_CARD_CONTENT.sections.map((section) => section.blocks))
-		expect(articleSectionMarkdown(BASH_CARD_CONTENT)).toEqual(BASH_SECTIONS)
-		expect(BASH_EDITORIAL.names.rows.length).toBeGreaterThan(0)
+		expect(article.introMarkdown).toBe(BASH_SECTIONS.overview)
+		expect(article.sections.map((section) => section.markdown))
+			.toEqual(BASH_CARD_CONTENT.sections.map((section) => section.markdown))
+		expect(article.sections.map((section) => section.published?.content))
+			.toEqual(BASH_CARD_CONTENT.sections.map((section) => section.markdown))
 		expect(BASH_SECTIONS).not.toHaveProperty('names-in-other-languages')
 	})
 	it('round-trips nested lists, headings, escaped pipes and multiline history cells', () => {

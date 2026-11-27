@@ -18,10 +18,14 @@ export interface ArticleSectionContent {
 	title: string
 	level: 2 | 3 | 4
 	blocks: ArticleBlock[]
+	/** Markdown source when the section is authored as a Markdown file. */
+	markdown?: string
 }
 
 export interface ArticleContent {
 	intro: ArticleBlock[]
+	/** Markdown source for the overview; takes precedence over `intro` blocks. */
+	introMarkdown?: string
 	sections: ArticleSectionContent[]
 	context?: { tokens: Record<string, RelicWikiToken>; tooltips: Record<string, string> }
 	lang?: string
@@ -63,14 +67,6 @@ export function articleMarkdown(blocks: ArticleBlock[]): string {
 	}).join('\n\n')
 }
 
-export function articleSectionMarkdown(article: ArticleContent): Record<string, string> {
-	return Object.fromEntries([
-		['overview', articleMarkdown(article.intro)],
-		...article.sections.filter((section) => !isHiddenArticleSection(section.key))
-			.map((section) => [canonicalSectionKey(section.key), articleMarkdown(section.blocks)])
-	])
-}
-
 const SECTION_ALIASES: Record<string, string> = {
 	intro: 'overview', obtaining: 'obtaining', sources: 'obtaining',
 	'update-history': 'history', 'update_history': 'history'
@@ -100,7 +96,7 @@ function listItems(value: unknown, depth = 0): ArticleListItem[] {
 	})
 }
 
-function safeHref(value: unknown): string | undefined {
+export function safeHref(value: unknown): string | undefined {
 	if (typeof value !== 'string') return undefined
 	return /^(https?:\/\/|\/(?!\/)|#)/i.test(value) ? value : undefined
 }

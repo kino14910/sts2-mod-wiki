@@ -1,0 +1,9 @@
+- [[sts2:Keyword:Vulnerable]] applied by this card:
+  - Increases damage dealt by [[sts2:Card:Bully]].
+  - Grants an additional hit from [[sts2:Card:Dismantle]].
+  - Grants additional [[sts2:Keyword:Strength]] from [[sts2:Card:Dominate]].
+  - Draws 1 (2) card via [[sts2:Card:Vicious]].
+  - Makes enemies deal 50% less damage with [[sts2:Card:Colossus]].
+  - Makes enemies take 25% (50%) more damage with [[sts2:Card:Cruelty]].
+  - Makes enemies take 25% more damage with [[sts2:Relic:PaperPhrog]].
+  - Is potentially doubled by [[sts2:Relic:UnsettlingLamp]].

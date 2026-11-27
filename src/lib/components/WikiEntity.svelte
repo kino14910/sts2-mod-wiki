@@ -70,6 +70,7 @@
 	let tipX = $state(0);
 	let tipY = $state(0);
 	let tipEl: HTMLElement | undefined = $state();
+	let triggerEl: HTMLElement | undefined = $state();
 	let timer: ReturnType<typeof setTimeout> | undefined;
 
 	let iconInfo = $derived.by(
@@ -116,17 +117,24 @@
 		};
 	}
 
-	function place(event: MouseEvent) {
+	function registerTrigger(element: HTMLElement) {
+		triggerEl = element;
+		return () => {
+			if (triggerEl === element) triggerEl = undefined;
+		};
+	}
+
+	function placeAt(x: number, y: number) {
 		const rect = tipEl?.getBoundingClientRect();
 		const width = rect?.width || 420;
 		const height = rect?.height || 160;
 		tipX = Math.max(
 			8,
-			Math.min(event.clientX + 15, window.innerWidth - width - 8),
+			Math.min(x + 15, window.innerWidth - width - 8),
 		);
 		tipY = Math.max(
 			8,
-			Math.min(event.clientY + 15, window.innerHeight - height - 8),
+			Math.min(y + 15, window.innerHeight - height - 8),
 		);
 	}
 
@@ -135,12 +143,31 @@
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			hovered = true;
-			place(event);
+			placeAt(event.clientX, event.clientY);
 		}, 100);
 	}
 
 	function move(event: MouseEvent) {
-		if (hovered) place(event);
+		if (hovered) placeAt(event.clientX, event.clientY);
+	}
+
+	function focus() {
+		if (!tip) return;
+		const rect = triggerEl?.getBoundingClientRect();
+		if (!rect) return;
+		clearTimeout(timer);
+		hovered = true;
+		placeAt(rect.left, rect.bottom);
+	}
+
+	function touch(event: TouchEvent) {
+		if (!tip) return;
+		const point = event.touches[0];
+		if (!point) return;
+		hovered = true;
+		placeAt(point.clientX, point.clientY);
+		clearTimeout(timer);
+		timer = setTimeout(leave, 2500);
 	}
 
 	function leave() {
@@ -157,17 +184,30 @@
 {#if link && !current}<a
 		class="wiki-card-link text-[#85d2e4] hover:underline [text-underline-thickness:1px] underline-offset-2"
 		href={link}
+		{@attach registerTrigger}
 		onmouseenter={enter}
 		onmousemove={move}
-		onmouseleave={leave}>{@render content()}</a
-	>{:else}<span
+		onmouseleave={leave}
+		onfocus={focus}
+		onblur={leave}
+		ontouchstart={touch}>{@render content()}</a
+	>
+{:else}
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex (A tooltip-only term must be reachable by keyboard.) -->
+	<span
 		class="wiki-card-link wiki-term"
 		role="note"
+		tabindex={tip ? 0 : undefined}
 		aria-current={current ? "page" : undefined}
+		{@attach registerTrigger}
 		onmouseenter={enter}
 		onmousemove={move}
-		onmouseleave={leave}>{@render content()}</span
-	>{/if}{#snippet entityTip()}{#if entity}<EntityTooltip {entity} />{/if}{/snippet}<HoverTooltip
+		onmouseleave={leave}
+		onfocus={focus}
+		onblur={leave}
+		ontouchstart={touch}>{@render content()}</span
+	>
+{/if}{#snippet entityTip()}{#if entity}<EntityTooltip {entity} />{/if}{/snippet}<HoverTooltip
 	show={hovered && (useEntityTip || !!tip)}
 	html={useEntityTip ? "" : tip}
 	x={tipX}

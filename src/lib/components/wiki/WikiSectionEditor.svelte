@@ -6,6 +6,7 @@
 	import { diffLines } from '#lib/wiki-diff'
 	import type { SectionEditResult } from '#lib/wiki-collaboration'
 	import DiffView from './DiffView.svelte'
+	import WikiMarkdown from './WikiMarkdown.svelte'
 	import WikiSectionContent from './WikiSectionContent.svelte'
 
 	let { section, snapshot, canPublish = false, context, onSaved, onCancel, onRefresh }: {
@@ -28,7 +29,8 @@
 	let comparing = $state(false)
 	let base = $state(opening)
 	let ui = $derived(wikiUi(getLocale()))
-	let preview = $derived(articleBlocks(draft, section.contentType))
+	let previewMarkdown = $derived(section.contentType === 'markdown' ? draft : null)
+	let preview = $derived(previewMarkdown === null ? articleBlocks(draft, section.contentType) : [])
 	let comparison = $derived(diffLines(section.content, draft))
 	const fieldId = $props.id()
 
@@ -72,7 +74,7 @@
 		<textarea id={fieldId} {@attach focusEditor} rows="10" bind:value={draft}
 			class="w-full resize-y rounded border border-line bg-black/30 px-3 py-2 font-mono text-sm leading-relaxed focus-visible:outline-2"></textarea>
 	</div>
-	{#if tab === 'preview'}<WikiSectionContent blocks={preview} {context} />{/if}
+	{#if tab === 'preview'}{#if previewMarkdown !== null}<WikiMarkdown md={previewMarkdown} {context} />{:else}<WikiSectionContent blocks={preview} {context} />{/if}{/if}
 	<label class="block text-sm" for={`${fieldId}-summary`}>{ui.summary}</label>
 	<input id={`${fieldId}-summary`} type="text" maxlength="500" bind:value={summary} class="w-full rounded border border-line bg-black/30 px-3 py-2 text-sm" />
 	{#if errorMessage}<p role="alert" class="text-sm text-red-300">{errorMessage}</p>{/if}

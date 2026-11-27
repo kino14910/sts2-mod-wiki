@@ -62,7 +62,11 @@
 	{/if}
 	{#if snapshot && section.published}
 		<WikiSectionEditor section={section.published} {snapshot} {canPublish} {context} onSaved={saved} onCancel={restoreFocus} onRefresh={onChanged} />
-	{:else}<WikiSectionContent blocks={section.blocks} {context} />{/if}
+	{:else}<WikiSectionContent
+		blocks={section.blocks}
+		markdown={section.published?.contentType === 'markdown' ? section.published.content : section.markdown ?? null}
+		{context}
+	/>{/if}
 	{#if notice}<p role="status" class="my-2 text-xs text-muted">{notice}</p>{/if}
 	{#if message}<p role="status" class="my-2 text-sm text-emerald-300">{message}</p>{/if}
 	<div id={`${section.id}-history`}>
